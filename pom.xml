@@ -7,9 +7,23 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Uaa</name>
-
+    <repositories>
+        <repository>
+            <id>xxyTX</id>
+            <name>xxt TX Server private maven</name>
+            <url>http://193.112.161.157:8080/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>xxyTX</id>
+            <name>xxt TX Server private maven</name>
+            <url>http://193.112.161.157:8080/nexus/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
     <properties>
         <!-- Build properties -->
+        <com.xxy.base.version>1.0-SNAPSHOT</com.xxy.base.version>
         <maven.version>3.0.0</maven.version>
         <java.version>1.8</java.version>
         <scala.version>2.12.1</scala.version>
@@ -97,6 +111,13 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.xxy</groupId>
+            <artifactId>base</artifactId>
+            <version>${com.xxy.base.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
@@ -365,6 +386,16 @@
             <groupId>io.github.jhipster.registry</groupId>
             <artifactId>foshan-registry</artifactId>
             <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.xxy</groupId>
+            <artifactId>base-tool</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.xxy</groupId>
+            <artifactId>base-file</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
