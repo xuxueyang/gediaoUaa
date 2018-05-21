@@ -1,6 +1,5 @@
 package uaa.config;
 
-import io.github.jhipster.registry.security.jwt.JWTConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
-import io.github.jhipster.registry.security.jwt.TokenProvider;
-import io.github.jhipster.registry.security.Http401UnauthorizedEntryPoint;
 
 
 import javax.annotation.PostConstruct;
