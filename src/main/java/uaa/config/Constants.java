@@ -11,7 +11,10 @@ public final class Constants {
     public static final String SYSTEM_ACCOUNT = "system";
     public static final String ANONYMOUS_USER = "anonymoususer";
     public static final String DEFAULT_LANGUAGE = "en";
-    
+    //email templates
+    public static final String EMAIL_TEMPLATE_TEST_SEND = "testSendEmail";
+    public static final String EMAIL_VAR_URL = "url";
+
     private Constants() {
     }
 }

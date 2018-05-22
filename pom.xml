@@ -11,19 +11,34 @@
         <repository>
             <id>xxyTX</id>
             <name>xxt TX Server private maven</name>
-            <url>http://193.112.161.157:8080/nexus/content/groups/public</url>
+            <url>http://193.112.161.157:8080/nexus/service/local/repositories/public/content</url>
+        </repository>
+        <repository>
+            <id>xxy-snapshots</id>
+            <url>http://193.112.161.157:8080/nexus/service/local/repositories/snapshots/content/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>xxyTX</id>
             <name>xxt TX Server private maven</name>
-            <url>http://193.112.161.157:8080/nexus/content/groups/public</url>
+            <url>http://193.112.161.157:8080/nexus/service/local/repositories/public/content</url>
         </pluginRepository>
     </pluginRepositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>xxy-snapshots</id>
+            <url>http://193.112.161.157:8080/nexus/service/local/repositories/snapshots/content/</url>
+        </snapshotRepository>
+        <repository>
+            <id>xxy-thirdparty</id>
+            <url>http://193.112.161.157:8080/nexus/content/repositories/thirdparty/</url>
+        </repository>
+    </distributionManagement>
     <properties>
+        <start-class>uaa.UaaApp</start-class>
         <!-- Build properties -->
-        <com.xxy.base.version>1.0-SNAPSHOT</com.xxy.base.version>
+        <com.xxy.base.version>1.0</com.xxy.base.version>
         <maven.version>3.0.0</maven.version>
         <java.version>1.8</java.version>
         <scala.version>2.12.1</scala.version>
@@ -97,6 +112,9 @@
         <!-- jhipster-needle-maven-property -->
     </properties>
 
+
+
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -111,12 +129,6 @@
     </dependencyManagement>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.xxy</groupId>
-            <artifactId>base</artifactId>
-            <version>${com.xxy.base.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -380,12 +392,17 @@
         <dependency>
             <groupId>com.xxy</groupId>
             <artifactId>base-tool</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${com.xxy.base.version}</version>
         </dependency>
         <dependency>
             <groupId>com.xxy</groupId>
             <artifactId>base-file</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${com.xxy.base.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.xxy</groupId>
+            <artifactId>base-email</artifactId>
+            <version>${com.xxy.base.version}</version>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
@@ -556,10 +573,10 @@
                     <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:3306/uaa</url>
-                    <defaultSchemaName>uaa</defaultSchemaName>
+                    <url>jdbc:mysql://193.112.161.157:3306/gediao-uaa</url>
+                    <defaultSchemaName>gediao-uaa</defaultSchemaName>
                     <username>root</username>
-                    <password></password>
+                    <password>XXY@tx.2018!</password>
                     <referenceUrl>hibernate:spring:uaa.domain?dialect=org.hibernate.dialect.MySQL5InnoDBDialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
                     <verbose>true</verbose>
                     <logging>debug</logging>
