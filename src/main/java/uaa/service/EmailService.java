@@ -1,6 +1,6 @@
 package uaa.service;
 
-import domain.SenderInfo;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +12,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import uaa.config.ApplicationProperties;
 import uaa.config.Constants;
+import uaa.domain.SenderInfo;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

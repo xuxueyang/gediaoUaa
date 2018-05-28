@@ -1,53 +1,53 @@
-package domain;
+package uaa.domain;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SenderInfo {
-    // ·¢ËÍÓÊ¼şµÄ·şÎñÆ÷µÄIPºÍ¶Ë¿Ú
+    // å‘é€é‚®ä»¶çš„æœåŠ¡å™¨çš„IPå’Œç«¯å£
     private String mailServerHost;
     private int mailServerPort;
 
-    // ÓÊ¼ş·¢ËÍÕßµÄµØÖ·
+    // é‚®ä»¶å‘é€è€…çš„åœ°å€
     private String fromAddress;
     private String fromUserName;
 
-    // ÓÊ¼ş½ÓÊÕÕßµÄµØÖ·
+    // é‚®ä»¶æ¥æ”¶è€…çš„åœ°å€
     private String toAddress;
     private String toAddressName;
 
-    // ÓÊ¼ş½ÓÊÕÕßµÄµØÖ·¼¯ºÏ, Key - Address, Value - Name
+    // é‚®ä»¶æ¥æ”¶è€…çš„åœ°å€é›†åˆ, Key - Address, Value - Name
     private Map<String, String> toAddressMap = new HashMap<String, String>();
 
-    // µÇÂ½ÓÊ¼ş·¢ËÍ·şÎñÆ÷µÄÓÃ»§ÃûºÍÃÜÂë
+    // ç™»é™†é‚®ä»¶å‘é€æœåŠ¡å™¨çš„ç”¨æˆ·åå’Œå¯†ç 
     private String userName;
     private String password;
 
-    // ÊÇ·ñĞèÒªÉí·İÑéÖ¤
+    // æ˜¯å¦éœ€è¦èº«ä»½éªŒè¯
     private boolean validate = false;
 
-    // ÓÊ¼şÖ÷Ìâ
+    // é‚®ä»¶ä¸»é¢˜
     private String subject;
 
-    // ÓÊ¼şµÄÎÄ±¾ÄÚÈİ
+    // é‚®ä»¶çš„æ–‡æœ¬å†…å®¹
     private String message;
 
     private String url;
-    // ÓÊ¼şµÄ±¸ÓÃÄÚÈİ
+    // é‚®ä»¶çš„å¤‡ç”¨å†…å®¹
     private String textMessage;
-    // ÓÊ¼şµÄHTMLÄÚÈİ
+    // é‚®ä»¶çš„HTMLå†…å®¹
     private String htmlMessage;
 
-    // ÓÊ¼ş¸½¼şµÄÎÄ¼şÃû, ¸½¼şÎª±¾µØ×ÊÔ´
+    // é‚®ä»¶é™„ä»¶çš„æ–‡ä»¶å, é™„ä»¶ä¸ºæœ¬åœ°èµ„æº
     private String[] attachmentPath;
 
-    //ÓÊ¼ş¸½¼şµÄURL, ¸½¼şÎªÔÚÏß×ÊÔ´
+    //é‚®ä»¶é™„ä»¶çš„URL, é™„ä»¶ä¸ºåœ¨çº¿èµ„æº
     private String[] attachmentUrls;
 
-    //¸½¼şÃèÊö
+    //é™„ä»¶æè¿°
     private String attachmentDescription;
 
-    //¸½¼şÃû³Æ
+    //é™„ä»¶åç§°
     private String attachmentName;
 
     public String getMailServerHost() {

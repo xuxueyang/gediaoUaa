@@ -1,12 +1,12 @@
 package uaa.service;
 
-import domain.SenderInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.*;
 import org.apache.commons.mail.resolver.DataSourceUrlResolver;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import uaa.domain.SenderInfo;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-@Service
+@Component
 public class Sender {
     private static final String CHARSET = "UTF-8";
 

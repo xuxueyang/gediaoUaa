@@ -400,10 +400,11 @@
             <version>${com.xxy.base.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.xxy</groupId>
-            <artifactId>base-email</artifactId>
-            <version>${com.xxy.base.version}</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.4</version>
         </dependency>
+
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
