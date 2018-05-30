@@ -26,7 +26,7 @@ public abstract class BaseEntity implements Serializable {
 
     @LastModifiedDate
     @Column(name = "UPDATED_DATE")
-    private Instant lastModifiedDate = Instant.now();
+    private Instant updateDate = Instant.now();
 
     @Column(name = "VERSION")
     private String version;
@@ -42,13 +42,6 @@ public abstract class BaseEntity implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 
     public String getVersion() {
         return version;
@@ -72,5 +65,13 @@ public abstract class BaseEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Instant getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Instant updateDate) {
+        this.updateDate = updateDate;
     }
 }
