@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
     private  Email email = new Email();
-
+    private String version;
 
 
     public Email getEmail() {
@@ -20,6 +20,14 @@ public class ApplicationProperties {
 
     public void setEmail(Email email) {
         this.email = email;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
 
