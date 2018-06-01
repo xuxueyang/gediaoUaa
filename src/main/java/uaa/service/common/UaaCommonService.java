@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.service.ResultInfo;
-import uaa.service.common.redis.RedisClient;
+//import uaa.service.common.redis.RedisClient;
 
 @Service
 @Transactional
