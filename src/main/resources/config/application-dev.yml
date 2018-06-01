@@ -189,6 +189,7 @@ application:
         subject:
             create: 创建了用户
     version: 0
+    client : qinglonghui
 redis:
     project-code: qinglonghui
     env: test

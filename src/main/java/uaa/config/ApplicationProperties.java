@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
     private  Email email = new Email();
     private String version;
+    private String client;
 
 
     public Email getEmail() {
@@ -28,6 +29,14 @@ public class ApplicationProperties {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 
 

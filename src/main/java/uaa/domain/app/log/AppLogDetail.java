@@ -3,6 +3,7 @@ package uaa.domain.app.log;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.Id;
 import uaa.domain.BaseEntity;
 
 import javax.persistence.Column;
@@ -13,20 +14,17 @@ import java.io.Serializable;
 @Entity
 @Table(name = "app_log_detail")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class LogDetail extends BaseEntity implements Serializable {
-    @Column(name = "TAG_ID")
-    private String tagId;
+public class AppLogDetail extends BaseEntity implements Serializable {
+    @Id
+    @Column(name = "ID")
+    private String id;
+
 
     @Column(name = "REMARKS")
     private String remarks;
 
-    public String getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(String tagId) {
-        this.tagId = tagId;
-    }
+    @Column(name = "BASE_ID")
+    private String logEachId;
 
     public String getRemarks() {
         return remarks;
@@ -34,5 +32,21 @@ public class LogDetail extends BaseEntity implements Serializable {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLogEachId() {
+        return logEachId;
+    }
+
+    public void setLogEachId(String logEachId) {
+        this.logEachId = logEachId;
     }
 }

@@ -1,0 +1,85 @@
+package uaa.domain.app.log;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.Id;
+import uaa.domain.BaseEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "app_log_tag")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class AppLogTag extends BaseEntity implements Serializable {
+
+    @Id
+    @Column(name = "ID")
+    private String id;
+
+    @Column(name = "NAME")
+    private String name;
+
+    @Column(name = "TYPE")
+    private String type;
+
+    @Column(name = "GROUP")
+    private String group;
+
+    @Column(name = "CREATED_ID")
+    private String createdId;
+
+    @Column(name = "UPDATED_ID")
+    private String updatedId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getCreatedId() {
+        return createdId;
+    }
+
+    public void setCreatedId(String createdId) {
+        this.createdId = createdId;
+    }
+
+    public String getUpdatedId() {
+        return updatedId;
+    }
+
+    public void setUpdatedId(String updatedId) {
+        this.updatedId = updatedId;
+    }
+}
+

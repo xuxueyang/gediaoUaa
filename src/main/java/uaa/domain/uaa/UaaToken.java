@@ -1,7 +1,9 @@
-package uaa.domain;
+package uaa.domain.uaa;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.Id;
+import uaa.domain.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,9 +15,13 @@ import java.io.Serializable;
  */
 
 @Entity
-@Table(name = "qlh_token")
+@Table(name = "uaa_token")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UaaToken extends BaseEntity implements Serializable{
+    @Id
+    @Column(name = "ID")
+    private Long id;
+
     @Column(name = "ACCESS_TOKEN")
     private String accesstoken;
     @Column(name = "REFRESH_TOKEN")
@@ -56,5 +62,13 @@ public class UaaToken extends BaseEntity implements Serializable{
 
     public void setCreatedid(String createdid) {
         this.createdid = createdid;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

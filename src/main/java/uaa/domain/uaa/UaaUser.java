@@ -1,10 +1,12 @@
-package uaa.domain;
+package uaa.domain.uaa;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.Id;
 import uaa.config.Constants;
+import uaa.domain.BaseEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,9 +16,13 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@Table(name = "qlh_user")
+@Table(name = "uaa_user")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UaaUser  extends BaseEntity implements Serializable {
+    @Id
+    @Column(name = "ID")
+    private String id;
+
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 80)
     @Column(name = "LOGIN_NAME", unique = true, nullable = false)
@@ -52,6 +58,12 @@ public class UaaUser  extends BaseEntity implements Serializable {
 
     @Column(name = "IMAGE")
     private String image;
+
+    @Column(name = "INTRODUCE")
+    private String introduce;
+
+    @Column(name = "NICKNAME")
+    private String nickName;
 
     public String getName() {
         return name;
@@ -133,5 +145,29 @@ public class UaaUser  extends BaseEntity implements Serializable {
 
     public void setLogindate(Instant logindate) {
         this.logindate = logindate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }

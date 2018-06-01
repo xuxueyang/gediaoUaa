@@ -16,9 +16,6 @@ import java.time.Instant;
 @Audited
 public abstract class BaseEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @CreatedDate
     @Column(name = "CREATED_DATE", nullable = false)
@@ -57,14 +54,6 @@ public abstract class BaseEntity implements Serializable {
 
     public void setTenantCode(String tenantCode) {
         this.tenantCode = tenantCode;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Instant getUpdateDate() {

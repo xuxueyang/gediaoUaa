@@ -3,6 +3,7 @@ package uaa.domain.app.log;
 import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.Id;
 import uaa.domain.BaseEntity;
 
 import javax.persistence.Column;
@@ -14,7 +15,12 @@ import java.time.Instant;
 @Entity
 @Table(name = "app_log_detail")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class LogDay extends BaseEntity implements Serializable{
+public class AppLogDay extends BaseEntity implements Serializable{
+
+    @Id
+    @Column(name = "ID")
+    private String id;
+
     @Column(name = "CREATED_ID")
     private String createdId;
 
@@ -28,6 +34,7 @@ public class LogDay extends BaseEntity implements Serializable{
     private Instant belongDate;
 
     @Column(name = "TITLE")
+    private String title;
 
     public String getCreatedId() {
         return createdId;
@@ -59,5 +66,21 @@ public class LogDay extends BaseEntity implements Serializable{
 
     public void setBelongDate(Instant belongDate) {
         this.belongDate = belongDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
