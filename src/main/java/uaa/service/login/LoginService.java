@@ -28,6 +28,8 @@ import uaa.service.dto.login.UserInfo;
 import util.CaptchaGenerator;
 import util.UUIDGenerator;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Service
@@ -131,6 +133,19 @@ public class LoginService {
         userInfo.setName(uaaUser.getName());
         userInfo.setNickName(uaaUser.getNickName());
         return userInfo;
+    }
+    public UaaToken getUserByToken(String token){
+        //如果token不存在或过期则返回null
+        UaaToken oneByAccesstoken = uaaTokenRepository.findOneByAccesstoken(token);
+        if(oneByAccesstoken==null)
+            return null;
+        Instant toTime = oneByAccesstoken.getCreatedDate().plusSeconds(oneByAccesstoken.getValidtime());
+        if(toTime.isAfter(Instant.now())){
+            //删除token
+            uaaTokenRepository.delete(oneByAccesstoken.getId());
+            return null;
+        }
+        return oneByAccesstoken;
     }
 
 //    /**

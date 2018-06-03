@@ -10,6 +10,25 @@ public class AppLogEachDTO extends AppLogBaseDTO{
     private List<AppLogDetailDTO> appLogDetailDTOList;
 
 
+    @ApiModelProperty(name = "ID")
+    private String id;
+
+    @ApiModelProperty(name = "所属于的日期")
+    private String belongDate;
+
+    @ApiModelProperty(name = "消息")
+    private String message;
+
+    @ApiModelProperty(name = "标题")
+    private String title;
+
+    @ApiModelProperty(name = "类型")
+    private String type;
+
+    @ApiModelProperty(name = "标签")
+    private Map<String,AppLogTagDTO> tagMap;
+
+
 //    @ApiModelProperty(name = "含有each参数的map")
 //    private Map<String,Object> values;
 
@@ -28,5 +47,53 @@ public class AppLogEachDTO extends AppLogBaseDTO{
 
     public void setAppLogDetailDTOList(List<AppLogDetailDTO> appLogDetailDTOList) {
         this.appLogDetailDTOList = appLogDetailDTOList;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getBelongDate() {
+        return belongDate;
+    }
+
+    public void setBelongDate(String belongDate) {
+        this.belongDate = belongDate;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Map<String, AppLogTagDTO> getTagMap() {
+        return tagMap;
+    }
+
+    public void setTagMap(Map<String, AppLogTagDTO> tagMap) {
+        this.tagMap = tagMap;
     }
 }

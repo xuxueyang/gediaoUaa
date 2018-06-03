@@ -28,6 +28,10 @@ public class AppLogEachTag extends BaseEntity implements Serializable {
     @Column(name = "TAG_ID")
     private String tagId;
 
+
+    @Column(name = "STATUS")
+    private String status;
+
     public String getId() {
         return id;
     }
@@ -50,5 +54,13 @@ public class AppLogEachTag extends BaseEntity implements Serializable {
 
     public void setTagId(String tagId) {
         this.tagId = tagId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

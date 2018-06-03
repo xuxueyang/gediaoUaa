@@ -3,6 +3,7 @@ package uaa.domain.app.log;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uaa.domain.BaseEntity;
+import uaa.domain.uaa.UaaUser;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -43,9 +44,17 @@ public class AppLogEach extends BaseEntity implements Serializable {
     private String type;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "BASE_ID", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "BASE_ID", referencedColumnName = "ID", insertable = false, updatable = false)
     @org.hibernate.annotations.OrderBy(clause = "UPDATED_DATE")
     private Set<AppLogDetail> details = new HashSet<>();
+//
+//    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "CREATED_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+//    private UaaUser uaaUser;
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "BASE_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    @org.hibernate.annotations.OrderBy(clause = "UPDATED_DATE")
+    private Set<AppLogEachTag> tags = new HashSet<>();
 
     public String getId() {
         return id;
@@ -126,4 +135,20 @@ public class AppLogEach extends BaseEntity implements Serializable {
     public void setDetails(Set<AppLogDetail> details) {
         this.details = details;
     }
+
+    public Set<AppLogEachTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<AppLogEachTag> tags) {
+        this.tags = tags;
+    }
+
+//    public UaaUser getUaaUser() {
+//        return uaaUser;
+//    }
+//
+//    public void setUaaUser(UaaUser uaaUser) {
+//        this.uaaUser = uaaUser;
+//    }
 }

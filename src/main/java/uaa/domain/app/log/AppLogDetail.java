@@ -26,6 +26,9 @@ public class AppLogDetail extends BaseEntity implements Serializable {
     @Column(name = "BASE_ID")
     private String logEachId;
 
+    @Column(name = "STATUS")
+    private String status;
+
     public String getRemarks() {
         return remarks;
     }
@@ -48,5 +51,13 @@ public class AppLogDetail extends BaseEntity implements Serializable {
 
     public void setLogEachId(String logEachId) {
         this.logEachId = logEachId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -20,7 +20,7 @@ import java.io.Serializable;
 public class UaaToken extends BaseEntity implements Serializable{
     @Id
     @Column(name = "ID")
-    private Long id;
+    private String id;
 
     @Column(name = "ACCESS_TOKEN")
     private String accesstoken;
@@ -64,11 +64,11 @@ public class UaaToken extends BaseEntity implements Serializable{
         this.createdid = createdid;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

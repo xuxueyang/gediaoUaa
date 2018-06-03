@@ -21,7 +21,14 @@ public final class Constants {
     public static final String USERINFO = "userinfo";
 
     //token超时时间
-    public static final Long TOKEN_VALID_TIME = 1000*30000L;
+    public static final Long TOKEN_VALID_TIME = 30*60L;
+
+    //LogEach状态
+    public static final String APP_LOG_STATUS_SAVE = "S";///保存状态
+    public static final String APP_LOG_STATUS_DELETE = "D";//删除
+    public static final String APP_LOG_STATUS_Y = "Y";//删除
+    public static final String APP_LOG_STATUS_N = "N";//删除
+
 
     private Constants() {
     }
