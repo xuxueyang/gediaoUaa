@@ -4,19 +4,17 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uaa.domain.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "app_log_EachDay")
+@Table(name = "app_log_each_day")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class AppLogEachDay extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
 

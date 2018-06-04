@@ -11,10 +11,10 @@ public class LoginDTO {
     @ApiModelProperty(name = "密码")
     private String password;
 
-    @ApiModelProperty(value = "图形验证码", required = true)
+    @ApiModelProperty(value = "图形验证码")
     private String graphCaptchaCode;
 
-    @ApiModelProperty(value = "图形验证码编号", required = true)
+    @ApiModelProperty(value = "图形验证码编号")
 
     private String graphCaptchaCodeId;
 

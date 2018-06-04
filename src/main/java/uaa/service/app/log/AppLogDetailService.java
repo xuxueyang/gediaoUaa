@@ -7,6 +7,7 @@ import uaa.config.Constants;
 import uaa.domain.app.log.AppLogDetail;
 import uaa.repository.app.log.AppLogDetailRepository;
 import uaa.service.dto.app.log.AppLogDetailDTO;
+import util.UUIDGenerator;
 
 /**
  * Created by UKi_Hi on 2018/6/4.
@@ -27,6 +28,8 @@ public class AppLogDetailService {
     }
     public AppLogDetailDTO prepareDetailEntityToDTO(AppLogDetail appLogDetail){
         AppLogDetailDTO appLogDetailDTO = new AppLogDetailDTO();
+        appLogDetailDTO.setCreatedDate(appLogDetail.getCreatedDate());
+        appLogDetailDTO.setUpdatedDate(appLogDetail.getUpdateDate());
         appLogDetailDTO.setRemarks(appLogDetail.getRemarks());
         appLogDetailDTO.setId(appLogDetail.getId());
         return appLogDetailDTO;
@@ -46,6 +49,7 @@ public class AppLogDetailService {
 
     public AppLogDetailDTO createDetail(String logEachId, String remarks) {
         AppLogDetail appLogDetail = new AppLogDetail();
+        appLogDetail.setId(UUIDGenerator.getUUID());
         appLogDetail.setStatus(Constants.APP_LOG_STATUS_SAVE);
         appLogDetail.setRemarks(remarks);
         appLogDetail.setLogEachId(logEachId);
@@ -53,7 +57,7 @@ public class AppLogDetailService {
         return prepareDetailEntityToDTO(appLogDetail);
     }
 
-    public void updateDetail(AppLogDetail appLogDetail, String remarks) {
+    public void updateDetail(AppLogDetail appLogDetail, String remarks,String updateId) {
         appLogDetail.setRemarks(remarks);
         appLogDetailRepository.save(appLogDetail);
     }

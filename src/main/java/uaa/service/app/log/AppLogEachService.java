@@ -46,6 +46,8 @@ public class AppLogEachService {
     }
     private AppLogEachDTO prepareEachEntityToDTO(AppLogEach appLogEach){
         AppLogEachDTO appLogEachDTO = new AppLogEachDTO();
+        appLogEachDTO.setUpdatedDate(appLogEach.getUpdateDate());
+        appLogEachDTO.setCreatedDate(appLogEach.getCreatedDate());
         List<AppLogDetailDTO> detailDTOList = new ArrayList<>();
         //从关联表里找出数据，插入
         for(AppLogDetail appLogDetail:appLogEach.getDetails()){
@@ -87,9 +89,10 @@ public class AppLogEachService {
         }
         return one;
     }
-    public void updateEach(AppLogEach appLogEach,UpdateLogEachDTO updateLogEachDTO) {
+    public void updateEach(AppLogEach appLogEach,UpdateLogEachDTO updateLogEachDTO,String updateId) {
         appLogEach.setBelongDate(updateLogEachDTO.getBelongDate());
         appLogEach.setTitle(updateLogEachDTO.getTitle());
+        appLogEach.setUpdatedID(updateId);
         appLogEach.setMessage(updateLogEachDTO.getMessage());
         //对于分类进行修改
         if(updateLogEachDTO.getTags()==null||updateLogEachDTO.getTags().size()==0){
@@ -124,6 +127,7 @@ public class AppLogEachService {
     public AppLogEachDTO createEach(CreateLogEachDTO createLogEachDTO, String createdid) {
         AppLogEach appLogEach = new AppLogEach();
         appLogEach.setCreatedId(createdid);
+        appLogEach.setUpdatedID(createdid);
         appLogEach.setMessage(createLogEachDTO.getMessage());
         appLogEach.setTitle(createLogEachDTO.getTitle());
         appLogEach.setBelongDate(createLogEachDTO.getBelongDate());
@@ -131,16 +135,21 @@ public class AppLogEachService {
         appLogEach.setId(UUIDGenerator.getUUID());
         appLogEachRepository.save(appLogEach);
         //插入到分类表中
+        Set<AppLogEachTag> tagSet = new HashSet<>();
         if(createLogEachDTO.getTags()!=null||createLogEachDTO.getTags().size()>0){
             for(String tagId:createLogEachDTO.getTags()){
-                AppLogEachTag appLogEachTag = new AppLogEachTag();
-                appLogEachTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
-                appLogEachTag.setLogEachId(appLogEach.getId());
-                appLogEachTag.setTagId(tagId);
-                appLogEachTagRepository.save(appLogEachTag);
+                AppLogTag one = appLogTagRepository.findOne(tagId);
+                if(one!=null){
+                    AppLogEachTag appLogEachTag = new AppLogEachTag();
+                    appLogEachTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
+                    appLogEachTag.setLogEachId(appLogEach.getId());
+                    appLogEachTag.setTagId(tagId);
+                    appLogEachTagRepository.save(appLogEachTag);
+                    tagSet.add(appLogEachTag);
+                }
             }
         }
-
+        appLogEach.setTags(tagSet);
         return prepareEachEntityToDTO(appLogEach);
     }
 

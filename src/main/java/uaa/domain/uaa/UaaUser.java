@@ -20,6 +20,7 @@ import java.time.Instant;
 public class UaaUser  extends BaseEntity implements Serializable {
     @Id
     @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Pattern(regexp = Constants.LOGIN_REGEX)

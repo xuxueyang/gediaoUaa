@@ -7,8 +7,7 @@ import java.util.List;
 /**
  * Created by UKi_Hi on 2018/6/2.
  */
-public class UpdateLogEachDTO {
-    //只更新LogEach的信息
+public class UpdateLogDayDTO {
     @ApiModelProperty(name = "ID")
     private String id;
 
@@ -27,8 +26,6 @@ public class UpdateLogEachDTO {
     @ApiModelProperty(name = "tags的ID")
     private List<String> tags;
 
-    @ApiModelProperty(name = "状态设置（未完成N还是已完成Y）")
-    private String status;
 
     public String getBelongDate() {
         return belongDate;
@@ -60,14 +57,6 @@ public class UpdateLogEachDTO {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public List<String> getTags() {

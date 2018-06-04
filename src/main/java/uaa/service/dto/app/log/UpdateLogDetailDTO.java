@@ -15,6 +15,9 @@ public class UpdateLogDetailDTO {
     @ApiModelProperty(name = "备注")
     private String remarks;
 
+    @ApiModelProperty(name = "token")
+    private String token;
+
     public String getRemarks() {
         return remarks;
     }
@@ -29,5 +32,13 @@ public class UpdateLogDetailDTO {
 
     public void setDetailId(String detailId) {
         this.detailId = detailId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

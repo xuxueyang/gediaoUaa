@@ -1,24 +1,23 @@
 package uaa.domain.app.log;
 
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uaa.domain.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "app_log_detail")
+@Table(name = "app_log_day")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class AppLogDay extends BaseEntity implements Serializable{
 
     @Id
     @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "CREATED_ID")
@@ -31,10 +30,25 @@ public class AppLogDay extends BaseEntity implements Serializable{
     private String encode;
 
     @Column(name = "BELONG_DATE")
-    private Instant belongDate;
+    private String belongDate;
 
     @Column(name = "TITLE")
     private String title;
+
+
+    @Column(name = "TYPE")
+    private String type;
+
+    @Column(name = "STATUS")
+    private String status;
+
+    @Column(name = "MESSAGE")
+    private String message;
+
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "DAY_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    @org.hibernate.annotations.OrderBy(clause = "UPDATED_DATE")
+    private Set<AppLogDayTag> tags = new HashSet<>();
 
     public String getCreatedId() {
         return createdId;
@@ -60,13 +74,6 @@ public class AppLogDay extends BaseEntity implements Serializable{
         this.encode = encode;
     }
 
-    public Instant getBelongDate() {
-        return belongDate;
-    }
-
-    public void setBelongDate(Instant belongDate) {
-        this.belongDate = belongDate;
-    }
 
     public String getId() {
         return id;
@@ -82,5 +89,45 @@ public class AppLogDay extends BaseEntity implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Set<AppLogDayTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<AppLogDayTag> tags) {
+        this.tags = tags;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getBelongDate() {
+        return belongDate;
+    }
+
+    public void setBelongDate(String belongDate) {
+        this.belongDate = belongDate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

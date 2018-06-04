@@ -58,7 +58,7 @@ public class LoginResource extends BaseResource{
             }
             //验证验证码
             //前期先判断如果ID不为空再验证
-            if(Validators.fieldBlank(loginDTO.getGraphCaptchaCodeId())){
+            if(!Validators.fieldBlank(loginDTO.getGraphCaptchaCodeId())){
                 if(!loginService.verifyGraph(loginDTO.getGraphCaptchaCodeId(),loginDTO.getGraphCaptchaCode())){
                     return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE,null);
 

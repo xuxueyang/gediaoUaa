@@ -6,28 +6,48 @@ import java.util.List;
 import java.util.Map;
 
 public class AppLogDayDTO extends  AppLogBaseDTO{
-    @ApiModelProperty(name = "该天下的任务日志")
-    private List<AppLogEachDTO> appLogEachDTOList;
+    @ApiModelProperty(name = "标题")
+    private String title;
+
+    @ApiModelProperty(name = "ID")
+    private String id;
+
+    @ApiModelProperty(name = "消息")
+    private String message;
+
+    @ApiModelProperty(name = "标签")
+    private Map<String,AppLogTagDTO> tagMap;
 
 
-
-
-//    @ApiModelProperty(name = "含有day参数的map")
-//    private Map<String,Object> values;
-
-    public List<AppLogEachDTO> getAppLogEachDTOList() {
-        return appLogEachDTOList;
+    public String getMessage() {
+        return message;
     }
 
-    public void setAppLogEachDTOList(List<AppLogEachDTO> appLogEachDTOList) {
-        this.appLogEachDTOList = appLogEachDTOList;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-//    public Map<String, Object> getValue() {
-//        return values;
-//    }
-//
-//    public void setValue(Map<String, Object> values) {
-//        this.values = values;
-//    }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Map<String, AppLogTagDTO> getTagMap() {
+        return tagMap;
+    }
+
+    public void setTagMap(Map<String, AppLogTagDTO> tagMap) {
+        this.tagMap = tagMap;
+    }
 }

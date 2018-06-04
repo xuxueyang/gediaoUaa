@@ -4,10 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uaa.domain.BaseEntity;
 
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -17,6 +14,7 @@ public class AppLogTag extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "NAME")
@@ -27,6 +25,10 @@ public class AppLogTag extends BaseEntity implements Serializable {
 
     @Column(name = "GROUP")
     private String group;
+
+
+    @Column(name = "STATUS")
+    private String status;
 
     @Column(name = "CREATED_ID")
     private String createdId;
@@ -80,6 +82,14 @@ public class AppLogTag extends BaseEntity implements Serializable {
 
     public void setUpdatedId(String updatedId) {
         this.updatedId = updatedId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

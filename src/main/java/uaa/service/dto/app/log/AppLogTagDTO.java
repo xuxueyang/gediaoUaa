@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Created by UKi_Hi on 2018/6/4.
  */
 public class AppLogTagDTO {
+
     @ApiModelProperty(name = "名字")
     private String name;
 
@@ -38,4 +39,5 @@ public class AppLogTagDTO {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -101,6 +101,13 @@ public class LoginService {
         }
     }
     public Map login(UaaUser uaaUser) {
+        //删除token
+        List<UaaToken> allByCreatedid = uaaTokenRepository.findAllByCreatedid(uaaUser.getId());
+        if(allByCreatedid!=null||allByCreatedid.size()>0){
+            for(UaaToken token: allByCreatedid){
+                uaaTokenRepository.delete(token);
+            }
+        }
         //登录，创建token
         Map map = new HashMap<String,Object>();
         //生成token
@@ -114,6 +121,7 @@ public class LoginService {
         map.put(Constants.USERINFO,prepareForUserInfo(uaaUser));
         //存到数据库里，token
         UaaToken uaaToken = new UaaToken();
+        uaaToken.setId(UUIDGenerator.getUUID());
         uaaToken.setAccesstoken(token);
 //        uaaToken.setRefreshtoken(token.getRefreshToken().getValue());
         uaaToken.setCreatedid(uaaUser.getId());
@@ -140,7 +148,7 @@ public class LoginService {
         if(oneByAccesstoken==null)
             return null;
         Instant toTime = oneByAccesstoken.getCreatedDate().plusSeconds(oneByAccesstoken.getValidtime());
-        if(toTime.isAfter(Instant.now())){
+        if(!toTime.isAfter(Instant.now())){
             //删除token
             uaaTokenRepository.delete(oneByAccesstoken.getId());
             return null;
