@@ -10,18 +10,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
-    private  Email email = new Email();
+    private Config config = new Config();
     private String version;
     private String client;
 
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
-    }
 
     public String getVersion() {
         return version;
@@ -39,6 +31,34 @@ public class ApplicationProperties {
         this.client = client;
     }
 
+    public Config getConfig() {
+        return config;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    public static class Config{
+        private Email email;
+        private FileService fileService;
+
+        public FileService getFileService() {
+            return fileService;
+        }
+
+        public void setFileService(FileService fileService) {
+            this.fileService = fileService;
+        }
+
+        public Email getEmail() {
+            return email;
+        }
+
+        public void setEmail(Email email) {
+            this.email = email;
+        }
+    }
 
     public static class Email {
         private  Subject subject = new Subject();
@@ -61,6 +81,45 @@ public class ApplicationProperties {
 
         public void setCreate(String create) {
             this.create = create;
+        }
+    }
+    public static class FileService{
+        private String ipAddr;
+        private String username;
+        private String password;
+        private String uploadServerFileRootPath;
+
+        public String getUploadServerFileRootPath() {
+            return uploadServerFileRootPath;
+        }
+
+        public void setUploadServerFileRootPath(String uploadServerFileRootPath) {
+            this.uploadServerFileRootPath = uploadServerFileRootPath;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+
+        public String getIpAddr() {
+            return ipAddr;
+        }
+
+        public void setIpAddr(String ipAddr) {
+            this.ipAddr = ipAddr;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
         }
     }
 }

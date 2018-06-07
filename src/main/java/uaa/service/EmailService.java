@@ -35,7 +35,7 @@ public class EmailService {
     public void sendEmail()throws Exception{
         Context context = new Context(Locale.CHINA);
         context.setVariable(Constants.EMAIL_VAR_URL,"http://193.112.161.157:8080");
-        String subject = applicationProperties.getEmail().getSubject().getCreate();
+        String subject = applicationProperties.getConfig().getEmail().getSubject().getCreate();
         String emailContent = templateEngine.process(Constants.EMAIL_TEMPLATE_TEST_SEND, context);
 
         SenderInfo senderInfo = new SenderInfo();
