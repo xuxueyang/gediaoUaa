@@ -32,13 +32,14 @@ public class UaaFileService {
     private  String uploadServerFileRootPath;
 
     private ChannelSftp channelSftp;
-    public UaaFileService(){
-        this.ipAddr = applicationProperties.getConfig().getFileService().getIpAddr();
-        this.username = applicationProperties.getConfig().getFileService().getUsername();
-        this.password = applicationProperties.getConfig().getFileService().getPassword();
-        this.uploadServerFileRootPath = applicationProperties.getConfig().getFileService().getUploadServerFileRootPath();
-        this.channelSftp  =  connect(ipAddr,22,username,password);
-
+    private void connect(){
+        if(channelSftp==null){
+            this.ipAddr = applicationProperties.getConfig().getFileService().getIpAddr();
+            this.username = applicationProperties.getConfig().getFileService().getUsername();
+            this.password = applicationProperties.getConfig().getFileService().getPassword();
+            this.uploadServerFileRootPath = applicationProperties.getConfig().getFileService().getUploadServerFileRootPath();
+            this.channelSftp  =  connect(ipAddr,22,username,password);
+        }
     }
     private ChannelSftp connect(String host, int port, String username,
                                 String password) {
@@ -95,6 +96,8 @@ public class UaaFileService {
      */
     private  boolean upload(String directory, InputStream fileStream, String fileName) {
         try {
+            if(channelSftp==null)
+                connect();
             channelSftp.cd(directory);
             channelSftp.put(fileStream, fileName);
             return true;
@@ -183,6 +186,25 @@ public class UaaFileService {
             return uaaFile.getId();
         }else {
             return "";
+        }
+    }
+
+    public UaaFile findUaaFileById(String id) {
+        UaaFile one = fileRepository.findOne(id);
+        return one;
+    }
+
+    public boolean downFile(String directory,String downloadFile,OutputStream fileOutputStream){
+        try {
+            if(channelSftp==null)
+                connect();
+            channelSftp.cd(directory);
+            channelSftp.get(downloadFile,fileOutputStream);
+            fileOutputStream.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
