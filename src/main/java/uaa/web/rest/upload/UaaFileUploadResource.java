@@ -4,6 +4,7 @@ import core.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import uaa.service.upload.UploadResultDTO;
+import uaa.service.dto.upload.UploadResultDTO;
+import uaa.service.upload.UaaFileService;
+import util.UUIDGenerator;
 import util.Validators;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +54,7 @@ import java.util.List;
 //import org.springframework.web.multipart.MultipartFile;
 //import org.springframework.web.multipart.MultipartHttpServletRequest;
 //import uaa.security.SecurityUtils;
-//import uaa.service.upload.UploadResultDTO;
+//import uaa.service.dto.upload.UploadResultDTO;
 //import util.Validators;
 //
 //import javax.servlet.http.HttpServletRequest;
@@ -67,26 +70,28 @@ import java.util.List;
 @RequestMapping("/api")
 @Api(value = "文件上传", description = "文件上传")
 public class UaaFileUploadResource extends BaseResource {
+    @Autowired
+    private UaaFileService uaaFileService;
     //文件能穿过来即可，前期不必用fastddfs
     @PostMapping("/uaafile/upload")
     @ResponseBody
     @ApiOperation(value = "上传文件", httpMethod = "POST", response = UploadResultDTO.class, notes = "上传文件")
-    public ResponseEntity<?> uploadFileUaa(final String _fileName, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> uploadFileUaa(HttpServletRequest request, HttpServletResponse response) {
         try {
-            List<String> result = new ArrayList<String>();
-//            List<UploadResultDTO> result = new ArrayList<UploadResultDTO>();
-            UploadResultDTO uploadResult = null;
+//            List<String> result = new ArrayList<String>();
+            List<UploadResultDTO> result = new ArrayList<UploadResultDTO>();;
             MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
             Iterator<String> iter = mRequest.getFileNames();
             while (iter.hasNext()){
                 MultipartFile file = mRequest.getFile(iter.next());
                 String fileName = null;
-                if(Validators.fieldBlank(_fileName))
-                    fileName = _fileName;
-                else
-                    fileName = file.getOriginalFilename();
+                 fileName = file.getOriginalFilename();
+                //验证文件名不能含有非法字符
+                if(Validators.verifyFileName(fileName))
+                    return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
                 //获取文件类型
                 String extName = null;
+                String oldFileName = fileName;
                 try {
                     extName = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
                     if(extName.length()!=fileName.length())
@@ -94,9 +99,21 @@ public class UaaFileUploadResource extends BaseResource {
                 }catch (Exception e){
                     extName = null;
                 }
+                fileName = fileName.replace(".","-")+"-"+extName+ UUIDGenerator.getUUID();
                 //上传文件——不适用fdfs
                 //存ID和路径
-
+                try {
+                    String id = uaaFileService.uploadFile(file,fileName);
+                    UploadResultDTO uploadResult = new UploadResultDTO();
+                    uploadResult.setId(id);
+                    uploadResult.setUploadFileName(oldFileName);
+                    result.add(uploadResult);
+                }catch (Exception e){
+                    UploadResultDTO uploadResult = new UploadResultDTO();
+                    uploadResult.setId("");
+                    uploadResult.setUploadFileName(oldFileName);
+                    result.add(uploadResult);
+                }
             }
             return prepareReturnResult(ReturnCode.DEFAULT_SUCCESS, result);
         }catch (Exception e){
