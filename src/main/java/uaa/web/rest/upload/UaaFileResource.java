@@ -89,7 +89,7 @@ public class UaaFileResource extends BaseResource {
                 String fileName = null;
                  fileName = file.getOriginalFilename();
                 //验证文件名不能含有非法字符
-                if(Validators.verifyFileName(fileName))
+                if(!Validators.verifyFileName(fileName))
                     return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
                 //获取文件类型
                 String extName = null;
