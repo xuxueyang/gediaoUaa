@@ -42,6 +42,9 @@ public class UaaFile extends BaseEntity implements Serializable {
     private String name;
 
 
+    @Column(name = "MD5")
+    private String md5;
+
     public String getId() {
         return id;
     }
@@ -104,6 +107,14 @@ public class UaaFile extends BaseEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 }
 //    ID	varchar	45	0	0	0	0	0	0		0		utf8	utf8_general_ci		-1	0

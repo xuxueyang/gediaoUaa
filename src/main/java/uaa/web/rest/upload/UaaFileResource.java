@@ -145,31 +145,31 @@ public class UaaFileResource extends BaseResource {
         }
     }
 
-    /**
-     * 判断文件的编码格式
-     * @return 文件编码格式
-     * @throws Exception
-     */
-    private String codeString(BufferedInputStream bin) throws Exception{
-        int p = (bin.read() << 8) + bin.read();
-        String code = null;
-
-        switch (p) {
-            case 0xefbb:
-                code = "UTF-8";
-                break;
-            case 0xfffe:
-                code = "Unicode";
-                break;
-            case 0xfeff:
-                code = "UTF-16BE";
-                break;
-            default:
-                code = "GBK";
-        }
-
-        return code;
-    }
+//    /**
+//     * 判断文件的编码格式
+//     * @return 文件编码格式
+//     * @throws Exception
+//     */
+//    private String codeString(BufferedInputStream bin) throws Exception{
+//        int p = (bin.read() << 8) + bin.read();
+//        String code = null;
+//
+//        switch (p) {
+//            case 0xefbb:
+//                code = "UTF-8";
+//                break;
+//            case 0xfffe:
+//                code = "Unicode";
+//                break;
+//            case 0xfeff:
+//                code = "UTF-16BE";
+//                break;
+//            default:
+//                code = "GBK";
+//        }
+//
+//        return code;
+//    }
 
     @GetMapping("/down/{id}")
     @ApiOperation(value = "文件下载", httpMethod = "GET", response = ResponseEntity.class, notes = "文件下载")

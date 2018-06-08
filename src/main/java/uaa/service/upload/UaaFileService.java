@@ -41,29 +41,33 @@ public class UaaFileService {
     private  String uploadServerFileRootPath;
 
     private ChannelSftp channelSftp;
+    private Session sshSession;
+    private JSch jsch;
+    private Channel channel;
+
     private void connect(){
-        if(channelSftp==null){
+        if(channelSftp==null||channelSftp.isClosed()){
             this.ipAddr = applicationProperties.getConfig().getFileService().getIpAddr();
             this.username = applicationProperties.getConfig().getFileService().getUsername();
             this.password = applicationProperties.getConfig().getFileService().getPassword();
             this.uploadServerFileRootPath = applicationProperties.getConfig().getFileService().getUploadServerFileRootPath();
 //            this.channelSftp  =  connect(ipAddr,22,username,password);
             try {
-                JSch jsch = new JSch();
+                jsch = new JSch();
                 jsch.getSession(username, ipAddr, 22);
-                Session sshSession = jsch.getSession(username, ipAddr, 22);
+                sshSession = jsch.getSession(username, ipAddr, 22);
                 System.out.println("Session created.");
                 sshSession.setPassword(password);
                 Properties sshConfig = new Properties();
                 sshConfig.put("StrictHostKeyChecking", "no");
                 sshSession.setConfig(sshConfig);
                 sshSession.connect();
-                System.out.println("Session connected.");
-                System.out.println("Opening Channel.");
-                Channel channel = sshSession.openChannel("sftp");
+//                System.out.println("Session connected.");
+//                System.out.println("Opening Channel.");
+                channel = sshSession.openChannel("sftp");
                 channel.connect();
                 this.channelSftp = (ChannelSftp) channel;
-                System.out.println("Connected to " + ipAddr + ".");
+//                System.out.println("Connected to " + ipAddr + ".");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -124,7 +128,7 @@ public class UaaFileService {
      */
     private  boolean upload(String directory, InputStream fileStream, String fileName) {
         try {
-            if(channelSftp==null){
+            if(channelSftp==null||channelSftp.isClosed()){
                 connect();
 //                Class cl = ChannelSftp.class;
 //                Field field =cl.getDeclaredField("server_version");
@@ -143,9 +147,6 @@ public class UaaFileService {
         }
     }
 
-    public  void download( String downloadFile,String saveFile, ChannelSftp sftp){
-        download(uploadServerFileRootPath,downloadFile,saveFile,sftp);
-    }
     /**
      * 下载文件
      * @param directory 下载目录
@@ -223,9 +224,8 @@ public class UaaFileService {
         return one;
     }
 
-    //TODO 这里不输入文件，而是采用字节数组的方式缓冲数据
     public byte[] downFile(String directory,String downloadFile,OutputStream fileOutputStream) throws Exception{
-        if(channelSftp==null)
+        if(channelSftp==null||channelSftp.isClosed())
             connect();
         channelSftp.cd(directory);
         ByteArrayOutputStream f = new ByteArrayOutputStream();
