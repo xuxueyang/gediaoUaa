@@ -80,7 +80,7 @@ public class AppLogSingleService {
         AppLogDayDTO dto = new AppLogDayDTO();
         dto.setId(appLogDay.getId());
         dto.setMessage(appLogDay.getMessage());
-        dto.setUpdatedDate(appLogDay.getUpdateDate());
+        dto.setUpdatedDate(appLogDay.getUpdatedDate());
         dto.setCreatedDate(appLogDay.getCreatedDate());
         dto.setTitle(appLogDay.getTitle());
         Set<AppLogDayTag> tags = appLogDay.getTags();

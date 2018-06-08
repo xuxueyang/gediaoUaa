@@ -23,7 +23,7 @@ public abstract class BaseEntity implements Serializable {
 
     @LastModifiedDate
     @Column(name = "UPDATED_DATE")
-    private Instant updateDate = Instant.now();
+    private Instant updatedDate = Instant.now();
 
     @Column(name = "VERSION")
     private String version;
@@ -56,11 +56,11 @@ public abstract class BaseEntity implements Serializable {
         this.tenantCode = tenantCode;
     }
 
-    public Instant getUpdateDate() {
-        return updateDate;
+    public Instant getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setUpdateDate(Instant updateDate) {
-        this.updateDate = updateDate;
+    public void setUpdatedDate(Instant updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }

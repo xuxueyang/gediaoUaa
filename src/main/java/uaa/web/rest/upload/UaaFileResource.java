@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uaa.domain.uaa.UaaFile;
+import uaa.service.dto.upload.UaaFileDTO;
 import uaa.service.dto.upload.UploadResultDTO;
 import uaa.service.upload.UaaFileService;
 import util.UUIDGenerator;
@@ -17,6 +18,7 @@ import util.Validators;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -83,51 +85,94 @@ public class UaaFileResource extends BaseResource {
 //            List<String> result = new ArrayList<String>();
             List<UploadResultDTO> result = new ArrayList<UploadResultDTO>();;
             MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
+            if (request.getCharacterEncoding() == null) {
+                request.setCharacterEncoding("UTF-8");//你的编码格式
+            }
             Iterator<String> iter = mRequest.getFileNames();
             while (iter.hasNext()){
                 MultipartFile file = mRequest.getFile(iter.next());
-                String fileName = null;
-                 fileName = file.getOriginalFilename();
+                String fileName = file.getOriginalFilename();
+//                deFileName=java.net.URLDecoder.decode(request.getParameter("fileName"),"utf-8");
+//                InputStream ins = file.getInputStream();
+//                BufferedInputStream bfs = new BufferedInputStream(ins);
+//                String code = codeString(bfs);
+//                String fileName  = file.getOriginalFilename().getBytes(code).toString();
+//                InputStream insm = file.getInputStream();
+                //InputStreamReader 要用insm没有去查询过编码的 InputStream 才行,如果用ins 读不到数据
+//                InputStreamReader in = new InputStreamReader(insm,code);
+//                BufferedReader reader = new BufferedReader(in);
+//                byte[] data = new byte[(int) file.getSize()];
+//                file.getInputStream().read(data,0, (int) file.getSize());
+//                InputStream inputStream = new ByteArrayInputStream(data.toString().getBytes(code));
                 //验证文件名不能含有非法字符
                 if(!Validators.verifyFileName(fileName))
                     return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
-                //获取文件类型
-                String extName = null;
-                String oldFileName = fileName;
-                try {
-                    extName = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
-                    if(extName.length()!=fileName.length())
-                        extName = extName.replace(".","");
-                }catch (Exception e){
-                    extName = null;
-                }
-                fileName = fileName.replace(".","-")+"-"+extName+ UUIDGenerator.getUUID();
+//                //获取文件类型
+//                String extName = null;
+//                String oldFileName = fileName;
+//                try {
+//                    extName = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+//                    if(extName.length()!=fileName.length())
+//                        extName = extName.replace(".","");
+//                }catch (Exception e){
+//                    extName = null;
+//                }
                 //上传文件——不适用fdfs
                 //存ID和路径
                 try {
-                    String id = uaaFileService.uploadFile(file,fileName);
-                    UploadResultDTO uploadResult = new UploadResultDTO();
-                    uploadResult.setId(id);
-                    uploadResult.setUploadFileName(oldFileName);
-                    result.add(uploadResult);
+                    UaaFile uaaFile = uaaFileService.uploadFile(file,fileName,UUIDGenerator.getUUID());
+                    if(uaaFile!=null){
+                        UploadResultDTO uploadResult = new UploadResultDTO();
+                        uploadResult.setId(uaaFile.getId());
+                        uploadResult.setUploadFileName(fileName);
+                        uploadResult.setName(uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()));
+                        result.add(uploadResult);
+                    }else{
+                        throw new Exception("文件存储失败！");
+                    }
                 }catch (Exception e){
                     UploadResultDTO uploadResult = new UploadResultDTO();
                     uploadResult.setId("");
-                    uploadResult.setUploadFileName(oldFileName);
+                    uploadResult.setUploadFileName(fileName);
+                    uploadResult.setName("");
                     result.add(uploadResult);
+//                    System.out.println(e);
                 }
             }
-            return prepareReturnResult(ReturnCode.DEFAULT_SUCCESS, result);
+            return prepareReturnResult(ReturnCode.CREATE_SUCCESS, result);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE, null);
         }
     }
 
+    /**
+     * 判断文件的编码格式
+     * @return 文件编码格式
+     * @throws Exception
+     */
+    private String codeString(BufferedInputStream bin) throws Exception{
+        int p = (bin.read() << 8) + bin.read();
+        String code = null;
 
+        switch (p) {
+            case 0xefbb:
+                code = "UTF-8";
+                break;
+            case 0xfffe:
+                code = "Unicode";
+                break;
+            case 0xfeff:
+                code = "UTF-16BE";
+                break;
+            default:
+                code = "GBK";
+        }
+
+        return code;
+    }
 
     @GetMapping("/down/{id}")
-    @ResponseBody
-    @ApiOperation(value = "文件下载", httpMethod = "GET", response = UploadResultDTO.class, notes = "文件下载")
+    @ApiOperation(value = "文件下载", httpMethod = "GET", response = ResponseEntity.class, notes = "文件下载")
     public ResponseEntity<?> downloadFileUaa(@PathVariable("id") String id,HttpServletResponse response) {
         try {
             //判断文件ID
@@ -137,14 +182,53 @@ public class UaaFileResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
             //获取到文件的输出流
-            uaaFileService.downFile(uaaFile.getRootFilePath(),uaaFile.getRelFilePath(),response.getOutputStream());
+            byte[] data = uaaFileService.downFile(uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response.getOutputStream());
             // 清空response
             response.reset();
             // 设置response的Header
+//            response.setContentType("application/force-download");// 设置强制下载不打开
             response.addHeader("Content-Disposition", "attachment;filename=" + uaaFile.getName());
-            response.addHeader("Content-Length", uaaFile.getSize());
+            response.addHeader("Content-Length", ""+data.length);
             response.setContentType("application/octet-stream");
-            return prepareReturnResult(ReturnCode.DEFAULT_SUCCESS, response);
+//            try (OutputStream out = new BufferedOutputStream(response.getOutputStream())) {
+//                out.write(data);
+//                out.flush();
+//            }
+            OutputStream out = new BufferedOutputStream(response.getOutputStream());
+            out.write(data);
+            out.flush();
+            return prepareReturnResult(ReturnCode.GET_SUCCESS, null);
+        } catch (Exception e) {
+            return prepareReturnResult(ReturnCode.ERROR_QUERY, null);
+        }
+
+    }
+    @GetMapping("/list")
+    @ApiOperation(value = "搜索文件", httpMethod = "POST", response = ResponseEntity.class, notes = "搜索文件")
+    public ResponseEntity<?> downloadSearchFileUaa(@PathParam("name") String name) {
+        try {
+            //根据name搜索file的ID
+            List<UaaFileDTO> fileIds = uaaFileService.searchFilesByName(name);
+            return prepareReturnResult(ReturnCode.GET_SUCCESS, fileIds);
+        } catch (Exception e) {
+            return prepareReturnResult(ReturnCode.ERROR_QUERY, null);
+        }
+
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "文件删除", httpMethod = "DELETE", response = ResponseEntity.class, notes = "文件删除")
+    public ResponseEntity<?> deleteFile(@PathVariable("id") String id) {
+        try {
+            //根据name搜索file的ID
+            //判断文件ID
+            UaaFile uaaFile = uaaFileService.findUaaFileById(id);
+            if(uaaFile==null)
+            {
+                return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
+            }
+            uaaFileService.deleteFile(uaaFile);
+            return prepareReturnResult(ReturnCode.DELETE_SUCCESS, null);
         } catch (Exception e) {
             return prepareReturnResult(ReturnCode.ERROR_CREATE, null);
         }

@@ -46,7 +46,7 @@ public class AppLogEachService {
     }
     private AppLogEachDTO prepareEachEntityToDTO(AppLogEach appLogEach){
         AppLogEachDTO appLogEachDTO = new AppLogEachDTO();
-        appLogEachDTO.setUpdatedDate(appLogEach.getUpdateDate());
+        appLogEachDTO.setUpdatedDate(appLogEach.getUpdatedDate());
         appLogEachDTO.setCreatedDate(appLogEach.getCreatedDate());
         List<AppLogDetailDTO> detailDTOList = new ArrayList<>();
         //从关联表里找出数据，插入

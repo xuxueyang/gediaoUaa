@@ -29,7 +29,7 @@ public class AppLogDetailService {
     public AppLogDetailDTO prepareDetailEntityToDTO(AppLogDetail appLogDetail){
         AppLogDetailDTO appLogDetailDTO = new AppLogDetailDTO();
         appLogDetailDTO.setCreatedDate(appLogDetail.getCreatedDate());
-        appLogDetailDTO.setUpdatedDate(appLogDetail.getUpdateDate());
+        appLogDetailDTO.setUpdatedDate(appLogDetail.getUpdatedDate());
         appLogDetailDTO.setRemarks(appLogDetail.getRemarks());
         appLogDetailDTO.setId(appLogDetail.getId());
         return appLogDetailDTO;

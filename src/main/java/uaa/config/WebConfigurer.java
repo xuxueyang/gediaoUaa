@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.*;
 import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import io.undertow.UndertowOptions;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -128,5 +129,15 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
     @Autowired(required = false)
     public void setMetricRegistry(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
+    }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        //文件最大
+        factory.setMaxFileSize("200MB"); //KB,MB
+        /// 设置总上传数据总大小
+        factory.setMaxRequestSize("200MB");
+        return factory.createMultipartConfig();
     }
 }
