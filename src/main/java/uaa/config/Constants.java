@@ -33,6 +33,11 @@ public final class Constants {
     public static final String APP_LOG_DAY_TYPE_TEL = "TEL";//技术文档积累
     public static final String APP_LOG_DAY_TYPE_DIARY = "DIARY";//日志
 
+    //File的文件状态
+    public static final String FILE_STATUS_SAVE = "S";//保存状态
+    public static final String FILE_STATUS_DELETE = "D";//删除状态
+
+
     private Constants() {
     }
 }

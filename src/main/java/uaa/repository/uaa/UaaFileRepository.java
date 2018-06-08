@@ -8,5 +8,6 @@ import java.util.List;
 
 
 public interface UaaFileRepository extends JpaRepository<UaaFile, String>,JpaSpecificationExecutor<UaaFile> {
+    UaaFile findOneByMd5(String md5);
 //    List<UaaFile> findAllByName(String name);
 }

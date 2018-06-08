@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import uaa.config.ApplicationProperties;
+import uaa.config.Constants;
 import uaa.domain.uaa.UaaFile;
 import uaa.repository.uaa.UaaFileRepository;
 import uaa.service.dto.upload.UaaFileDTO;
+import uaa.web.rest.util.MD5Util;
 import util.UUIDGenerator;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -191,36 +193,71 @@ public class UaaFileService {
     }
 
     public UaaFile uploadFile(MultipartFile file, String fileName,String pathFilehName) {
-        //上传到服务器
-        boolean uploadResult;
+        //判断MD5码
+        String md5 = null;
         try {
-            uploadResult = upload(this.uploadServerFileRootPath,file.getInputStream(),pathFilehName);
-        } catch (IOException e) {
-            uploadResult =false;
-            e.printStackTrace();
+            byte[] data = new byte[(int)file.getSize()];
+            file.getInputStream().read(data);
+            md5 = MD5Util.MD5(data.toString());
+        }catch (Exception e){
+
         }
-        if(uploadResult){
-            UaaFile uaaFile = new UaaFile();
-            uaaFile.setId(UUIDGenerator.getUUID());
-            uaaFile.setCreatedId("0");
-            uaaFile.setUpdatedId("0");
-            uaaFile.setTenantCode("0");
-            uaaFile.setSize(""+file.getSize());
-            uaaFile.setName(fileName);
-            uaaFile.setServiceIp(this.ipAddr);
-            uaaFile.setRootFilePath(this.uploadServerFileRootPath);
-            uaaFile.setRelFilePath("/"+pathFilehName);
-            uaaFile.setCreatedDate(Instant.now());
-            uaaFile.setUpdatedDate(Instant.now());
-            fileRepository.save(uaaFile);
-            return uaaFile;
-        }else {
-            return null;
+        UaaFile uaaFile = null;
+        if(md5!=null){
+            uaaFile = fileRepository.findOneByMd5(md5);
         }
+        if(uaaFile==null){
+            //上传到服务器
+            boolean uploadResult;
+            try {
+                uploadResult = upload(this.uploadServerFileRootPath,file.getInputStream(),pathFilehName);
+            } catch (IOException e) {
+                uploadResult =false;
+                e.printStackTrace();
+            }
+            if(uploadResult){
+                uaaFile = new UaaFile();
+                uaaFile.setId(UUIDGenerator.getUUID());
+                uaaFile.setCreatedId("0");
+                uaaFile.setUpdatedId("0");
+                uaaFile.setTenantCode("0");
+                uaaFile.setSize(""+file.getSize());
+                uaaFile.setName(fileName);
+                uaaFile.setServiceIp(this.ipAddr);
+                uaaFile.setRootFilePath(this.uploadServerFileRootPath);
+                uaaFile.setRelFilePath("/"+pathFilehName);
+                uaaFile.setCreatedDate(Instant.now());
+                uaaFile.setUpdatedDate(Instant.now());
+                fileRepository.save(uaaFile);
+                return uaaFile;
+            }else {
+                return null;
+            }
+        }else{
+            //复制现在的UaaFile
+            UaaFile newFile = new UaaFile();
+            newFile.setId(UUIDGenerator.getUUID());
+            newFile.setCreatedId("0");
+            newFile.setUpdatedId("0");
+            newFile.setTenantCode("0");
+            newFile.setSize(uaaFile.getSize());
+            newFile.setSize(fileName);
+            newFile.setServiceIp(uaaFile.getServiceIp());
+            newFile.setRelFilePath(uaaFile.getRelFilePath());
+            newFile.setRootFilePath(uaaFile.getRootFilePath());
+            newFile.setCreatedDate(Instant.now());
+            newFile.setUpdatedDate(Instant.now());
+            fileRepository.save(newFile);
+            return newFile;
+        }
+
     }
 
     public UaaFile findUaaFileById(String id) {
         UaaFile one = fileRepository.findOne(id);
+        if(Constants.FILE_STATUS_DELETE.equals(one))
+            return null;
+        //还需要判断远程文件存不存在
         return one;
     }
 
@@ -247,7 +284,8 @@ public class UaaFileService {
                 @Override
                 public Predicate toPredicate(Root<UaaFile> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                     Predicate nameQuery = criteriaBuilder.like(root.get("name"), "%" + name + "%");
-                    criteriaQuery.where(nameQuery);
+                    Predicate statusQuery = criteriaBuilder.notEqual(root.get("status"), Constants.FILE_STATUS_DELETE);
+                    criteriaQuery.where(nameQuery,statusQuery);
                     criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
                     return criteriaQuery.getRestriction();
                 }
@@ -272,7 +310,9 @@ public class UaaFileService {
     }
 
     public void deleteFile(UaaFile uaaFile) throws Exception {
-        delete(uaaFile.getRootFilePath(), uaaFile.getRelFilePath().substring(1, uaaFile.getRelFilePath().length()));
-        fileRepository.delete(uaaFile);
+//        delete(uaaFile.getRootFilePath(), uaaFile.getRelFilePath().substring(1, uaaFile.getRelFilePath().length()));
+//        fileRepository.delete(uaaFile);
+        uaaFile.setStatus(Constants.FILE_STATUS_DELETE);
+        fileRepository.save(uaaFile);
     }
 }
