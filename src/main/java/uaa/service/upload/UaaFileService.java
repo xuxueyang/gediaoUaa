@@ -2,6 +2,9 @@ package uaa.service.upload;
 
 
 import com.jcraft.jsch.*;
+//import jcifs.smb.SmbFile;
+//import jcifs.smb.SmbFileInputStream;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 import java.lang.reflect.Field;
@@ -40,12 +44,14 @@ public class UaaFileService {
     private  String ipAddr ;
     private  String username ;
     private  String password ;
+    private  int port = 22;
     private  String uploadServerFileRootPath;
 
     private ChannelSftp channelSftp;
     private Session sshSession;
     private JSch jsch;
     private Channel channel;
+    private Properties sshConfig;
 
     private void connect(){
         if(channelSftp==null||channelSftp.isClosed()){
@@ -56,11 +62,11 @@ public class UaaFileService {
 //            this.channelSftp  =  connect(ipAddr,22,username,password);
             try {
                 jsch = new JSch();
-                jsch.getSession(username, ipAddr, 22);
-                sshSession = jsch.getSession(username, ipAddr, 22);
+                jsch.getSession(username, ipAddr, port);
+                sshSession = jsch.getSession(username, ipAddr, port);
                 System.out.println("Session created.");
                 sshSession.setPassword(password);
-                Properties sshConfig = new Properties();
+                sshConfig = new Properties();
                 sshConfig.put("StrictHostKeyChecking", "no");
                 sshSession.setConfig(sshConfig);
                 sshSession.connect();
@@ -69,6 +75,8 @@ public class UaaFileService {
                 channel = sshSession.openChannel("sftp");
                 channel.connect();
                 this.channelSftp = (ChannelSftp) channel;
+                //等待一会
+//                Thread.currentThread().sleep(5000);
 //                System.out.println("Connected to " + ipAddr + ".");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -142,8 +150,12 @@ public class UaaFileService {
             //等等一会看看吧
             channelSftp.cd(directory);
             channelSftp.put(fileStream, fileName);
+//            channelSftp.exit();
             return true;
-        } catch (Exception e) {
+        } catch (SftpException e) {
+            if(e.id==0){
+                return true;
+            }
             e.printStackTrace();
             return false;
         }
@@ -163,21 +175,14 @@ public class UaaFileService {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             sftp.get(downloadFile,fileOutputStream);
             fileOutputStream.close();
+            channelSftp.exit();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-    /**
-     * 删除文件
-     * @param directory 要删除文件所在目录
-     * @param deleteFile 要删除的文件
-     */
-    private  void delete(String directory, String deleteFile) throws Exception{
-        channelSftp.cd(directory);
-        channelSftp.rm(deleteFile);
-    }
+
     public  Vector listFiles(ChannelSftp sftp)throws SftpException {
         return listFiles(uploadServerFileRootPath,sftp);
     }
@@ -196,15 +201,15 @@ public class UaaFileService {
         //判断MD5码
         String md5 = null;
         try {
-            byte[] data = new byte[(int)file.getSize()];
-            file.getInputStream().read(data);
-            md5 = MD5Util.MD5(data.toString());
-        }catch (Exception e){
+            md5 = DigestUtils.md5Hex(file.getInputStream());
+        } catch (IOException e) {
 
         }
         UaaFile uaaFile = null;
         if(md5!=null){
-            uaaFile = fileRepository.findOneByMd5(md5);
+            List<UaaFile> list = fileRepository.findAllByMd5(md5);
+            if(list!=null&list.size()>0)
+                uaaFile =list.get(0);
         }
         if(uaaFile==null){
             //上传到服务器
@@ -228,6 +233,7 @@ public class UaaFileService {
                 uaaFile.setRelFilePath("/"+pathFilehName);
                 uaaFile.setCreatedDate(Instant.now());
                 uaaFile.setUpdatedDate(Instant.now());
+                uaaFile.setMd5(md5);
                 fileRepository.save(uaaFile);
                 return uaaFile;
             }else {
@@ -240,13 +246,15 @@ public class UaaFileService {
             newFile.setCreatedId("0");
             newFile.setUpdatedId("0");
             newFile.setTenantCode("0");
+            newFile.setStatus(Constants.FILE_STATUS_SAVE);
             newFile.setSize(uaaFile.getSize());
-            newFile.setSize(fileName);
+            newFile.setName(fileName);
             newFile.setServiceIp(uaaFile.getServiceIp());
             newFile.setRelFilePath(uaaFile.getRelFilePath());
             newFile.setRootFilePath(uaaFile.getRootFilePath());
             newFile.setCreatedDate(Instant.now());
             newFile.setUpdatedDate(Instant.now());
+            newFile.setMd5(uaaFile.getMd5());
             fileRepository.save(newFile);
             return newFile;
         }
@@ -260,41 +268,127 @@ public class UaaFileService {
         //还需要判断远程文件存不存在
         return one;
     }
+//    public void downFile_smb(String directory, String downloadFile,OutputStream outputStream){
+//        InputStream in = null;
+//        OutputStream out = null;
+//        try {
+//        SmbFile remoteFile = new SmbFile("smb://"+username+password+"@"+this.ipAddr+directory+"/"+downloadFile);
+//
+//        if (remoteFile != null && remoteFile.exists()) {
+//
+//            String fileName = remoteFile.getName();
+//            in = new BufferedInputStream(new SmbFileInputStream(remoteFile));
+//            out = new BufferedOutputStream(outputStream);
+//            byte[] buffer = new byte[1024];
+//            while (in.read(buffer) != -1) {
+//                out.write(buffer);
+//                buffer = new byte[1024];
+//            }
+//        }else{
+//            //文件不存在
+//        }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }finally {
+//            try {
+//                out.close();
+//                out = null;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//
+//                try {
+//                    in.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
-    public byte[] downFile(String directory,String downloadFile,OutputStream fileOutputStream) throws Exception{
+    public byte[] downFile(String directory, String downloadFile,OutputStream outputStream) throws Exception{
         if(channelSftp==null||channelSftp.isClosed())
             connect();
         channelSftp.cd(directory);
         ByteArrayOutputStream f = new ByteArrayOutputStream();
         channelSftp.get(downloadFile,f);
+//        InputStream inputStream = channelSftp.get(directory + "/" + downloadFile);
+//        BufferedInputStream br = new BufferedInputStream(inputStream);
+//        int buf_size = 1024;
+//        byte[] buffer = new byte[buf_size];
+//        int len = 0;
+//        while (-1 != (len = inputStream.read(buffer, 0, buf_size))) {
+//            outputStream.write(buffer, 0, len);
+//        }
+
+//        byte[] data = new byte[Integer.parseInt(size)];
+//        whil{
+//            outputStream.write(br.readLine());
+//        }
         byte[] data =   f.toByteArray();
         f.close();
+        channelSftp.exit();
         return data;
+    }
+    public void downFile(String size,String name,String directory,String downloadFile,HttpServletResponse response) throws Exception{
+        // 清空response
+        response.reset();
+        response.addHeader("Accept-Language" ,"zh-cn,zh");
+        response.addHeader("Content-Disposition", "attachment;filename=" + name);
+        response.addHeader("Content-Length", ""+size);
+        response.setContentType("application/octet-stream");
+        if(channelSftp==null||channelSftp.isClosed())
+            connect();
+//
+        channelSftp.cd(directory);
+        BufferedOutputStream f = new BufferedOutputStream(response.getOutputStream());
+        channelSftp.get(downloadFile,f);
+        f.flush();
+//        //TODO 先缓存到本地上
+//        channelSftp.cd(directory);
+//        File file=new File("D:/tmp/"+downloadFile);
+//        FileOutputStream fileOutputStream = new FileOutputStream(file);
+//        channelSftp.get(downloadFile,fileOutputStream);
+//        fileOutputStream.close();
+//        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+//        String data = null;
+//        while((data = br.readLine())!=null)
+//        {
+//            response.getOutputStream().write(data.getBytes());
+//        }
+
     }
 
     public List<UaaFileDTO> searchFilesByName(String name) {
+        if(name==null)
+            name = "";
         List<UaaFileDTO> result = new ArrayList<>();
         List<UaaFile> files  = null;
-        if(name==null||"".equals(name))
-            files = fileRepository.findAll();
-        else{
-//            files =  fileRepository.findAllByName(name);
-            //JPA查询
-            files = fileRepository.findAll(new Specification<UaaFile>() {
-                @Override
-                public Predicate toPredicate(Root<UaaFile> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                    Predicate nameQuery = criteriaBuilder.like(root.get("name"), "%" + name + "%");
-                    Predicate statusQuery = criteriaBuilder.notEqual(root.get("status"), Constants.FILE_STATUS_DELETE);
-                    criteriaQuery.where(nameQuery,statusQuery);
-                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
-                    return criteriaQuery.getRestriction();
-                }
-            });
-        }
+//        TODO if(name==null||"".equals(name))
+//            files = fileRepository.findAll();
+//        else{
+////            files =  fileRepository.findAllByName(name);
+//            //JPA查询
+////            files = fileRepository.findAll(new Specification<UaaFile>() {
+////                @Override
+////                public Predicate toPredicate(Root<UaaFile> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+////                    Predicate statusQuery = cb.notEqual(root.get("status"), Constants.FILE_STATUS_DELETE);
+////                    Predicate nameQuery = cb.like(root.get("name").as(String.class), "%"+name+"%");
+////                    cb.and(statusQuery,nameQuery);
+////                    criteriaQuery.orderBy(cb.asc(root.get("createdDate").as(Instant.class)));
+////                    return criteriaQuery.getRestriction();
+////                }
+////            });
+//            files = fileRepository.findAllByStatusNotAndNameLike(Constants.FILE_STATUS_DELETE,name);
+//        }
+        files = fileRepository.findAll();
         if(files!=null&&files.size()>0){
-            //安装时间排序
-
             for(UaaFile uaaFile:files){
+                //自己判断name的状态的删选
+                if(Constants.FILE_STATUS_DELETE.equals(uaaFile.getStatus()))
+                    continue;
+                if(uaaFile.getName()==null||!uaaFile.getName().contains(name))
+                    continue;
                 UaaFileDTO dto = new UaaFileDTO();
                 dto.setId(uaaFile.getId());
                 dto.setName(uaaFile.getName());
@@ -303,6 +397,7 @@ public class UaaFileService {
                 dto.setCreatedDate(uaaFile.getCreatedDate());
                 dto.setUpdatedDate(uaaFile.getUpdatedDate());
                 dto.setSize(uaaFile.getSize());
+                dto.setMd5(uaaFile.getMd5());
                 result.add(dto);
             }
         }

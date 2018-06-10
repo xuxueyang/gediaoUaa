@@ -157,22 +157,35 @@ public class UaaFileResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
             //获取到文件的输出流
-            byte[] data = uaaFileService.downFile(uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response.getOutputStream());
-            // 清空response
-            response.reset();
-            // 设置response的Header
+            boolean needCache = false;
+            if(needCache){
+                uaaFileService.downFile(uaaFile.getSize(),uaaFile.getName(),uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response);
+
+                return prepareReturnResult(ReturnCode.GET_SUCCESS, null);
+            }else{
+                int size = Integer.parseInt(uaaFile.getSize());
+                // 清空response
+                response.reset();
+                // 设置response的Header
 //            response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition", "attachment;filename=" + uaaFile.getName());
-            response.addHeader("Content-Length", ""+data.length);
-            response.setContentType("application/octet-stream");
+                response.addHeader("Content-Disposition", "attachment;filename=" + uaaFile.getName());
+                response.addHeader("Content-Length", ""+size);
+                response.addHeader("Accept-Language" ,"zh-cn,zh");
+                response.setContentType("application/octet-stream");
+//                response.setCharacterEncoding("UTF-8");
+
+                byte[] data = uaaFileService.downFile(uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response.getOutputStream());
+//                uaaFileService.downFile_smb(uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response.getOutputStream());
 //            try (OutputStream out = new BufferedOutputStream(response.getOutputStream())) {
 //                out.write(data);
 //                out.flush();
 //            }
-            OutputStream out = new BufferedOutputStream(response.getOutputStream());
-            out.write(data);
-            out.flush();
-            return prepareReturnResult(ReturnCode.GET_SUCCESS, null);
+                OutputStream out = new BufferedOutputStream(response.getOutputStream());
+                out.write(data);
+                out.flush();
+                return prepareReturnResult(ReturnCode.GET_SUCCESS, null);
+            }
+
         } catch (Exception e) {
             return prepareReturnResult(ReturnCode.ERROR_QUERY, null);
         }
