@@ -37,6 +37,17 @@ public final class Constants {
     public static final String FILE_STATUS_SAVE = "S";//保存状态
     public static final String FILE_STATUS_DELETE = "D";//删除状态
 
+    /**
+     * 消息
+     */
+    //消息的类别
+    public static final String MESSAGE_PROJECT_TYPE_QINGLONGHUI = "QLH";//青龙会开发进度消息
+    //消息的状态——已完善-待完善——bug
+
+    public static final String MESSAGE_TYPE_TODO = "TODO";//待完善
+    public static final String MESSAGE_TYPE_DONE  = "DONE";//已完成
+    public static final String MESSAGE_TYPE_BUG = "BUG";//bug
+
 
     private Constants() {
     }

@@ -51,6 +51,9 @@ public class UaaFile extends BaseEntity implements Serializable {
     @Column(name = "VERIFY_CODE")
     private String verifyCode;
 
+    @Column(name = "DOWN_NUM")
+    private String downNum;
+
     public String getId() {
         return id;
     }
@@ -137,6 +140,14 @@ public class UaaFile extends BaseEntity implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDownNum() {
+        return downNum;
+    }
+
+    public void setDownNum(String downNum) {
+        this.downNum = downNum;
     }
 }
 //    ID	varchar	45	0	0	0	0	0	0		0		utf8	utf8_general_ci		-1	0

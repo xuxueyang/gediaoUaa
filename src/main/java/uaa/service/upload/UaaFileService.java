@@ -46,7 +46,7 @@ public class UaaFileService {
     private  String password ;
     private  int port = 22;
     private  String uploadServerFileRootPath;
-
+    private  boolean isLoadDate = false;
     private ChannelSftp channelSftp;
     private Session sshSession;
     private JSch jsch;
@@ -84,6 +84,13 @@ public class UaaFileService {
         }
     }
     private  ChannelSftp getConnect() {
+        if(!isLoadDate){
+            this.ipAddr = applicationProperties.getConfig().getFileService().getIpAddr();
+            this.username = applicationProperties.getConfig().getFileService().getUsername();
+            this.password = applicationProperties.getConfig().getFileService().getPassword();
+            this.uploadServerFileRootPath = applicationProperties.getConfig().getFileService().getUploadServerFileRootPath();
+            isLoadDate = true;
+        }
         ChannelSftp sftp = null;
         try {
             JSch jsch = new JSch();
@@ -159,21 +166,20 @@ public class UaaFileService {
     /**
      * 上传文件
      */
-    private  boolean upload(String directory, InputStream fileStream, String fileName) {
+    private  boolean upload(String directory, InputStream fileStream, String fileName){
         try {
-            if(channelSftp==null||channelSftp.isClosed()){
-                connect();
-//                Class cl = ChannelSftp.class;
-//                Field field =cl.getDeclaredField("server_version");
-//                field.setAccessible(true);
-//                field.set(channelSftp, 2);
-//                channelSftp.setFilenameEncoding("GBK");
-//                Thread.currentThread().sleep(5000);
+            ChannelSftp channelSftp = getConnect();
+            if(channelSftp==null){
+//                throw new Exception("创建连接失败");
+                return  false;
             }
+//            if(channelSftp==null||channelSftp.isClosed()){
+//                connect();
+//            }
             //等等一会看看吧
             channelSftp.cd(directory);
             channelSftp.put(fileStream, fileName);
-//            channelSftp.exit();
+            channelSftp.disconnect();
             return true;
         } catch (SftpException e) {
             if(e.id==0){
@@ -184,41 +190,41 @@ public class UaaFileService {
         }
     }
 
-    /**
-     * 下载文件
-     * @param directory 下载目录
-     * @param downloadFile 下载的文件
-     * @param saveFile 存在本地的路径
-     * @param sftp
-     */
-    private  boolean download(String directory, String downloadFile,String saveFile, ChannelSftp sftp) {
-        try {
-            sftp.cd(directory);
-            File file=new File(saveFile);
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            sftp.get(downloadFile,fileOutputStream);
-            fileOutputStream.close();
-            channelSftp.exit();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public  Vector listFiles(ChannelSftp sftp)throws SftpException {
-        return listFiles(uploadServerFileRootPath,sftp);
-    }
-    /**
-     * 列出目录下的文件
-     * @param directory 要列出的目录
-     * @param sftp
-     * @return
-     * @throws SftpException
-     */
-    private   Vector listFiles(String directory, ChannelSftp sftp) throws SftpException{
-        return sftp.ls(directory);
-    }
+//    /**
+//     * 下载文件
+//     * @param directory 下载目录
+//     * @param downloadFile 下载的文件
+//     * @param saveFile 存在本地的路径
+//     * @param sftp
+//     */
+//    private  boolean download(String directory, String downloadFile,String saveFile, ChannelSftp sftp) {
+//        try {
+//            sftp.cd(directory);
+//            File file=new File(saveFile);
+//            FileOutputStream fileOutputStream = new FileOutputStream(file);
+//            sftp.get(downloadFile,fileOutputStream);
+//            fileOutputStream.close();
+//            channelSftp.exit();
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+//
+//    public  Vector listFiles(ChannelSftp sftp)throws SftpException {
+//        return listFiles(uploadServerFileRootPath,sftp);
+//    }
+//    /**
+//     * 列出目录下的文件
+//     * @param directory 要列出的目录
+//     * @param sftp
+//     * @return
+//     * @throws SftpException
+//     */
+//    private   Vector listFiles(String directory, ChannelSftp sftp) throws SftpException{
+//        return sftp.ls(directory);
+//    }
 
     public UaaFile uploadFile(MultipartFile file, String fileName,String pathFilehName) {
         //判断MD5码
@@ -329,7 +335,7 @@ public class UaaFileService {
 //        }
 //    }
 
-    public byte[] downFile(String directory, String downloadFile,OutputStream outputStream) throws Exception{
+    public byte[] downFile(UaaFile uaaFile,String directory, String downloadFile,OutputStream outputStream) throws Exception{
         //TODO 为了不影响上传的功能，下载均新建个连接
         ChannelSftp channelSftp = getConnect();
         if(channelSftp==null){
@@ -354,6 +360,23 @@ public class UaaFileService {
         byte[] data =   f.toByteArray();
         f.close();
         channelSftp.disconnect();
+        //将文件下载计数+1(自己的文件以及md5相同的）
+        if(uaaFile.getMd5()==null||"".equals(uaaFile.getMd5())){
+            //这种情况只需要要自己的计数+1
+            if(uaaFile.getDownNum()==null)
+                uaaFile.setDownNum("1");
+            uaaFile.setDownNum("" + Integer.parseInt(uaaFile.getDownNum())+1);
+            fileRepository.save(uaaFile);
+        }else{
+            //找出一样的MD5的
+            List<UaaFile> allByMd5 = fileRepository.findAllByMd5(uaaFile.getMd5());
+            for(UaaFile file:allByMd5){
+                if(file.getDownNum()==null)
+                    file.setDownNum("0");
+                file.setDownNum("" + Integer.parseInt(file.getDownNum())+1);
+                fileRepository.save(file);
+            }
+        }
         return data;
     }
     public void downFile(String size,String name,String directory,String downloadFile,HttpServletResponse response) throws Exception{
@@ -423,6 +446,9 @@ public class UaaFileService {
                 dto.setCreatedDate(uaaFile.getCreatedDate());
                 dto.setUpdatedDate(uaaFile.getUpdatedDate());
                 dto.setSize(uaaFile.getSize());
+                if(uaaFile.getDownNum()==null)
+                    uaaFile.setDownNum("0");
+                dto.setDownNum(uaaFile.getDownNum());
                 dto.setMd5(uaaFile.getMd5());
                 result.add(dto);
             }

@@ -11,6 +11,7 @@ public class UaaFileDTO {
     private Instant updatedDate;
     private String size;
     private String md5;
+    private String downNum;
 
     public String getId() {
         return id;
@@ -74,5 +75,13 @@ public class UaaFileDTO {
 
     public void setMd5(String md5) {
         this.md5 = md5;
+    }
+
+    public String getDownNum() {
+        return downNum;
+    }
+
+    public void setDownNum(String downNum) {
+        this.downNum = downNum;
     }
 }

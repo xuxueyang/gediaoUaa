@@ -174,7 +174,7 @@ public class UaaFileResource extends BaseResource {
                 response.setContentType("application/octet-stream");
 //                response.setCharacterEncoding("UTF-8");
 
-                byte[] data = uaaFileService.downFile(uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response.getOutputStream());
+                byte[] data = uaaFileService.downFile(uaaFile,uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response.getOutputStream());
 //                uaaFileService.downFile_smb(uaaFile.getRootFilePath(),uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()),response.getOutputStream());
 //            try (OutputStream out = new BufferedOutputStream(response.getOutputStream())) {
 //                out.write(data);
