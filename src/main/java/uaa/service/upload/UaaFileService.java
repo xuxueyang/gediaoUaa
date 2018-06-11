@@ -83,6 +83,29 @@ public class UaaFileService {
             }
         }
     }
+    private  ChannelSftp getConnect() {
+        ChannelSftp sftp = null;
+        try {
+            JSch jsch = new JSch();
+            jsch.getSession(username, ipAddr, port);
+            Session sshSession = jsch.getSession(username, ipAddr, port);
+            System.out.println("Session created.");
+            sshSession.setPassword(password);
+            Properties sshConfig = new Properties();
+            sshConfig.put("StrictHostKeyChecking", "no");
+            sshSession.setConfig(sshConfig);
+            sshSession.connect();
+            System.out.println("Session connected.");
+            System.out.println("Opening Channel.");
+            Channel channel = sshSession.openChannel("sftp");
+            channel.connect();
+            sftp = (ChannelSftp) channel;
+            System.out.println("Connected to " + ipAddr + ".");
+        } catch (Exception e) {
+
+        }
+        return sftp;
+    }
 //    private ChannelSftp connect(String host, int port, String username,
 //                                String password) {
 //        ChannelSftp sftp = null;
@@ -307,8 +330,11 @@ public class UaaFileService {
 //    }
 
     public byte[] downFile(String directory, String downloadFile,OutputStream outputStream) throws Exception{
-        if(channelSftp==null||channelSftp.isClosed())
-            connect();
+        //TODO 为了不影响上传的功能，下载均新建个连接
+        ChannelSftp channelSftp = getConnect();
+        if(channelSftp==null){
+            throw new  Exception("创建连接失败");
+        }
         channelSftp.cd(directory);
         ByteArrayOutputStream f = new ByteArrayOutputStream();
         channelSftp.get(downloadFile,f);
@@ -327,7 +353,7 @@ public class UaaFileService {
 //        }
         byte[] data =   f.toByteArray();
         f.close();
-        channelSftp.exit();
+        channelSftp.disconnect();
         return data;
     }
     public void downFile(String size,String name,String directory,String downloadFile,HttpServletResponse response) throws Exception{
