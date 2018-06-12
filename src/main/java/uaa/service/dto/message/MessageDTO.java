@@ -4,6 +4,7 @@ import java.time.Instant;
 
 public class MessageDTO {
     private String type;
+    private String title;
     private String projectType;
 
     private String value;
@@ -49,5 +50,13 @@ public class MessageDTO {
 
     public void setProjectType(String projectType) {
         this.projectType = projectType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

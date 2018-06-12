@@ -44,9 +44,16 @@ public final class Constants {
     public static final String MESSAGE_PROJECT_TYPE_QINGLONGHUI = "QLH";//青龙会开发进度消息
     //消息的类别——已完善-待完善——bug
 
-    public static final String MESSAGE_TYPE_TODO = "TODO";//待完善
-    public static final String MESSAGE_TYPE_DONE  = "DONE";//已完成
-    public static final String MESSAGE_TYPE_BUG = "BUG";//bug
+    public enum MESSAGE_TYPE{
+        TODO,
+        DONE,
+        BUG,
+        QLH_AUTHOR_SAY
+    }
+//    public static final String MESSAGE_TYPE_TODO = "TODO";//待完善
+//    public static final String MESSAGE_TYPE_DONE  = "DONE";//已完成
+//    public static final String MESSAGE_TYPE_BUG = "BUG";//bug
+//    public static final String MESSAGE_TYPE_QLH_AUTHOR_SAY = "QLH_AUTHOR_SAY";//作者吐槽——青龙会
     //消息的状态
     public static final String MESSAGE_STATUS_DELETE = "DELETE";//删除
     public static final String MESSAGE_STATUS_SAVE  = "SAVE";//保存

@@ -14,7 +14,8 @@ public class CreateMessageDTO  extends UaaBasePremissionDTO{
     @ApiModelProperty(value = "添加的值")
     private String value;
 
-
+    @ApiModelProperty(value = "主题")
+    private String title;
 
     public String getType() {
         return type;
@@ -40,4 +41,11 @@ public class CreateMessageDTO  extends UaaBasePremissionDTO{
         this.projectType = projectType;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

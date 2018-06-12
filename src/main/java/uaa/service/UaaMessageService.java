@@ -41,21 +41,31 @@ public class UaaMessageService {
     }
     private MessageDTO prepareMessageEntityToDTO(UaaLogMessage message){
         //目前只返回三种状态
-        if(!Validators.fieldRangeValue(message.getType(),
-            Constants.MESSAGE_TYPE_BUG,
-            Constants.MESSAGE_TYPE_DONE,
-            Constants.MESSAGE_TYPE_TODO)){
-            return null;
+//        if(!Validators.fieldRangeValue(message.getType(),
+//            Constants.MESSAGE_TYPE.values())){
+//            return null;
+//        }
+        Constants.MESSAGE_TYPE[] values = Constants.MESSAGE_TYPE.values();
+        boolean has = false;
+        for(Constants.MESSAGE_TYPE value:values){
+            if(value.name().equals(message.getType()))
+            {
+                has = true;
+                break;
+            }
         }
+        if(!has)
+            return null;
         MessageDTO dto = new MessageDTO();
         dto.setCreatedDate(message.getCreatedDate());
         dto.setUpdatedDate(message.getUpdatedDate());
         dto.setType(message.getType());
         dto.setValue(message.getValue());
         dto.setProjectType(message.getProjectType());
+        dto.setTitle(message.getTitle());
         return dto;
     }
-    public void  createMessage(String createdId,String projectType,String type,String value){
+    public void  createMessage(String createdId,String title,String projectType,String type,String value){
         UaaLogMessage logMessage = new UaaLogMessage();
         logMessage.setStatus(Constants.MESSAGE_STATUS_SAVE);
         logMessage.setProjectType(projectType);
@@ -65,6 +75,7 @@ public class UaaMessageService {
         logMessage.setCreatedDate(Instant.now());
         logMessage.setUpdatedDate(Instant.now());
         logMessage.setValue(value);
+        logMessage.setTitle(title);
         logMessage.setId(UUIDGenerator.getUUID());
         messageRepository.save(logMessage);
     }

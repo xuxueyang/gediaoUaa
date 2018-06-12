@@ -52,7 +52,9 @@ public class UaaMessageResource extends BaseResource {
     public ResponseEntity updateDevelopMessage(@RequestBody CreateMessageDTO createMessageDTO){
         try{
             //验证有没有添加的权限
-            if(Validators.fieldBlank(createMessageDTO.getProjectType())){
+            if(Validators.fieldBlank(createMessageDTO.getProjectType())
+                ||Validators.fieldBlank(createMessageDTO.getTitle())
+                ||Validators.fieldBlank(createMessageDTO.getLoginName())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
             if(!Validators.fieldRangeValue(createMessageDTO.getProjectType(),Constants.MESSAGE_PROJECT_TYPE_QINGLONGHUI))
@@ -63,14 +65,26 @@ public class UaaMessageResource extends BaseResource {
                 ||Validators.fieldBlank(createMessageDTO.getLoginName()))){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
-            if (!Validators.fieldRangeValue(createMessageDTO.getType(), Constants.MESSAGE_TYPE_BUG, Constants.MESSAGE_TYPE_DONE, Constants.MESSAGE_TYPE_TODO)) {
-                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+            //验证消息范围
+            Constants.MESSAGE_TYPE[] values = Constants.MESSAGE_TYPE.values();
+            boolean has = false;
+            for(Constants.MESSAGE_TYPE value:values){
+                if(value.name().equals(createMessageDTO.getType()))
+                {
+                    has = true;
+                    break;
+                }
             }
+            if(!has)
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+//            if (!Validators.fieldRangeValue(createMessageDTO.getType(), Constants.MESSAGE_TYPE.values())) {
+//                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+//            }
             UaaError uaaError = uaaPermissionService.verifyOperation(createMessageDTO, "/api/message/develop");
             if(uaaError.hasError())
                 return prepareReturnResult(uaaError.getFirstError(),null);
             //执行操作
-            uaaMessageService.createMessage(((UaaUser)uaaError.getValue()).getId(),createMessageDTO.getProjectType(),createMessageDTO.getType(),createMessageDTO.getValue());
+            uaaMessageService.createMessage(((UaaUser)uaaError.getValue()).getId(),createMessageDTO.getTitle(),createMessageDTO.getProjectType(),createMessageDTO.getType(),createMessageDTO.getValue());
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
