@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
 import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaLogMessage;
+import uaa.domain.uaa.UaaUser;
 import uaa.repository.uaa.UaaLogMessageRepository;
+import uaa.repository.uaa.UaaUserRepository;
 import uaa.service.dto.message.MessageDTO;
 import util.UUIDGenerator;
 import util.Validators;
@@ -22,7 +24,8 @@ import java.util.List;
 public class UaaMessageService {
     @Autowired
     private UaaLogMessageRepository messageRepository;
-
+    @Autowired
+    private UaaUserRepository uaaUserRepository;
     public List<MessageDTO> getMessagesByType(String projectType){
         List<MessageDTO> messageDTOList = new ArrayList<>();
         //获取到全部的
@@ -62,7 +65,12 @@ public class UaaMessageService {
         dto.setType(message.getType());
         dto.setValue(message.getValue());
         dto.setProjectType(message.getProjectType());
+        UaaUser one = uaaUserRepository.findOne(message.getCreatedID());
+        if(one==null||"".equals(one.getName()))
+            return null;
+        dto.setLoginName(one.getName());
         dto.setTitle(message.getTitle());
+        dto.setId(message.getId());
         return dto;
     }
     public void  createMessage(String createdId,String title,String projectType,String type,String value){

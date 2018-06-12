@@ -10,6 +10,8 @@ public class MessageDTO {
     private String value;
     private Instant createdDate;
     private Instant updatedDate;
+    private String loginName;
+    private String id;
 
     public String getType() {
         return type;
@@ -58,5 +60,21 @@ public class MessageDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
     }
 }
