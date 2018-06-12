@@ -1,15 +1,19 @@
 package uaa.service;
 
 
+import core.ReturnCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
+import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaLogMessage;
 import uaa.repository.uaa.UaaLogMessageRepository;
 import uaa.service.dto.message.MessageDTO;
+import util.UUIDGenerator;
 import util.Validators;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +30,8 @@ public class UaaMessageService {
         //转DTO返回，前端根据BUG、T ODO、DONE，显示红色，黄色，蓝色，做区分
         if(allByType!=null&&allByType.size()>0){
             for(UaaLogMessage logMessage:allByType){
+                if(Constants.MESSAGE_STATUS_DELETE.equals(logMessage.getStatus()))
+                    continue;
                 MessageDTO messageDTO = prepareMessageEntityToDTO(logMessage);
                 if(messageDTO!=null)
                     messageDTOList.add(messageDTO);
@@ -48,5 +54,30 @@ public class UaaMessageService {
         dto.setValue(message.getValue());
         dto.setProjectType(message.getProjectType());
         return dto;
+    }
+    public void  createMessage(String createdId,String projectType,String type,String value){
+        UaaLogMessage logMessage = new UaaLogMessage();
+        logMessage.setStatus(Constants.MESSAGE_STATUS_SAVE);
+        logMessage.setProjectType(projectType);
+        logMessage.setType(type);
+        logMessage.setCreatedID(createdId);
+        logMessage.setUpdatedID(createdId);
+        logMessage.setCreatedDate(Instant.now());
+        logMessage.setUpdatedDate(Instant.now());
+        logMessage.setValue(value);
+        logMessage.setId(UUIDGenerator.getUUID());
+        messageRepository.save(logMessage);
+    }
+
+    public UaaError deleteMessage(String id) {
+        UaaError uaaError = new UaaError();
+        UaaLogMessage one = messageRepository.findOne(id);
+        if(one==null){
+            uaaError.addError(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE);
+            return uaaError;
+        }
+        one.setStatus(Constants.MESSAGE_STATUS_DELETE);
+        messageRepository.save(one);
+        return uaaError;
     }
 }

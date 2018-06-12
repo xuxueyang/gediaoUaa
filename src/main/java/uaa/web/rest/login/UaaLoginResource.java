@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.UaaUserService;
 import uaa.service.dto.login.LoginDTO;
-import uaa.service.login.LoginService;
+import uaa.service.login.UaaLoginService;
 import util.UUIDGenerator;
 import util.Validators;
 
@@ -20,7 +20,7 @@ import java.util.Map;
 @Api(value = "登录系统",description = "登录系统")
 @RestController
 @RequestMapping("/api")
-public class LoginResource extends BaseResource{
+public class UaaLoginResource extends BaseResource{
     @GetMapping("/login/test-graph")
     @ResponseBody
     @ApiOperation(value = "测试登录", httpMethod = "GET", response = ResponseEntity.class, notes = "测试登录")
@@ -31,7 +31,7 @@ public class LoginResource extends BaseResource{
     }
 
     @Autowired
-    private LoginService loginService;
+    private UaaLoginService uaaLoginService;
 
     @Autowired
     private UaaUserService uaaUserService;
@@ -40,7 +40,7 @@ public class LoginResource extends BaseResource{
     @ApiOperation(value = "获取验证码", httpMethod = "GET", response = ResponseEntity.class, notes = "获取验证码")
     public ResponseEntity<?> getGraph() {
         try {
-            Map<String,Object> map = loginService.createGraph();
+            Map<String,Object> map = uaaLoginService.createGraph();
             return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE,null);
@@ -59,7 +59,7 @@ public class LoginResource extends BaseResource{
             //验证验证码
             //前期先判断如果ID不为空再验证
             if(!Validators.fieldBlank(loginDTO.getGraphCaptchaCodeId())){
-                if(!loginService.verifyGraph(loginDTO.getGraphCaptchaCodeId(),loginDTO.getGraphCaptchaCode())){
+                if(!uaaLoginService.verifyGraph(loginDTO.getGraphCaptchaCodeId(),loginDTO.getGraphCaptchaCode())){
                     return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE,null);
 
                 }
@@ -71,7 +71,7 @@ public class LoginResource extends BaseResource{
             if(!uaaUser.getPassword().equals(loginDTO.getPassword())){
                 return prepareReturnResult(ReturnCode.ERROR_PASSWORD_NOT_CORRECT_CODE,null);
             }
-            Map<String,Object> map = loginService.login(uaaUser);
+            Map<String,Object> map = uaaLoginService.login(uaaUser);
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,map);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_LOGIN,null);

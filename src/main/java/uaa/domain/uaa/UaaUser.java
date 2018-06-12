@@ -53,8 +53,8 @@ public class UaaUser  extends BaseEntity implements Serializable {
     @Column(name = "TYPE")
     private String type;
 
-    @Column(name = "ACCT_VERFIED")
-    private String acctverfied;
+    @Column(name = "VERIFY_CODE")
+    private String verifyCode;
 
     @Column(name = "IMAGE")
     private String image;
@@ -123,13 +123,6 @@ public class UaaUser  extends BaseEntity implements Serializable {
         this.type = type;
     }
 
-    public String getAcctverfied() {
-        return acctverfied;
-    }
-
-    public void setAcctverfied(String acctverfied) {
-        this.acctverfied = acctverfied;
-    }
 
     public String getImage() {
         return image;
@@ -169,5 +162,13 @@ public class UaaUser  extends BaseEntity implements Serializable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
     }
 }

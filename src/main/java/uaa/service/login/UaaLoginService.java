@@ -34,7 +34,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class LoginService {
+public class UaaLoginService {
 //    private static ApplicationProperties APPLICATION_PROPERTIES = (ApplicationProperties) SpringLoginUtils.getBean(ApplicationProperties.class);
 
     @Autowired

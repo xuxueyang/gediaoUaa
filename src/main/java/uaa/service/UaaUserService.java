@@ -32,4 +32,12 @@ public class UaaUserService {
         uaaUser.setPassword(createUaaUserDTO.getPassword());
         uaaUserRepository.save(uaaUser);
     }
+
+    public UaaUser findUserById(String id){
+        UaaUser one = uaaUserRepository.findOne(id);
+        if(one==null||Constants.APP_LOG_STATUS_DELETE.equals(one.getStatus())){
+            return null;
+        }
+        return one;
+    }
 }

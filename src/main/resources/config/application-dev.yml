@@ -196,6 +196,7 @@ application:
             upload-server-file-root-path: /usr/local/FILEUPLOAD
     version: 0
     client : qinglonghui
+    project-type: QLH
 
 redis:
     project-code: qinglonghui

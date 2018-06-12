@@ -17,7 +17,7 @@ import uaa.service.app.log.AppLogDetailService;
 import uaa.service.app.log.AppLogEachService;
 import uaa.service.app.log.AppLogSingleService;
 import uaa.service.dto.app.log.*;
-import uaa.service.login.LoginService;
+import uaa.service.login.UaaLoginService;
 import util.Validators;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class AppLogResource extends BaseResource{
     @Autowired
     private AppLogSingleService appLogSingleService;
     @Autowired
-    private LoginService loginService;
+    private UaaLoginService uaaLoginService;
 
     //*******************************************Day等单例的API**********************************
     @GetMapping("/tag/{id}")
@@ -75,7 +75,7 @@ public class AppLogResource extends BaseResource{
             if(tag==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
-            UaaToken userByToken = loginService.getUserByToken(updateLogTagDTO.getToken());
+            UaaToken userByToken = uaaLoginService.getUserByToken(updateLogTagDTO.getToken());
             if(userByToken==null)
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
 
@@ -108,7 +108,7 @@ public class AppLogResource extends BaseResource{
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
             //验证user是不是存在
-            UaaToken token = loginService.getUserByToken(createLogTagDTO.getToken());
+            UaaToken token = uaaLoginService.getUserByToken(createLogTagDTO.getToken());
             if(token==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
@@ -162,7 +162,7 @@ public class AppLogResource extends BaseResource{
             if(appLogDay==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
-            UaaToken userByToken = loginService.getUserByToken(updateLogDayDTO.getToken());
+            UaaToken userByToken = uaaLoginService.getUserByToken(updateLogDayDTO.getToken());
             if(userByToken==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
@@ -203,7 +203,7 @@ public class AppLogResource extends BaseResource{
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
             //验证user是不是存在
-            UaaToken token = loginService.getUserByToken(createLogDayDTO.getToken());
+            UaaToken token = uaaLoginService.getUserByToken(createLogDayDTO.getToken());
             if(token==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
@@ -238,7 +238,7 @@ public class AppLogResource extends BaseResource{
             if(appLogDetail==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
-            UaaToken userByToken = loginService.getUserByToken(updateLogDetailDTO.getToken());
+            UaaToken userByToken = uaaLoginService.getUserByToken(updateLogDetailDTO.getToken());
             if(userByToken==null)
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
 
@@ -299,7 +299,7 @@ public class AppLogResource extends BaseResource{
     public ResponseEntity getEachInfo(@RequestParam(name="token",required=true) String token,
                                       @RequestParam(name="userId",required=true) String userId){
         try {
-            UaaToken userByToken = loginService.getUserByToken(token);
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
             if (userByToken==null||!userByToken.getCreatedid().equals(userId)){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
@@ -329,7 +329,7 @@ public class AppLogResource extends BaseResource{
             if(appLogEach==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
-            UaaToken userByToken = loginService.getUserByToken(updateLogEachDTO.getToken());
+            UaaToken userByToken = uaaLoginService.getUserByToken(updateLogEachDTO.getToken());
             if(userByToken==null)
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
 
@@ -366,7 +366,7 @@ public class AppLogResource extends BaseResource{
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
             //验证user是不是存在
-            UaaToken token = loginService.getUserByToken(createLogEachDTO.getToken());
+            UaaToken token = uaaLoginService.getUserByToken(createLogEachDTO.getToken());
             if(token==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }

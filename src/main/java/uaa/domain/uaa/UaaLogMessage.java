@@ -37,6 +37,10 @@ public class UaaLogMessage extends BaseEntity implements Serializable {
     @Column(name = "VALUE")
     private String value;
 
+    @Column(name = "TITLE")
+    private String title;
+
+
     public String getStatus() {
         return status;
     }
@@ -91,5 +95,13 @@ public class UaaLogMessage extends BaseEntity implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

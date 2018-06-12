@@ -26,8 +26,8 @@ public final class Constants {
     //LogEach状态
     public static final String APP_LOG_STATUS_SAVE = "S";///保存状态
     public static final String APP_LOG_STATUS_DELETE = "D";//删除
-    public static final String APP_LOG_STATUS_Y = "Y";//删除
-    public static final String APP_LOG_STATUS_N = "N";//删除
+    public static final String APP_LOG_STATUS_Y = "Y";//完成
+    public static final String APP_LOG_STATUS_N = "N";//未完成
 
     //LogDay的状态
     public static final String APP_LOG_DAY_TYPE_TEL = "TEL";//技术文档积累
@@ -40,14 +40,16 @@ public final class Constants {
     /**
      * 消息
      */
-    //消息的类别
+    //消息的工程类别
     public static final String MESSAGE_PROJECT_TYPE_QINGLONGHUI = "QLH";//青龙会开发进度消息
-    //消息的状态——已完善-待完善——bug
+    //消息的类别——已完善-待完善——bug
 
     public static final String MESSAGE_TYPE_TODO = "TODO";//待完善
     public static final String MESSAGE_TYPE_DONE  = "DONE";//已完成
     public static final String MESSAGE_TYPE_BUG = "BUG";//bug
-
+    //消息的状态
+    public static final String MESSAGE_STATUS_DELETE = "DELETE";//删除
+    public static final String MESSAGE_STATUS_SAVE  = "SAVE";//保存
 
     private Constants() {
     }

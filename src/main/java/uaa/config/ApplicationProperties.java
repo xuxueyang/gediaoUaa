@@ -13,7 +13,7 @@ public class ApplicationProperties {
     private Config config = new Config();
     private String version;
     private String client;
-
+    private String projectType;
 
     public String getVersion() {
         return version;
@@ -38,6 +38,15 @@ public class ApplicationProperties {
     public void setConfig(Config config) {
         this.config = config;
     }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
+
 
     public static class Config{
         private Email email;
