@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface UaaLogMessageRepository extends JpaRepository<UaaLogMessage, String> {
     List<UaaLogMessage> findAllByProjectType(String projectType);
-
+    UaaLogMessage findOneByProjectTypeAndId(String projectType,String id);
 }

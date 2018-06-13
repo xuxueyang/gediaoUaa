@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uaa.config.Constants;
 import uaa.domain.UaaError;
-import uaa.domain.uaa.UaaToken;
+import uaa.domain.uaa.UaaLogMessage;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.UaaMessageService;
 import uaa.service.UaaUserService;
 import uaa.service.dto.UaaBasePremissionDTO;
 import uaa.service.dto.message.CreateMessageDTO;
+import uaa.service.dto.message.TranferMessageDTO;
+import uaa.service.dto.message.UpdateMessageDTO;
 import uaa.service.login.UaaLoginService;
 import uaa.service.permission.UaaPermissionService;
 import util.Validators;
@@ -66,25 +68,21 @@ public class UaaMessageResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
             //验证消息范围
-            Constants.MESSAGE_TYPE[] values = Constants.MESSAGE_TYPE.values();
-            boolean has = false;
-            for(Constants.MESSAGE_TYPE value:values){
-                if(value.name().equals(createMessageDTO.getType()))
-                {
-                    has = true;
-                    break;
-                }
-            }
-            if(!has)
+            if(!Validators.fieldRangeValue(createMessageDTO.getType(),
+                Constants.MESSAGE_TYPE_TODO,
+                Constants.MESSAGE_TYPE_DONE,
+                Constants.MESSAGE_TYPE_BUG,
+                Constants.MESSAGE_PROJECT_TYPE_QINGLONGHUI
+            )){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
-//            if (!Validators.fieldRangeValue(createMessageDTO.getType(), Constants.MESSAGE_TYPE.values())) {
-//                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
-//            }
-            UaaError uaaError = uaaPermissionService.verifyOperation(createMessageDTO, "/api/message/develop");
+            }
+
+            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(createMessageDTO, "/api/message/develop","POST");
             if(uaaError.hasError())
                 return prepareReturnResult(uaaError.getFirstError(),null);
             //执行操作
-            uaaMessageService.createMessage(((UaaUser)uaaError.getValue()).getId(),createMessageDTO.getTitle(),createMessageDTO.getProjectType(),createMessageDTO.getType(),createMessageDTO.getValue());
+            uaaMessageService.createMessage(((UaaUser)uaaError.getValue()).getId(),createMessageDTO.getTitle(),createMessageDTO.getProjectType(),
+                createMessageDTO.getType(),createMessageDTO.getValue());
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
@@ -92,10 +90,10 @@ public class UaaMessageResource extends BaseResource {
     }
 
     @DeleteMapping("/message/{id}")
-    @ApiOperation(value = "修改开发日志——todo：添加一个权限表", httpMethod = "GET", response = ResponseEntity.class, notes = "获取开发日志")
+    @ApiOperation(value = "删除开发日志", httpMethod = "DELETE", response = ResponseEntity.class, notes = "删除开发日志")
     public ResponseEntity deleteDevelopMessage(@PathVariable("id") String id, @RequestBody UaaBasePremissionDTO premissionDTO){
         try {
-            UaaError uaaError = uaaPermissionService.verifyOperation(premissionDTO, "/api/message/{id}");
+            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(premissionDTO, "/api/message/{id}","DELETE");
             if(uaaError.hasError())
                 return prepareReturnResult(uaaError.getFirstError(),null);
             UaaError uaaError2 = uaaMessageService.deleteMessage(id);
@@ -107,5 +105,60 @@ public class UaaMessageResource extends BaseResource {
         }
     }
 
+    @PutMapping("/message/develop/tranfer")
+    @ApiOperation(value = "转换开发日志", httpMethod = "PUT", response = ResponseEntity.class, notes = "转换开发日志")
+    public ResponseEntity tranferDevelopMessage(@RequestBody TranferMessageDTO tranferMessageDTO){
+        try{
+            //验证状态，不符合不行（如果类别不变算错误，删除现有的，新建复制一个
+            //权限验证
+            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(tranferMessageDTO, "/message/develop/tranfer","PUT");
+            if(uaaError.hasError())
+                return prepareReturnResult(uaaError.getFirstError(),null);
+            //TODO 走事物逻辑了
+            //如果类型不一样了那么视为字段错误
+            UaaLogMessage logMessage = uaaMessageService.findProjectCanUpdateMessageById(tranferMessageDTO.getProjectType(),
+                tranferMessageDTO.getId());
+            if(logMessage==null)
+                return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
+            //只有三种能狗更新字段
+            if(!Validators.fieldRangeValue(tranferMessageDTO.getType(),
+                Constants.MESSAGE_TYPE_TODO,
+                Constants.MESSAGE_TYPE_DONE,
+                Constants.MESSAGE_TYPE_BUG
+                )){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+            }
+            if(logMessage.getType().equals(tranferMessageDTO.getType()))
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
 
+            //更新ps、id、date、字段(这种转移是需要复制的
+            uaaMessageService.transferMessageTypeAndPs(logMessage,tranferMessageDTO.getType(),tranferMessageDTO.getPs(),uaaError.getValue().getId());
+            return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
+        }
+    }
+    @PutMapping("/message/develop/update")
+    @ApiOperation(value = "更新开发日志", httpMethod = "PUT", response = ResponseEntity.class, notes = "更新开发日志")
+    public ResponseEntity updateDevelopMessage(@RequestBody UpdateMessageDTO updateMessageDTO){
+        try{
+            //权限验证
+            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(updateMessageDTO, "/message/develop/update","PUT");
+            if(uaaError.hasError())
+                return prepareReturnResult(uaaError.getFirstError(),null);
+            //TODO 走事物逻辑了
+            if(Validators.fieldBlank(updateMessageDTO.getId())){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaLogMessage logMessage = uaaMessageService.findProjectCanUpdateMessageById(updateMessageDTO.getProjectType(),
+                updateMessageDTO.getId());
+            if(logMessage==null)
+                return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
+
+            uaaMessageService.updateMessageValueAndPs(logMessage,updateMessageDTO.getValue(),updateMessageDTO.getPs(),uaaError.getValue().getId());
+            return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
+        }
+    }
 }

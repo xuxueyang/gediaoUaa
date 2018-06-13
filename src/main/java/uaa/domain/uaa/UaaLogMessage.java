@@ -40,6 +40,12 @@ public class UaaLogMessage extends BaseEntity implements Serializable {
     @Column(name = "TITLE")
     private String title;
 
+    @Column(name = "LAST_MESSAGE_ID")
+    private String lastMessageId;
+
+    @Column(name = "PS")
+    private String ps;
+
 
     public String getStatus() {
         return status;
@@ -103,5 +109,21 @@ public class UaaLogMessage extends BaseEntity implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getLastMessageId() {
+        return lastMessageId;
+    }
+
+    public void setLastMessageId(String lastMessageId) {
+        this.lastMessageId = lastMessageId;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }

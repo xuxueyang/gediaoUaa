@@ -5,8 +5,7 @@ import uaa.service.dto.UaaBasePremissionDTO;
 
 public class CreateMessageDTO  extends UaaBasePremissionDTO{
 
-    @ApiModelProperty(value = "为那个项目类别添加日志")
-    private String projectType;
+
 
     @ApiModelProperty(value = "添加的消息类型")
     private String type;
@@ -33,13 +32,6 @@ public class CreateMessageDTO  extends UaaBasePremissionDTO{
         this.value = value;
     }
 
-    public String getProjectType() {
-        return projectType;
-    }
-
-    public void setProjectType(String projectType) {
-        this.projectType = projectType;
-    }
 
     public String getTitle() {
         return title;

@@ -29,10 +29,15 @@ public class UaaPermissionService {
         return true;
     }
 
-    public UaaError verifyOperation(UaaBasePremissionDTO premissionDTO,String apiResource){
+    public UaaError verifyOperation(UaaBasePremissionDTO premissionDTO,String apiResource,String methodType){
         //走token或验证码，来找出user
         UaaError uaaError = new UaaError();
         UaaUser uaa = null;
+        if(Validators.fieldBlank(premissionDTO.getProjectType()))
+        {
+            uaaError.addError(ReturnCode.ERROR_FIELD_EMPTY);
+            return uaaError;
+        }
         if(Validators.fieldBlank(premissionDTO.getToken())){
             uaa = uaaUserService.findUserByName(premissionDTO.getLoginName());
             //有的话才能添加

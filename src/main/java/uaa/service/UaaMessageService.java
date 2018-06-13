@@ -43,28 +43,22 @@ public class UaaMessageService {
         return messageDTOList;
     }
     private MessageDTO prepareMessageEntityToDTO(UaaLogMessage message){
-        //目前只返回三种状态
-//        if(!Validators.fieldRangeValue(message.getType(),
-//            Constants.MESSAGE_TYPE.values())){
-//            return null;
-//        }
-        Constants.MESSAGE_TYPE[] values = Constants.MESSAGE_TYPE.values();
-        boolean has = false;
-        for(Constants.MESSAGE_TYPE value:values){
-            if(value.name().equals(message.getType()))
-            {
-                has = true;
-                break;
-            }
-        }
-        if(!has)
+        //验证消息范围
+        if(!Validators.fieldRangeValue(message.getType(),
+            Constants.MESSAGE_TYPE_TODO,
+            Constants.MESSAGE_TYPE_DONE,
+            Constants.MESSAGE_TYPE_BUG,
+            Constants.MESSAGE_TYPE_QLH_MEMBER_SAY
+        )){
             return null;
+        }
         MessageDTO dto = new MessageDTO();
         dto.setCreatedDate(message.getCreatedDate());
         dto.setUpdatedDate(message.getUpdatedDate());
         dto.setType(message.getType());
         dto.setValue(message.getValue());
         dto.setProjectType(message.getProjectType());
+        dto.setPs(message.getPs());
         UaaUser one = uaaUserRepository.findOne(message.getCreatedID());
         if(one==null||"".equals(one.getName()))
             return null;
@@ -84,6 +78,7 @@ public class UaaMessageService {
         logMessage.setUpdatedDate(Instant.now());
         logMessage.setValue(value);
         logMessage.setTitle(title);
+//        logMessage.setPs(ps);
         logMessage.setId(UUIDGenerator.getUUID());
         messageRepository.save(logMessage);
     }
@@ -98,5 +93,53 @@ public class UaaMessageService {
         one.setStatus(Constants.MESSAGE_STATUS_DELETE);
         messageRepository.save(one);
         return uaaError;
+    }
+
+    /**
+     * 查找工程下可以被更新的（只更新消息的值和备注）
+     * @param id
+     * @return
+     */
+    public UaaLogMessage findProjectCanUpdateMessageById(String projectType,String id) {
+        UaaLogMessage logMessage = messageRepository.findOneByProjectTypeAndId(projectType, id);
+        if(Constants.MESSAGE_STATUS_DELETE.equals(logMessage.getStatus()))
+            return null;
+        return logMessage;
+    }
+
+    public void updateMessageValueAndPs(UaaLogMessage logMessage,String value, String ps,String updatedId) {
+        logMessage.setPs(ps);
+        logMessage.setValue(value);
+        logMessage.setUpdatedID(updatedId);
+        logMessage.setUpdatedDate(Instant.now());
+        messageRepository.save(logMessage);
+    }
+
+    public void updateMessageTypeAndPs(UaaLogMessage logMessage, String type, String ps, String updatedId) {
+        logMessage.setPs(ps);
+        logMessage.setType(type);
+        logMessage.setUpdatedDate(Instant.now());
+        logMessage.setUpdatedID(updatedId);
+        messageRepository.save(logMessage);
+    }
+
+    public void transferMessageTypeAndPs(UaaLogMessage logMessage, String type, String ps, String updatedId) {
+        UaaLogMessage newMessage = new UaaLogMessage();
+        newMessage.setPs(ps);
+        newMessage.setType(type);
+        newMessage.setUpdatedDate(Instant.now());
+        newMessage.setUpdatedID(updatedId);
+        newMessage.setCreatedDate(Instant.now());
+        newMessage.setCreatedID(updatedId);
+        newMessage.setValue(logMessage.getValue());
+        newMessage.setTitle(logMessage.getTitle());
+        newMessage.setId(UUIDGenerator.getUUID());
+        newMessage.setLastMessageId(logMessage.getId());
+        newMessage.setProjectType(logMessage.getProjectType());
+        newMessage.setVersion(logMessage.getVersion());
+        newMessage.setStatus(Constants.MESSAGE_STATUS_SAVE);
+        logMessage.setStatus(Constants.MESSAGE_STATUS_DELETE);
+        messageRepository.save(logMessage);
+        messageRepository.save(newMessage);
     }
 }

@@ -3,6 +3,9 @@ package uaa.service.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UaaBasePremissionDTO {
+    @ApiModelProperty(value = "为那个项目类别添加日志")
+    private String projectType;
+
     @ApiModelProperty(value = "验证自己身份的code")
     private String verifyCode;
 
@@ -35,5 +38,13 @@ public class UaaBasePremissionDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
     }
 }

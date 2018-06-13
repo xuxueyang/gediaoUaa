@@ -13,6 +13,8 @@ public class MessageDTO {
     private String loginName;
     private String id;
 
+    private String ps;
+
     public String getType() {
         return type;
     }
@@ -76,5 +78,13 @@ public class MessageDTO {
 
     public void setLoginName(String loginName) {
         this.loginName = loginName;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }
