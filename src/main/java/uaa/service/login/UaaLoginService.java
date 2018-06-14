@@ -135,7 +135,10 @@ public class UaaLoginService {
         return UUIDGenerator.getUUID();
     }
 
-    private UserInfo prepareForUserInfo(UaaUser uaaUser){
+    public UserInfo prepareForUserInfo(UaaUser uaaUser){
+//        if(uaaUser==null)
+        if(Constants.USER_STATUS_DELETE.equals(uaaUser.getStatus()))
+            return null;
         UserInfo userInfo = new UserInfo();
         userInfo.setEmail(uaaUser.getEmail());
         userInfo.setName(uaaUser.getName());

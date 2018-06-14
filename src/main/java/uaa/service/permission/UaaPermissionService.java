@@ -22,12 +22,6 @@ public class UaaPermissionService {
     @Autowired
     private UaaLoginService uaaLoginService;
 
-    //验证用户对于某个API有没有操作的权限
-    //TODO 到时候前端得获取到所有API，或者专门写一个配置API权限的页面
-    public boolean verifyUserOperResource(UaaUser uaaUser,String api){
-
-        return true;
-    }
 
     public UaaError verifyOperation(UaaBasePremissionDTO premissionDTO,String apiResource,String methodType){
         //走token或验证码，来找出user
@@ -72,4 +66,11 @@ public class UaaPermissionService {
         uaaError.setValue(uaa);
         return uaaError;
     }
+    //验证用户对于某个API有没有操作的权限
+    //TODO 到时候前端得获取到所有API，或者专门写一个配置API权限的页面
+    public boolean verifyUserOperResource(UaaUser uaaUser,String api){
+
+        return true;
+    }
+
 }

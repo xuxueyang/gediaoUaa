@@ -1,5 +1,6 @@
 package uaa.web.rest;
 
+import com.sun.org.apache.regexp.internal.REUtil;
 import core.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import uaa.config.Constants;
 import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaLogMessage;
+import uaa.domain.uaa.UaaToken;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.UaaMessageService;
 import uaa.service.UaaUserService;
@@ -36,20 +38,43 @@ public class UaaMessageResource extends BaseResource {
     @Autowired
     private UaaPermissionService uaaPermissionService;
 
-    @GetMapping("/message/develop")
+    @GetMapping("/message")
     @ApiOperation(value = "获取开发日志", httpMethod = "GET", response = ResponseEntity.class, notes = "获取开发日志")
-    public ResponseEntity getDevelopMessage(@PathParam("projectType") String projectType){
+    public ResponseEntity getDevelopMessage(@PathParam("projectType") String projectType,@PathParam("token") String token){
         try {
-            //
-            if(!Constants.MESSAGE_PROJECT_TYPE_QINGLONGHUI.equals(projectType)){
-                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+            //TODO 对于projectType也需要做权限认真，看是不是要登录名等
+            //QLH不做验证，返回其他的需要验证
+            if(Validators.fieldBlank(token)&&!Constants.PROJECT_TYPE_QINGLONGHUI.equals(projectType)){
+                return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
             }
-            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,uaaMessageService.getMessagesByType(projectType));
+            //如果token不为空需要找出User,然后搜索出下面的消息
+            if(Validators.fieldBlank(token))
+                return prepareReturnResult(ReturnCode.CREATE_SUCCESS,uaaMessageService.getMessagesByProjectType(projectType));
+            else{
+                UaaToken userByToken = uaaLoginService.getUserByToken(token);
+                if(userByToken==null)
+                    return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
+                return prepareReturnResult(ReturnCode.CREATE_SUCCESS,uaaMessageService.getMessagesByProjectTypeAndCreatedId(projectType,userByToken.getCreatedid()));
+            }
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
         }
     }
-    @PostMapping("/message/develop")
+//    @GetMapping("/message/personal")
+//    @ApiOperation(value = "获取个人备忘录", httpMethod = "GET", response = ResponseEntity.class, notes = "获取个人备忘录")
+//    public ResponseEntity getPersonMessage(@PathParam("projectType") String projectType){
+//        try {
+//            //
+//            if(!Constants.MESSAGE_PROJECT_TYPE_QINGLONGHUI.equals(projectType)){
+//                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+//            }
+//            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,uaaMessageService.getMessagesByType(projectType));
+//        }catch (Exception e){
+//            return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
+//        }
+//    }
+
+    @PostMapping("/message")
     @ApiOperation(value = "添加开发日志", httpMethod = "GET", response = ResponseEntity.class, notes = "添加开发日志")
     public ResponseEntity updateDevelopMessage(@RequestBody CreateMessageDTO createMessageDTO){
         try{
@@ -59,7 +84,7 @@ public class UaaMessageResource extends BaseResource {
                 ||Validators.fieldBlank(createMessageDTO.getLoginName())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
-            if(!Validators.fieldRangeValue(createMessageDTO.getProjectType(),Constants.MESSAGE_PROJECT_TYPE_QINGLONGHUI))
+            if(!Validators.fieldRangeValue(createMessageDTO.getProjectType(),Constants.PROJECT_TYPE_QINGLONGHUI))
             {
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
@@ -72,12 +97,13 @@ public class UaaMessageResource extends BaseResource {
                 Constants.MESSAGE_TYPE_TODO,
                 Constants.MESSAGE_TYPE_DONE,
                 Constants.MESSAGE_TYPE_BUG,
-                Constants.MESSAGE_PROJECT_TYPE_QINGLONGHUI
+                Constants.MESSAGE_TYPE_PAD,
+                Constants.MESSAGE_TYPE_QLH_MEMBER_SAY
             )){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
 
-            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(createMessageDTO, "/api/message/develop","POST");
+            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(createMessageDTO, "/api/message","POST");
             if(uaaError.hasError())
                 return prepareReturnResult(uaaError.getFirstError(),null);
             //执行操作
@@ -105,13 +131,13 @@ public class UaaMessageResource extends BaseResource {
         }
     }
 
-    @PutMapping("/message/develop/tranfer")
+    @PutMapping("/message/tranfer")
     @ApiOperation(value = "转换开发日志", httpMethod = "PUT", response = ResponseEntity.class, notes = "转换开发日志")
     public ResponseEntity tranferDevelopMessage(@RequestBody TranferMessageDTO tranferMessageDTO){
         try{
             //验证状态，不符合不行（如果类别不变算错误，删除现有的，新建复制一个
             //权限验证
-            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(tranferMessageDTO, "/message/develop/tranfer","PUT");
+            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(tranferMessageDTO, "/message/tranfer","PUT");
             if(uaaError.hasError())
                 return prepareReturnResult(uaaError.getFirstError(),null);
             //TODO 走事物逻辑了
@@ -138,15 +164,15 @@ public class UaaMessageResource extends BaseResource {
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
         }
     }
-    @PutMapping("/message/develop/update")
+    @PutMapping("/message/update")
     @ApiOperation(value = "更新开发日志", httpMethod = "PUT", response = ResponseEntity.class, notes = "更新开发日志")
     public ResponseEntity updateDevelopMessage(@RequestBody UpdateMessageDTO updateMessageDTO){
         try{
             //权限验证
-            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(updateMessageDTO, "/message/develop/update","PUT");
+            UaaError<UaaUser> uaaError = uaaPermissionService.verifyOperation(updateMessageDTO, "/message/update","PUT");
             if(uaaError.hasError())
                 return prepareReturnResult(uaaError.getFirstError(),null);
-            //TODO 走事物逻辑了
+            //走事物逻辑了
             if(Validators.fieldBlank(updateMessageDTO.getId())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }

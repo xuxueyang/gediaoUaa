@@ -20,10 +20,10 @@ public class UaaLogMessage extends BaseEntity implements Serializable {
     private String id;
 
     @Column(name = "CREATED_ID")
-    private String createdID;
+    private String createdId;
 
     @Column(name = "UPDATED_ID")
-    private String updatedID;
+    private String updatedId;
 
     @Column(name = "PROJECT_TYPE")
     private String projectType;
@@ -61,22 +61,6 @@ public class UaaLogMessage extends BaseEntity implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getCreatedID() {
-        return createdID;
-    }
-
-    public void setCreatedID(String createdID) {
-        this.createdID = createdID;
-    }
-
-    public String getUpdatedID() {
-        return updatedID;
-    }
-
-    public void setUpdatedID(String updatedID) {
-        this.updatedID = updatedID;
     }
 
     public String getId() {
@@ -125,5 +109,21 @@ public class UaaLogMessage extends BaseEntity implements Serializable {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getCreatedId() {
+        return createdId;
+    }
+
+    public void setCreatedId(String createdId) {
+        this.createdId = createdId;
+    }
+
+    public String getUpdatedId() {
+        return updatedId;
+    }
+
+    public void setUpdatedId(String updatedId) {
+        this.updatedId = updatedId;
     }
 }

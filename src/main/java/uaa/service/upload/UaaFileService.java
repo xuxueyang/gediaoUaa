@@ -365,7 +365,7 @@ public class UaaFileService {
             //这种情况只需要要自己的计数+1
             if(uaaFile.getDownNum()==null)
                 uaaFile.setDownNum("1");
-            uaaFile.setDownNum("" + Integer.parseInt(uaaFile.getDownNum())+1);
+            uaaFile.setDownNum("" + (Integer.parseInt(uaaFile.getDownNum())+1));
             fileRepository.save(uaaFile);
         }else{
             //找出一样的MD5的
@@ -373,7 +373,7 @@ public class UaaFileService {
             for(UaaFile file:allByMd5){
                 if(file.getDownNum()==null)
                     file.setDownNum("0");
-                file.setDownNum("" + Integer.parseInt(file.getDownNum())+1);
+                file.setDownNum("" + (Integer.parseInt(file.getDownNum())+1));
                 fileRepository.save(file);
             }
         }

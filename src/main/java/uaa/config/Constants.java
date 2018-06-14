@@ -41,7 +41,9 @@ public final class Constants {
      * 消息
      */
     //消息的工程类别
-    public static final String MESSAGE_PROJECT_TYPE_QINGLONGHUI = "QLH";//青龙会开发进度消息
+    public static final String PROJECT_TYPE_QINGLONGHUI = "QLH";//青龙会开发进度消息
+    public static final String PROJECT_TYPE_PERSONAL_MESSAGE = "PERSONAL_MESSAGE";//个人消息
+
     //消息的类别——已完善-待完善——bug
 
 //    public enum MESSAGE_TYPE{
@@ -54,9 +56,13 @@ public final class Constants {
     public static final String MESSAGE_TYPE_DONE  = "DONE";//已完成
     public static final String MESSAGE_TYPE_BUG = "BUG";//bug
     public static final String MESSAGE_TYPE_QLH_MEMBER_SAY = "QLH_MEMBER_SAY";//作者吐槽——青龙会
+    public static final String MESSAGE_TYPE_PAD = "PAD"; //备忘录
     //消息的状态
     public static final String MESSAGE_STATUS_DELETE = "DELETE";//删除
     public static final String MESSAGE_STATUS_SAVE  = "SAVE";//保存
+    //用户状态
+    public static final String USER_STATUS_SAVE = "S";///保存状态
+    public static final String USER_STATUS_DELETE = "D";//删除
 
     private Constants() {
     }

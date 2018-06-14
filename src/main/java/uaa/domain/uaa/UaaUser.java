@@ -28,6 +28,8 @@ public class UaaUser  extends BaseEntity implements Serializable {
     @Column(name = "LOGIN_NAME", unique = true, nullable = false)
     private String name;
 
+    @Column(name = "PROJECT_TYPE")
+    private String projectType;
 
     @Column(name = "TEL")
     private String tel;
@@ -170,5 +172,13 @@ public class UaaUser  extends BaseEntity implements Serializable {
 
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
     }
 }

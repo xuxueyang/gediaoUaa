@@ -15,7 +15,11 @@ public class CreateUaaUserDTO {
     @ApiModelProperty(name = "email")
     private String email;
 
+    @ApiModelProperty(name = "验证码.如果为空则默认是密码")
+    private String verifyCode;
 
+    @ApiModelProperty(name = "不同项目用户标识，目前只支持青龙会成员注册")
+    private String projectType;
 
     public String getPassword() {
         return password;
@@ -47,5 +51,21 @@ public class CreateUaaUserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
     }
 }

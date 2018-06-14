@@ -26,7 +26,7 @@ public class UaaMessageService {
     private UaaLogMessageRepository messageRepository;
     @Autowired
     private UaaUserRepository uaaUserRepository;
-    public List<MessageDTO> getMessagesByType(String projectType){
+    public List<MessageDTO> getMessagesByProjectType(String projectType){
         List<MessageDTO> messageDTOList = new ArrayList<>();
         //获取到全部的
         List<UaaLogMessage> allByType = messageRepository.findAllByProjectType(projectType);
@@ -43,15 +43,16 @@ public class UaaMessageService {
         return messageDTOList;
     }
     private MessageDTO prepareMessageEntityToDTO(UaaLogMessage message){
-        //验证消息范围
-        if(!Validators.fieldRangeValue(message.getType(),
-            Constants.MESSAGE_TYPE_TODO,
-            Constants.MESSAGE_TYPE_DONE,
-            Constants.MESSAGE_TYPE_BUG,
-            Constants.MESSAGE_TYPE_QLH_MEMBER_SAY
-        )){
-            return null;
-        }
+//        //验证消息范围
+//        if(!Validators.fieldRangeValue(message.getType(),
+//            Constants.MESSAGE_TYPE_TODO,
+//            Constants.MESSAGE_TYPE_DONE,
+//            Constants.MESSAGE_TYPE_BUG,
+//            Constants.MESSAGE_TYPE_PAD,
+//            Constants.MESSAGE_TYPE_QLH_MEMBER_SAY
+//        )){
+//            return null;
+//        }
         MessageDTO dto = new MessageDTO();
         dto.setCreatedDate(message.getCreatedDate());
         dto.setUpdatedDate(message.getUpdatedDate());
@@ -59,7 +60,7 @@ public class UaaMessageService {
         dto.setValue(message.getValue());
         dto.setProjectType(message.getProjectType());
         dto.setPs(message.getPs());
-        UaaUser one = uaaUserRepository.findOne(message.getCreatedID());
+        UaaUser one = uaaUserRepository.findOne(message.getCreatedId());
         if(one==null||"".equals(one.getName()))
             return null;
         dto.setLoginName(one.getName());
@@ -72,8 +73,8 @@ public class UaaMessageService {
         logMessage.setStatus(Constants.MESSAGE_STATUS_SAVE);
         logMessage.setProjectType(projectType);
         logMessage.setType(type);
-        logMessage.setCreatedID(createdId);
-        logMessage.setUpdatedID(createdId);
+        logMessage.setCreatedId(createdId);
+        logMessage.setUpdatedId(createdId);
         logMessage.setCreatedDate(Instant.now());
         logMessage.setUpdatedDate(Instant.now());
         logMessage.setValue(value);
@@ -110,7 +111,7 @@ public class UaaMessageService {
     public void updateMessageValueAndPs(UaaLogMessage logMessage,String value, String ps,String updatedId) {
         logMessage.setPs(ps);
         logMessage.setValue(value);
-        logMessage.setUpdatedID(updatedId);
+        logMessage.setUpdatedId(updatedId);
         logMessage.setUpdatedDate(Instant.now());
         messageRepository.save(logMessage);
     }
@@ -119,7 +120,7 @@ public class UaaMessageService {
         logMessage.setPs(ps);
         logMessage.setType(type);
         logMessage.setUpdatedDate(Instant.now());
-        logMessage.setUpdatedID(updatedId);
+        logMessage.setUpdatedId(updatedId);
         messageRepository.save(logMessage);
     }
 
@@ -128,9 +129,9 @@ public class UaaMessageService {
         newMessage.setPs(ps);
         newMessage.setType(type);
         newMessage.setUpdatedDate(Instant.now());
-        newMessage.setUpdatedID(updatedId);
+        newMessage.setUpdatedId(updatedId);
         newMessage.setCreatedDate(Instant.now());
-        newMessage.setCreatedID(updatedId);
+        newMessage.setCreatedId(updatedId);
         newMessage.setValue(logMessage.getValue());
         newMessage.setTitle(logMessage.getTitle());
         newMessage.setId(UUIDGenerator.getUUID());
@@ -141,5 +142,20 @@ public class UaaMessageService {
         logMessage.setStatus(Constants.MESSAGE_STATUS_DELETE);
         messageRepository.save(logMessage);
         messageRepository.save(newMessage);
+    }
+
+    public Object getMessagesByProjectTypeAndCreatedId(String projectType, String createdid) {
+        List<UaaLogMessage> messageList = messageRepository.findAllByProjectTypeAndCreatedId(projectType, createdid);
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+        if(messageList!=null&&messageList.size()>0){
+            for(UaaLogMessage logMessage:messageList){
+                if(Constants.MESSAGE_STATUS_DELETE.equals(logMessage.getStatus()))
+                    continue;
+                MessageDTO messageDTO = prepareMessageEntityToDTO(logMessage);
+                if(messageDTO!=null)
+                    messageDTOList.add(messageDTO);
+            }
+        }
+        return messageDTOList;
     }
 }
