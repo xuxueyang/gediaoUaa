@@ -181,7 +181,7 @@ public class UaaMessageResource extends BaseResource {
             if(logMessage==null)
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
 
-            uaaMessageService.updateMessageValueAndPs(logMessage,updateMessageDTO.getValue(),updateMessageDTO.getPs(),uaaError.getValue().getId());
+            uaaMessageService.updateMessageValueAndPs(logMessage,updateMessageDTO.getTitle(),updateMessageDTO.getValue(),updateMessageDTO.getPs(),uaaError.getValue().getId());
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);

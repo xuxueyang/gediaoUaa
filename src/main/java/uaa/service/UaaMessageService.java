@@ -108,9 +108,10 @@ public class UaaMessageService {
         return logMessage;
     }
 
-    public void updateMessageValueAndPs(UaaLogMessage logMessage,String value, String ps,String updatedId) {
+    public void updateMessageValueAndPs(UaaLogMessage logMessage,String title,String value, String ps,String updatedId) {
         logMessage.setPs(ps);
         logMessage.setValue(value);
+        logMessage.setTitle(title);
         logMessage.setUpdatedId(updatedId);
         logMessage.setUpdatedDate(Instant.now());
         messageRepository.save(logMessage);

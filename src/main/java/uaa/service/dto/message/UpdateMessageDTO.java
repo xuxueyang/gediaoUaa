@@ -9,6 +9,8 @@ public class UpdateMessageDTO extends UaaBasePremissionDTO {
 
     private String ps;
 
+    private String title;
+
     public String getValue() {
         return value;
     }
@@ -31,5 +33,13 @@ public class UpdateMessageDTO extends UaaBasePremissionDTO {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
