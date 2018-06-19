@@ -17,8 +17,10 @@ import org.springframework.security.oauth2.provider.request.DefaultOAuth2Request
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import uaa.config.ApplicationProperties;
 import uaa.config.Constants;
+import uaa.config.UaaProperties;
 import uaa.domain.uaa.UaaGraph;
 import uaa.domain.uaa.UaaToken;
 import uaa.domain.uaa.UaaUser;
@@ -37,6 +39,10 @@ import java.util.*;
 public class UaaLoginService {
 //    private static ApplicationProperties APPLICATION_PROPERTIES = (ApplicationProperties) SpringLoginUtils.getBean(ApplicationProperties.class);
 
+
+    @Autowired
+    private UaaProperties uaaProperties;
+
     @Autowired
     private UaaGraphRepository uaaGraphRepository;
 
@@ -44,15 +50,14 @@ public class UaaLoginService {
     private UaaTokenRepository uaaTokenRepository;
 
     //生成TOKEN
-//    //Start 生成token
-//    @Autowired
-//    private ClientDetailsService clientDetailsService;
-//    @Autowired
-//    private AuthorizationServerTokenServices tokenServices;
-//
-//    @Autowired
-//    private OAuth2RequestFactory oAuth2RequestFactory;
-//    private OAuth2RequestValidator oAuth2RequestValidator = new DefaultOAuth2RequestValidator();
+    @Autowired
+    private ClientDetailsService clientDetailsService;
+
+    @Autowired
+    private OAuth2RequestFactory oAuth2RequestFactory;
+
+    @Autowired
+    private AuthorizationServerTokenServices tokenServices;
 //    //END 生成token
 
 
@@ -159,71 +164,64 @@ public class UaaLoginService {
         return oneByAccesstoken;
     }
 
-//    /**
-//     * 创建token
-//     *
-//     * @param clientId
-//     * @param acctId
-//     * @param tenantCode
-//     * @return
-//     */
-//    public OAuth2AccessToken createToken(final String clientId, String acctId, final String tenantCode) {
-//        HashMap<String, String> parameters = new HashMap<>();
-//        parameters.put(AUTHORIZED_GRANT_TYPES, AUTHORIZED_GRANT_TYPES_PASSWORD);
-//        parameters.put(AUTHORIZED_GRANT_TYPES_USERNAME, acctId);
-//
-//        ClientDetails authenticatedClient = clientDetailsService.loadClientByClientId(clientId);
-//        TokenRequest tokenRequest = oAuth2RequestFactory.createTokenRequest(parameters, authenticatedClient);
-//        if (clientId != null && !clientId.equals("")) {
-//            // Only validate the client details if a client authenticated during this
-//            // request.
-//            if (!clientId.equals(tokenRequest.getClientId())) {
-//                // double check to make sure that the client ID in the token request is the same as that in the
-//                // authenticated client
-//                throw new InvalidClientException("Given client ID does not match authenticated client");
-//            }
-//        }
-//        if (authenticatedClient != null) {
-//            oAuth2RequestValidator.validateScope(tokenRequest, authenticatedClient);
-//        }
-//        if (!org.springframework.util.StringUtils.hasText(tokenRequest.getGrantType())) {
-//            throw new InvalidRequestException("Missing grant type");
-//        }
-//        if (tokenRequest.getGrantType().equals("implicit")) {
-//            throw new InvalidGrantException("Implicit grant type not supported from token endpoint");
-//        }
-//
-//        if (isAuthCodeRequest(parameters)) {
-//            // The scope was requested or determined during the authorization step
-//            if (!tokenRequest.getScope().isEmpty()) {
-//                System.out.println("Clearing scope of incoming token request");
-//                tokenRequest.setScope(Collections.<String>emptySet());
-//            }
-//        }
-//
-//        if (isRefreshTokenRequest(parameters)) {
-//            // A refresh token has its own default scopes, so we should ignore any added by the factory here.
-//            tokenRequest.setScope(OAuth2Utils.parseParameterList(parameters.get(OAuth2Utils.SCOPE)));
-//        }
-//
-//        OAuth2Request storedOAuth2Request = oAuth2RequestFactory.createOAuth2Request(authenticatedClient, tokenRequest);
-//
-//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-//
-//        grantedAuthorities.add((new SimpleGrantedAuthority(Constants.ANONYMOUS_USER)));
-//
-//        Authentication userAuth = new UsernamePasswordAuthenticationToken(tenantCode + Constants.TOKEN_BODY_SEPARATOR + acctId, "", grantedAuthorities);
-//        OAuth2AccessToken token = tokenServices.createAccessToken(new OAuth2Authentication(storedOAuth2Request, userAuth));
-//        if (token == null) {
-//            throw new UnsupportedGrantTypeException("Unsupported grant type: " + tokenRequest.getGrantType());
-//        }
-//        return token;
-//    }
-//    private boolean isAuthCodeRequest(Map<String, String> parameters) {
-//        return "authorization_code".equals(parameters.get("grant_type")) && parameters.get("code") != null;
-//    }
-//    private boolean isRefreshTokenRequest(Map<String, String> parameters) {
-//        return "refresh_token".equals(parameters.get("grant_type")) && parameters.get("refresh_token") != null;
-//    }
+    public OAuth2AccessToken getToken(String userId){
+        String clientId = uaaProperties.getWebClientConfiguration().getClientId();
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(AUTHORIZED_GRANT_TYPES, AUTHORIZED_GRANT_TYPES_PASSWORD);
+        parameters.put(AUTHORIZED_GRANT_TYPES_USERNAME, userId);
 
+        ClientDetails authenticatedClient = clientDetailsService.loadClientByClientId(clientId);
+        TokenRequest tokenRequest = oAuth2RequestFactory.createTokenRequest(parameters, authenticatedClient);
+
+        if (clientId != null && !clientId.equals("")) {
+            if (!clientId.equals(tokenRequest.getClientId())) {
+                throw new InvalidClientException("Given client ID does not match authenticated client");
+            }
+        }
+
+        if (authenticatedClient != null) {
+            OAuth2RequestValidator oAuth2RequestValidator = new DefaultOAuth2RequestValidator();
+            oAuth2RequestValidator.validateScope(tokenRequest, authenticatedClient);
+        }
+        if (!StringUtils.hasText(tokenRequest.getGrantType())) {
+            throw new InvalidRequestException("Missing grant type");
+        }
+        if (tokenRequest.getGrantType().equals("implicit")) {
+            throw new InvalidGrantException("Implicit grant type not supported from token endpoint");
+        }
+
+        if (isAuthCodeRequest(parameters)) {
+            // The scope was requested or determined during the authorization step
+            if (!tokenRequest.getScope().isEmpty()) {
+                tokenRequest.setScope(Collections.<String>emptySet());
+            }
+        }
+
+        if (isRefreshTokenRequest(parameters)) {
+            // A refresh token has its own default scopes, so we should ignore any added by the factory here.
+            tokenRequest.setScope(OAuth2Utils.parseParameterList(parameters.get(OAuth2Utils.SCOPE)));
+        }
+
+        //OAuth2AccessToken token = tokenGranter.grant(tokenRequest.getGrantType(), tokenRequest);
+        OAuth2Request storedOAuth2Request = oAuth2RequestFactory.createOAuth2Request(authenticatedClient, tokenRequest);
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+
+        grantedAuthorities.add((new SimpleGrantedAuthority("anonymoususer")));
+
+        Authentication userAuth = new UsernamePasswordAuthenticationToken(userId, "", grantedAuthorities);
+        OAuth2AccessToken token = tokenServices.createAccessToken(new OAuth2Authentication(storedOAuth2Request, userAuth));
+        if (token == null) {
+            throw new UnsupportedGrantTypeException("Unsupported grant type: " + tokenRequest.getGrantType());
+        }
+
+        return token;
+    }
+    private boolean isAuthCodeRequest(Map<String, String> parameters) {
+        return "authorization_code".equals(parameters.get("grant_type")) && parameters.get("code") != null;
+    }
+
+    private boolean isRefreshTokenRequest(Map<String, String> parameters) {
+        return "refresh_token".equals(parameters.get("grant_type")) && parameters.get("refresh_token") != null;
+    }
 }
