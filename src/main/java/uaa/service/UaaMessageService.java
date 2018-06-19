@@ -68,7 +68,7 @@ public class UaaMessageService {
         dto.setId(message.getId());
         return dto;
     }
-    public void  createMessage(String createdId,String title,String projectType,String type,String value){
+    public void  createMessage(String ps,String createdId,String title,String projectType,String type,String value){
         UaaLogMessage logMessage = new UaaLogMessage();
         logMessage.setStatus(Constants.MESSAGE_STATUS_SAVE);
         logMessage.setProjectType(projectType);
@@ -79,7 +79,7 @@ public class UaaMessageService {
         logMessage.setUpdatedDate(Instant.now());
         logMessage.setValue(value);
         logMessage.setTitle(title);
-//        logMessage.setPs(ps);
+        logMessage.setPs(ps);
         logMessage.setId(UUIDGenerator.getUUID());
         messageRepository.save(logMessage);
     }

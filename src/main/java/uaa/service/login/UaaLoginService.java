@@ -24,12 +24,15 @@ import uaa.config.UaaProperties;
 import uaa.domain.uaa.UaaGraph;
 import uaa.domain.uaa.UaaToken;
 import uaa.domain.uaa.UaaUser;
+import uaa.domain.uaa.UaaVisitRecord;
 import uaa.repository.uaa.UaaGraphRepository;
 import uaa.repository.uaa.UaaTokenRepository;
+import uaa.repository.uaa.UaaVisitCountRepository;
 import uaa.service.dto.login.UserInfo;
 import util.CaptchaGenerator;
 import util.UUIDGenerator;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -59,7 +62,8 @@ public class UaaLoginService {
     @Autowired
     private AuthorizationServerTokenServices tokenServices;
 //    //END 生成token
-
+    @Autowired
+    private UaaVisitCountRepository uaaVisitCountRepository;
 
     private final String AUTHORIZED_GRANT_TYPES_USERNAME = "username";
     private final String AUTHORIZED_GRANT_TYPES_PASSWORD = "password";
@@ -164,6 +168,30 @@ public class UaaLoginService {
         return oneByAccesstoken;
     }
 
+    public int visitcount(HttpServletRequest request) {
+        //保存，并计数
+        UaaVisitRecord record = new UaaVisitRecord();
+        record.setId(UUIDGenerator.getUUID());
+        record.setCreatedDate(Instant.now());
+        record.setIp(getIpAddr(request));
+        uaaVisitCountRepository.save(record);
+//        return uaaVisitCountRepository.countAll();
+        List<UaaVisitRecord> all = uaaVisitCountRepository.findAll();
+        return all.size();
+    }
+    private String getIpAddr(HttpServletRequest request) {
+        String ip = request.getHeader(" x-forwarded-for ");
+        if (ip == null || ip.length() == 0 || " unknown ".equalsIgnoreCase(ip)) {
+            ip = request.getHeader(" Proxy-Client-IP ");
+        }
+        if (ip == null || ip.length() == 0 || " unknown ".equalsIgnoreCase(ip)) {
+            ip = request.getHeader(" WL-Proxy-Client-IP ");
+        }
+        if (ip == null || ip.length() == 0 || " unknown ".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
     public OAuth2AccessToken getToken(String userId){
         String clientId = uaaProperties.getWebClientConfiguration().getClientId();
         Map<String, String> parameters = new HashMap<>();
@@ -224,4 +252,6 @@ public class UaaLoginService {
     private boolean isRefreshTokenRequest(Map<String, String> parameters) {
         return "refresh_token".equals(parameters.get("grant_type")) && parameters.get("refresh_token") != null;
     }
+
+
 }

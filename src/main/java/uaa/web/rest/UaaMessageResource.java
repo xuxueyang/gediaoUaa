@@ -44,7 +44,10 @@ public class UaaMessageResource extends BaseResource {
         try {
             //TODO 对于projectType也需要做权限认真，看是不是要登录名等
             //QLH不做验证，返回其他的需要验证
-            if(Validators.fieldBlank(token)&&!Constants.PROJECT_TYPE_QINGLONGHUI.equals(projectType)){
+            if(Validators.fieldBlank(token)&&(
+                !Constants.PROJECT_TYPE_QINGLONGHUI.equals(projectType)
+                &&!Constants.PROJECT_TYPE_UE4_XY.equals(projectType)
+            )){
                 return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
             }
             //如果token不为空需要找出User,然后搜索出下面的消息
@@ -84,7 +87,9 @@ public class UaaMessageResource extends BaseResource {
                 ||Validators.fieldBlank(createMessageDTO.getLoginName())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
-            if(!Validators.fieldRangeValue(createMessageDTO.getProjectType(),Constants.PROJECT_TYPE_QINGLONGHUI))
+            if(!Validators.fieldRangeValue(createMessageDTO.getProjectType(),
+                Constants.PROJECT_TYPE_QINGLONGHUI,
+                Constants.PROJECT_TYPE_UE4_XY))
             {
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
@@ -93,12 +98,13 @@ public class UaaMessageResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
             //验证消息范围
-            if(!Validators.fieldRangeValue(createMessageDTO.getType(),
+            if(!Validators.fieldRangeValue(
+                createMessageDTO.getType(),
                 Constants.MESSAGE_TYPE_TODO,
                 Constants.MESSAGE_TYPE_DONE,
                 Constants.MESSAGE_TYPE_BUG,
                 Constants.MESSAGE_TYPE_PAD,
-                Constants.MESSAGE_TYPE_QLH_MEMBER_SAY
+                Constants.MESSAGE_TYPE_MEMBER_SAY
             )){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
@@ -107,7 +113,7 @@ public class UaaMessageResource extends BaseResource {
             if(uaaError.hasError())
                 return prepareReturnResult(uaaError.getFirstError(),null);
             //执行操作
-            uaaMessageService.createMessage(((UaaUser)uaaError.getValue()).getId(),createMessageDTO.getTitle(),createMessageDTO.getProjectType(),
+            uaaMessageService.createMessage(createMessageDTO.getPs(),((UaaUser)uaaError.getValue()).getId(),createMessageDTO.getTitle(),createMessageDTO.getProjectType(),
                 createMessageDTO.getType(),createMessageDTO.getValue());
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,null);
         }catch (Exception e){

@@ -12,6 +12,9 @@ public class CreateUaaUserDTO {
     @ApiModelProperty(name = "tel")
     private String tel;
 
+    @ApiModelProperty(name = "昵称")
+    private String nickName;
+
     @ApiModelProperty(name = "email")
     private String email;
 
@@ -67,5 +70,13 @@ public class CreateUaaUserDTO {
 
     public void setProjectType(String projectType) {
         this.projectType = projectType;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }

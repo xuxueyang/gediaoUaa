@@ -14,6 +14,8 @@ import uaa.service.login.UaaLoginService;
 import util.UUIDGenerator;
 import util.Validators;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 
@@ -42,6 +44,16 @@ public class UaaLoginResource extends BaseResource{
         try {
             Map<String,Object> map = uaaLoginService.createGraph();
             return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE,null);
+        }
+    }
+    @PostMapping("/login/visit-count")
+    @ApiOperation(value = "访问计数", httpMethod = "POST", response = ResponseEntity.class, notes = "访问计数")
+    public ResponseEntity<?> visitCount(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            int num = uaaLoginService.visitcount(request);
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,num);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE,null);
         }

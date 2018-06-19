@@ -16,6 +16,9 @@ public class CreateMessageDTO  extends UaaBasePremissionDTO{
     @ApiModelProperty(value = "主题")
     private String title;
 
+    @ApiModelProperty(value = "备注")
+    private String ps;
+
     public String getType() {
         return type;
     }
@@ -39,5 +42,13 @@ public class CreateMessageDTO  extends UaaBasePremissionDTO{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }
