@@ -30,6 +30,20 @@ public class UaaResource  implements Serializable {
     @Column(name = "PROJECT_TYPE")
     private String projectType;
 
+    @Column(name = "SERVICE_IP")
+    private String serviceIp;
+
+    @Column(name = "SERVICE_PATH")
+    private String servicePath;
+
+    @Column(name = "NAME")
+    private String name;
+
+    @Column(name = "SUFFIX")
+    private String suffix;
+    @Column(name = "DESCRIPTION")
+    private String description;
+
     public String getId() {
         return id;
     }
@@ -68,5 +82,45 @@ public class UaaResource  implements Serializable {
 
     public void setProjectType(String projectType) {
         this.projectType = projectType;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getServiceIp() {
+        return serviceIp;
+    }
+
+    public void setServiceIp(String serviceIp) {
+        this.serviceIp = serviceIp;
+    }
+
+    public String getServicePath() {
+        return servicePath;
+    }
+
+    public void setServicePath(String servicePath) {
+        this.servicePath = servicePath;
     }
 }

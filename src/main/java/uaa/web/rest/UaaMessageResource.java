@@ -42,14 +42,14 @@ public class UaaMessageResource extends BaseResource {
     @ApiOperation(value = "获取开发日志", httpMethod = "GET", response = ResponseEntity.class, notes = "获取开发日志")
     public ResponseEntity getDevelopMessage(@PathParam("projectType") String projectType,@PathParam("token") String token){
         try {
-            //TODO 对于projectType也需要做权限认真，看是不是要登录名等
-            //QLH不做验证，返回其他的需要验证
-            if(Validators.fieldBlank(token)&&(
-                !Constants.PROJECT_TYPE_QINGLONGHUI.equals(projectType)
-                &&!Constants.PROJECT_TYPE_UE4_XY.equals(projectType)
-            )){
-                return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
-            }
+//            //TODO 对于projectType也需要做权限认真，看是不是要登录名等
+//            //QLH不做验证，返回其他的需要验证
+//            if(Validators.fieldBlank(token)&&(
+//                !Constants.PROJECT_TYPE_QINGLONGHUI.equals(projectType)
+//                &&!Constants.PROJECT_TYPE_UE4_XY.equals(projectType)
+//            )){
+//                return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
+//            }
             //如果token不为空需要找出User,然后搜索出下面的消息
             if(Validators.fieldBlank(token))
                 return prepareReturnResult(ReturnCode.CREATE_SUCCESS,uaaMessageService.getMessagesByProjectType(projectType));
@@ -87,12 +87,12 @@ public class UaaMessageResource extends BaseResource {
                 ||Validators.fieldBlank(createMessageDTO.getLoginName())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
-            if(!Validators.fieldRangeValue(createMessageDTO.getProjectType(),
-                Constants.PROJECT_TYPE_QINGLONGHUI,
-                Constants.PROJECT_TYPE_UE4_XY))
-            {
-                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
-            }
+//            if(!Validators.fieldRangeValue(createMessageDTO.getProjectType(),
+//                Constants.PROJECT_TYPE_QINGLONGHUI,
+//                Constants.PROJECT_TYPE_UE4_XY))
+//            {
+//                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+//            }
             if(Validators.fieldBlank(createMessageDTO.getToken())&&(Validators.fieldBlank(createMessageDTO.getVerifyCode())
                 ||Validators.fieldBlank(createMessageDTO.getLoginName()))){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
