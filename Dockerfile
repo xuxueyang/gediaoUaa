@@ -1,11 +1,11 @@
 # dockerfile 基础配置
-FROM daocloud.io/library/java:8u40-b22
+FROM java:8
 VOLUME /tmp
 ARG JAR_FILE
-ADD ${JAR_FILE} /usr/local/qinglonghui/uaa-0.0.1-SNAPSHOT.war
-WORKDIR /opt/docker
-EXPOSE 8761
-ENTRYPOINT ["java","-jar","./uaa-0.0.1-SNAPSHOT.war"]
+ADD ${JAR_FILE} app.jar
+RUN bash -c 'touch /app.jar'
+EXPOSE 8800
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 
 
 #DOCKER_HOST=tcp://193.112.17.169:2375  mvn clean package dockerfile:build -DskipTests
@@ -14,3 +14,5 @@ ENTRYPOINT ["java","-jar","./uaa-0.0.1-SNAPSHOT.war"]
 #    <pluginGroup>com.spotify</pluginGroup>
 #</pluginGroups>
 #https://blog.csdn.net/a610786189/article/details/79746426
+#docker run -tid --net=host --name docker_host1 qlh/uaa
+
