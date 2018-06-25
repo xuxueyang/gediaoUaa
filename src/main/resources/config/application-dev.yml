@@ -194,7 +194,7 @@ application:
             username: root
             password: Xuxueyang1
             upload-server-file-root-path: /usr/local/FILEUPLOAD
-    version: 0
+    version: 0.1
     client : qinglonghui
     project-type: QLH
 

@@ -39,6 +39,7 @@
         <start-class>uaa.UaaApp</start-class>
         <!-- Build properties -->
         <com.xxy.base.version>1.0</com.xxy.base.version>
+        <docker.image.prefix>qlh</docker.image.prefix>
         <maven.version>3.0.0</maven.version>
         <java.version>1.8</java.version>
         <scala.version>2.12.1</scala.version>
@@ -668,9 +669,12 @@
                 </executions>
                 -->
                 <configuration>
-                    <repository>uaa</repository>
+                    <!--<repository>qlh-uaa</repository>-->
                     <tag>latest</tag>
-                    <contextDirectory>${project.build.directory}</contextDirectory>
+                    <repository>${docker.image.prefix}/${project.artifactId}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.war</JAR_FILE>
+                    </buildArgs>
                 </configuration>
             </plugin>
             <!-- jhipster-needle-maven-add-plugin -->
