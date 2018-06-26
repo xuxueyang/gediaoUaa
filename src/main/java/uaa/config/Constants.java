@@ -23,6 +23,9 @@ public final class Constants {
     //token超时时间
     public static final Long TOKEN_VALID_TIME = 30*60L;
 
+    public static final Long IP_RECORD_TIME = 30*60L;
+
+
     //LogEach状态
     public static final String APP_LOG_STATUS_SAVE = "S";///保存状态
     public static final String APP_LOG_STATUS_DELETE = "D";//删除

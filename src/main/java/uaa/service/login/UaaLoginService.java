@@ -170,13 +170,30 @@ public class UaaLoginService {
 
     public int visitcount(HttpServletRequest request) {
         //保存，并计数
-        UaaVisitRecord record = new UaaVisitRecord();
-        record.setId(UUIDGenerator.getUUID());
-        record.setCreatedDate(Instant.now());
-        record.setIp(getIpAddr(request));
-        uaaVisitCountRepository.save(record);
-//        return uaaVisitCountRepository.countAll();
         List<UaaVisitRecord> all = uaaVisitCountRepository.findAll();
+        //判断IP
+        String ip = getIpAddr(request);
+        boolean needRecord = true;
+        if(all!=null&&all.size()>0){
+            for(UaaVisitRecord record:all){
+                if(ip.equals(record.getIp())){
+                    //如果有在半小时里的登录记录，那么就不记录
+                    Instant instant = record.getCreatedDate().plusSeconds(Constants.IP_RECORD_TIME);
+                    if(instant.isAfter(Instant.now())){
+                        needRecord = false;
+                        break;
+                    }
+                }
+            }
+        }
+        if(needRecord){
+            UaaVisitRecord record = new UaaVisitRecord();
+            record.setId(UUIDGenerator.getUUID());
+            record.setCreatedDate(Instant.now());
+            record.setIp(ip);
+            uaaVisitCountRepository.save(record);
+            return all.size()+1;
+        }
         return all.size();
     }
     private String getIpAddr(HttpServletRequest request) {
