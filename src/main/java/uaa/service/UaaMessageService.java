@@ -29,7 +29,7 @@ public class UaaMessageService {
     public List<MessageDTO> getMessagesByProjectType(String projectType){
         List<MessageDTO> messageDTOList = new ArrayList<>();
         //获取到全部的
-        List<UaaLogMessage> allByType = messageRepository.findAllByProjectType(projectType);
+        List<UaaLogMessage> allByType = messageRepository.findAllByProjectTypeOrderByUpdatedId(projectType);
         //转DTO返回，前端根据BUG、T ODO、DONE，显示红色，黄色，蓝色，做区分
         if(allByType!=null&&allByType.size()>0){
             for(UaaLogMessage logMessage:allByType){
@@ -102,7 +102,7 @@ public class UaaMessageService {
      * @return
      */
     public UaaLogMessage findProjectCanUpdateMessageById(String projectType,String id) {
-        UaaLogMessage logMessage = messageRepository.findOneByProjectTypeAndId(projectType, id);
+        UaaLogMessage logMessage = messageRepository.findOneByProjectTypeAndIdOrderByUpdatedId(projectType, id);
         if(Constants.MESSAGE_STATUS_DELETE.equals(logMessage.getStatus()))
             return null;
         return logMessage;
@@ -146,7 +146,7 @@ public class UaaMessageService {
     }
 
     public Object getMessagesByProjectTypeAndCreatedId(String projectType, String createdid) {
-        List<UaaLogMessage> messageList = messageRepository.findAllByProjectTypeAndCreatedId(projectType, createdid);
+        List<UaaLogMessage> messageList = messageRepository.findAllByProjectTypeAndCreatedIdOrderByUpdatedId(projectType, createdid);
         List<MessageDTO> messageDTOList = new ArrayList<>();
         if(messageList!=null&&messageList.size()>0){
             for(UaaLogMessage logMessage:messageList){

@@ -6,7 +6,7 @@ import uaa.domain.uaa.UaaLogMessage;
 import java.util.List;
 
 public interface UaaLogMessageRepository extends JpaRepository<UaaLogMessage, String> {
-    List<UaaLogMessage> findAllByProjectType(String projectType);
-    UaaLogMessage findOneByProjectTypeAndId(String projectType,String id);
-    List<UaaLogMessage> findAllByProjectTypeAndCreatedId(String projectType,String createdID);
+    List<UaaLogMessage> findAllByProjectTypeOrderByUpdatedId(String projectType);
+    UaaLogMessage findOneByProjectTypeAndIdOrderByUpdatedId(String projectType,String id);
+    List<UaaLogMessage> findAllByProjectTypeAndCreatedIdOrderByUpdatedId(String projectType,String createdID);
 }
