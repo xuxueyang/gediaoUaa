@@ -32,8 +32,7 @@ public class UaaUserResource extends BaseResource {
     @ApiOperation(value = "注册", httpMethod = "POST", response = ResponseEntity.class, notes = "注册;目前只支持青龙会的人注册")
     public ResponseEntity updateDayInfo(@RequestBody CreateUaaUserDTO createUaaUserDTO) {
         try {
-            if(Validators.fieldBlank(createUaaUserDTO.getProjectType())
-                || !Constants.PROJECT_TYPE_QINGLONGHUI.equals(createUaaUserDTO.getProjectType())){
+            if(Validators.fieldBlank(createUaaUserDTO.getProjectType())){
                 return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
             }
             if (Validators.fieldBlank(createUaaUserDTO.getPassword()) ||
