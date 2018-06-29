@@ -29,7 +29,7 @@ public class UaaUserResource extends BaseResource {
     private UaaUserService uaaUserService;
 
     @PostMapping("/user/reg")
-    @ApiOperation(value = "注册", httpMethod = "POST", response = ResponseEntity.class, notes = "注册;目前只支持青龙会的人注册")
+    @ApiOperation(value = "注册", httpMethod = "POST", response = ResponseEntity.class, notes = "注册")
     public ResponseEntity updateDayInfo(@RequestBody CreateUaaUserDTO createUaaUserDTO) {
         try {
             if(Validators.fieldBlank(createUaaUserDTO.getProjectType())){
