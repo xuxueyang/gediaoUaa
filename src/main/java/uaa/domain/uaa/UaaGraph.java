@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class UaaGraph extends BaseEntity implements Serializable{
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "VALUE")
