@@ -121,8 +121,7 @@ public class UaaLoginService {
         Map map = new HashMap<String,Object>();
         //生成token
 //        OAuth2AccessToken token = createToken(APPLICATION_PROPERTIES.getClient(),uaaUser.getId(), uaaUser.getTenantCode());
-        String token = createToken("qinglonghui",uaaUser.getId(), uaaUser.getTenantCode());
-
+        String token = createToken(uaaUser.getId(), uaaUser.getTenantCode());
         //技术原因，先只用token就好了
         map.put(Constants.ACCESS_TOKEN,token);
 //        map.put(Constants.REFRESH_TOKEN,token.getRefreshToken().getValue());
@@ -140,7 +139,7 @@ public class UaaLoginService {
         return map;
     }
 
-    private String createToken(String qinglonghui, String id, String tenantCode) {
+    private String createToken( String id, String tenantCode) {
         return UUIDGenerator.getUUID();
     }
 
@@ -152,6 +151,7 @@ public class UaaLoginService {
         userInfo.setEmail(uaaUser.getEmail());
         userInfo.setName(uaaUser.getName());
         userInfo.setNickName(uaaUser.getNickName());
+        userInfo.setId(uaaUser.getId());
         return userInfo;
     }
     public UaaToken getUserByToken(String token){
@@ -159,8 +159,8 @@ public class UaaLoginService {
         UaaToken oneByAccesstoken = uaaTokenRepository.findOneByAccesstoken(token);
         if(oneByAccesstoken==null)
             return null;
-        Instant toTime = oneByAccesstoken.getCreatedDate().plusSeconds(oneByAccesstoken.getValidtime());
-        if(!toTime.isAfter(Instant.now())){
+        ZonedDateTime toTime = oneByAccesstoken.getCreatedDate().plusSeconds(oneByAccesstoken.getValidtime());
+        if(!toTime.isAfter(ZonedDateTime.now())){
             //删除token
             uaaTokenRepository.delete(oneByAccesstoken.getId());
             return null;

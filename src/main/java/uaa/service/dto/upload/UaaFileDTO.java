@@ -1,14 +1,15 @@
 package uaa.service.dto.upload;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 
 public class UaaFileDTO {
     private String id;
     private String name;
     private String createdId;
     private String updatedId;
-    private Instant createdDate;
-    private Instant updatedDate;
+    private ZonedDateTime createdDate;
+    private ZonedDateTime updatedDate;
     private String size;
     private String md5;
     private String downNum;
@@ -53,19 +54,19 @@ public class UaaFileDTO {
         this.size = size;
     }
 
-    public Instant getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Instant getUpdatedDate() {
+    public ZonedDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Instant updatedDate) {
+    public void setUpdatedDate(ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 

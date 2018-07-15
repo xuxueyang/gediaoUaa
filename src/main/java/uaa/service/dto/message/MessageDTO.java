@@ -1,6 +1,7 @@
 package uaa.service.dto.message;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 
 public class MessageDTO {
     private String type;
@@ -8,8 +9,8 @@ public class MessageDTO {
     private String projectType;
 
     private String value;
-    private Instant createdDate;
-    private Instant updatedDate;
+    private ZonedDateTime createdDate;
+    private ZonedDateTime updatedDate;
     private String loginName;
     private String id;
 
@@ -31,19 +32,19 @@ public class MessageDTO {
         this.value = value;
     }
 
-    public Instant getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Instant getUpdatedDate() {
+    public ZonedDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Instant updatedDate) {
+    public void setUpdatedDate(ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 

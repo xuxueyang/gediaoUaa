@@ -1,6 +1,5 @@
 package uaa.web.rest;
 
-import core.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,12 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uaa.service.EmailService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 @Api(value = "发送邮件",description = "发送邮件")
 @RestController

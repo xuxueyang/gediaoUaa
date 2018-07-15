@@ -6,5 +6,5 @@ import uaa.domain.app.log.AppLogEach;
 import java.util.List;
 
 public interface AppLogEachRepository extends JpaRepository<AppLogEach,String> {
-    List<AppLogEach> findAllByCreatedId(String userId);
+    List<AppLogEach> findAllByCreatedIdAndStatusNotOrderByUpdatedDateDesc(String userId,String status);
 }

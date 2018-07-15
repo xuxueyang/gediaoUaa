@@ -1,6 +1,5 @@
 package uaa.web.rest;
 
-import core.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

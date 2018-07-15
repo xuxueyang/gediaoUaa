@@ -1,6 +1,6 @@
 package uaa.web.rest.login;
 
-import core.BaseResource;
+import uaa.web.rest.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

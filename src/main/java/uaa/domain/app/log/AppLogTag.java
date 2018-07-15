@@ -9,8 +9,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "app_log_tag")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class AppLogTag extends BaseEntity implements Serializable {
+public class AppLogTag extends BaseEntity implements Serializable{
 
     @Id
     @Column(name = "ID")
@@ -23,7 +22,7 @@ public class AppLogTag extends BaseEntity implements Serializable {
     @Column(name = "TYPE")
     private String type;
 
-    @Column(name = "GROUP")
+    @Column(name = "GROUP_NAME")
     private String group;
 
 

@@ -3,6 +3,8 @@ package uaa.service.dto.login;
 import io.swagger.annotations.ApiModelProperty;
 
 public class UserInfo {
+    @ApiModelProperty(name = "用户标记")
+    private String id;
     @ApiModelProperty(name = "登录名")
     private String name;
 
@@ -56,5 +58,13 @@ public class UserInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

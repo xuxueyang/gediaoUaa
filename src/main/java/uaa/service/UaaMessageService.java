@@ -16,6 +16,7 @@ import util.UUIDGenerator;
 import util.Validators;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,8 +76,8 @@ public class UaaMessageService {
         logMessage.setType(type);
         logMessage.setCreatedId(createdId);
         logMessage.setUpdatedId(createdId);
-        logMessage.setCreatedDate(Instant.now());
-        logMessage.setUpdatedDate(Instant.now());
+        logMessage.setCreatedDate(ZonedDateTime.now());
+        logMessage.setUpdatedDate(ZonedDateTime.now());
         logMessage.setValue(value);
         logMessage.setTitle(title);
         logMessage.setPs(ps);
@@ -113,14 +114,14 @@ public class UaaMessageService {
         logMessage.setValue(value);
         logMessage.setTitle(title);
         logMessage.setUpdatedId(updatedId);
-        logMessage.setUpdatedDate(Instant.now());
+        logMessage.setUpdatedDate(ZonedDateTime.now());
         messageRepository.save(logMessage);
     }
 
     public void updateMessageTypeAndPs(UaaLogMessage logMessage, String type, String ps, String updatedId) {
         logMessage.setPs(ps);
         logMessage.setType(type);
-        logMessage.setUpdatedDate(Instant.now());
+        logMessage.setUpdatedDate(ZonedDateTime.now());
         logMessage.setUpdatedId(updatedId);
         messageRepository.save(logMessage);
     }
@@ -129,9 +130,9 @@ public class UaaMessageService {
         UaaLogMessage newMessage = new UaaLogMessage();
         newMessage.setPs(ps);
         newMessage.setType(type);
-        newMessage.setUpdatedDate(Instant.now());
+        newMessage.setUpdatedDate(ZonedDateTime.now());
         newMessage.setUpdatedId(updatedId);
-        newMessage.setCreatedDate(Instant.now());
+        newMessage.setCreatedDate(ZonedDateTime.now());
         newMessage.setCreatedId(updatedId);
         newMessage.setValue(logMessage.getValue());
         newMessage.setTitle(logMessage.getTitle());

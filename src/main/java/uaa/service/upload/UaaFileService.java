@@ -27,6 +27,7 @@ import java.io.*;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -260,8 +261,8 @@ public class UaaFileService {
                 uaaFile.setServiceIp(this.ipAddr);
                 uaaFile.setRootFilePath(this.uploadServerFileRootPath);
                 uaaFile.setRelFilePath("/"+pathFilehName);
-                uaaFile.setCreatedDate(Instant.now());
-                uaaFile.setUpdatedDate(Instant.now());
+                uaaFile.setCreatedDate(ZonedDateTime.now());
+                uaaFile.setUpdatedDate(ZonedDateTime.now());
                 uaaFile.setMd5(md5);
                 fileRepository.save(uaaFile);
                 return uaaFile;
@@ -281,8 +282,8 @@ public class UaaFileService {
             newFile.setServiceIp(uaaFile.getServiceIp());
             newFile.setRelFilePath(uaaFile.getRelFilePath());
             newFile.setRootFilePath(uaaFile.getRootFilePath());
-            newFile.setCreatedDate(Instant.now());
-            newFile.setUpdatedDate(Instant.now());
+            newFile.setCreatedDate(ZonedDateTime.now());
+            newFile.setUpdatedDate(ZonedDateTime.now());
             newFile.setMd5(uaaFile.getMd5());
             fileRepository.save(newFile);
             return newFile;

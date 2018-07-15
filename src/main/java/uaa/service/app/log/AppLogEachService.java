@@ -76,7 +76,7 @@ public class AppLogEachService {
         appLogEachDTO.setBelongDate(appLogEach.getBelongDate());
         appLogEachDTO.setMessage(appLogEach.getMessage());
         appLogEachDTO.setTitle(appLogEach.getTitle());
-        appLogEachDTO.setType(appLogEach.getType());
+        appLogEachDTO.setStatus(appLogEach.getType());
 //        appLogEachDTO.setAppLogDetailDTOList();
         return appLogEachDTO;
     }
@@ -93,6 +93,7 @@ public class AppLogEachService {
         appLogEach.setBelongDate(updateLogEachDTO.getBelongDate());
         appLogEach.setTitle(updateLogEachDTO.getTitle());
         appLogEach.setUpdatedID(updateId);
+        appLogEach.setType(updateLogEachDTO.getStatus());
         appLogEach.setMessage(updateLogEachDTO.getMessage());
         //对于分类进行修改
         if(updateLogEachDTO.getTags()==null||updateLogEachDTO.getTags().size()==0){
@@ -128,6 +129,7 @@ public class AppLogEachService {
         AppLogEach appLogEach = new AppLogEach();
         appLogEach.setCreatedId(createdid);
         appLogEach.setUpdatedID(createdid);
+        appLogEach.setType(createLogEachDTO.getStatus());
         appLogEach.setMessage(createLogEachDTO.getMessage());
         appLogEach.setTitle(createLogEachDTO.getTitle());
         appLogEach.setBelongDate(createLogEachDTO.getBelongDate());
@@ -160,21 +162,25 @@ public class AppLogEachService {
             appLogDetail.setStatus(Constants.APP_LOG_STATUS_DELETE);
             appLogDetailService.saveDetail(appLogDetail);
         }
-        Set<AppLogEachTag> tags = appLogEach.getTags();
-        for(AppLogEachTag tag:tags){
-            tag.setStatus(Constants.APP_LOG_STATUS_DELETE);
-            appLogEachTagRepository.save(tag);
-        }
+//        Set<AppLogEachTag> tags = appLogEach.getTags();
+//        for(AppLogEachTag tag:tags){
+//            tag.setStatus(Constants.APP_LOG_STATUS_DELETE);
+//            appLogEachTagRepository.save(tag);
+//        }
         appLogEach.setStatus(Constants.APP_LOG_STATUS_DELETE);
         appLogEachRepository.save(appLogEach);
     }
 
     public List<AppLogEachDTO> getAllEach(String userId) {
-        List<AppLogEach> allByCreatedId = appLogEachRepository.findAllByCreatedId(userId);
+        List<AppLogEach> allByCreatedId = appLogEachRepository.findAllByCreatedIdAndStatusNotOrderByUpdatedDateDesc(userId,Constants.APP_LOG_STATUS_DELETE);
         List<AppLogEachDTO> dtoList = new ArrayList<>();
-        for(AppLogEach appLogEach: allByCreatedId){
-            dtoList.add(prepareEachEntityToDTO(appLogEach));
+        //根据日期排序
+        if(allByCreatedId!=null&&allByCreatedId.size()>0){
+            for(AppLogEach appLogEach: allByCreatedId){
+                dtoList.add(prepareEachEntityToDTO(appLogEach));
+            }
         }
         return dtoList;
     }
+
 }

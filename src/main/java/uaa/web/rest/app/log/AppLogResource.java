@@ -1,7 +1,9 @@
 package uaa.web.rest.app.log;
 
 
-import core.BaseResource;
+import uaa.domain.UaaError;
+import uaa.domain.uaa.UaaUser;
+import uaa.web.rest.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +51,17 @@ public class AppLogResource extends BaseResource{
         }
     }
 
-    @GetMapping("/tags}")
+    @GetMapping("/tags")
     @ApiOperation(value = "获取相应的day信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的day信息")
-    public ResponseEntity getDays(){
+    public ResponseEntity getTags(@RequestParam( name = "token",required = true) String token,
+                                  @RequestParam( name = "userId",required = true) String userId
+                                  ){
         try {
-            List<AppLogTagDTO> list = appLogSingleService.fingAllTag();
+            UaaError get = uaaPermissionService.verifyLogin(userId, token, "/tags", "GET");
+            if(get.hasError())
+                return prepareReturnResult(get.getFirstError(),null);
+            //得到下属用户下的tags
+            List<AppLogTagDTO> list = appLogSingleService.fingAllTag(userId);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,list);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
@@ -65,9 +73,7 @@ public class AppLogResource extends BaseResource{
     public ResponseEntity updateTagInfo(@RequestBody UpdateLogTagDTO updateLogTagDTO){
         try {
             if(Validators.fieldBlank(updateLogTagDTO.getTagId())
-                ||Validators.fieldBlank(updateLogTagDTO.getGroup())
                 ||Validators.fieldBlank(updateLogTagDTO.getName())
-                ||Validators.fieldBlank(updateLogTagDTO.getType())
                 ||Validators.fieldBlank(updateLogTagDTO.getToken())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
@@ -87,8 +93,12 @@ public class AppLogResource extends BaseResource{
     }
     @DeleteMapping("/tag/{id}")
     @ApiOperation(value = "删除相应的tag信息", httpMethod = "DELETE", response = ResponseEntity.class, notes = "删除相应的tag信息")
-    public ResponseEntity deleteTag(@PathVariable("id") String id){
+    public ResponseEntity deleteTag(@PathVariable("id") String id,@RequestParam( name = "token",required = true) String token,
+                                    @RequestParam( name = "userId",required = true) String userId){
         try{
+            UaaError get = uaaPermissionService.verifyLogin(userId, token, "/tag/{id}", "DELETE");
+            if(get.hasError())
+                return prepareReturnResult(get.getFirstError(),null);
             AppLogTag tag = appLogSingleService.findTagBy(id);
             if(tag==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
@@ -299,10 +309,14 @@ public class AppLogResource extends BaseResource{
     public ResponseEntity getEachInfo(@RequestParam(name="token",required=true) String token,
                                       @RequestParam(name="userId",required=true) String userId){
         try {
-            UaaToken userByToken = uaaLoginService.getUserByToken(token);
-            if (userByToken==null||!userByToken.getCreatedid().equals(userId)){
-                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+            UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/app/log/eachs", "GET");
+            if(post.hasError()){
+                return prepareReturnResult(post.getFirstError(),null);
             }
+//            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+//            if (userByToken==null||!userByToken.getCreatedid().equals(userId)){
+//                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+//            }
             List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachs);
         }catch (Exception e){
@@ -319,21 +333,22 @@ public class AppLogResource extends BaseResource{
                 Validators.fieldBlank(updateLogEachDTO.getToken())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
-            if(!Validators.verifyBelongDate(updateLogEachDTO.getBelongDate())||
-                Validators.fieldRangeValue(updateLogEachDTO.getStatus(),
-                    Constants.APP_LOG_STATUS_N,
-                    Constants.APP_LOG_STATUS_Y)){
+            if(!Validators.verifyBelongDate(updateLogEachDTO.getBelongDate())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
             AppLogEach appLogEach = appLogEachService.findEachById(updateLogEachDTO.getId());
             if(appLogEach==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
-            UaaToken userByToken = uaaLoginService.getUserByToken(updateLogEachDTO.getToken());
-            if(userByToken==null)
-                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+//            UaaToken userByToken = uaaLoginService.getUserByToken(updateLogEachDTO.getToken());
+//            if(userByToken==null)
+//                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+            UaaError post = uaaPermissionService.verifyLogin(updateLogEachDTO.getUserId(), updateLogEachDTO.getToken(), "/api/app/log/each", "POST");
+            if(post.hasError()){
+                return prepareReturnResult(post.getFirstError(),null);
+            }
 
-            appLogEachService.updateEach(appLogEach,updateLogEachDTO,userByToken.getId());
+            appLogEachService.updateEach(appLogEach,updateLogEachDTO,(updateLogEachDTO.getUserId()));
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
@@ -341,9 +356,14 @@ public class AppLogResource extends BaseResource{
     }
     @DeleteMapping("/each/{id}")
     @ApiOperation(value = "删除想要的each信息", httpMethod = "DELETE", response = ResponseEntity.class, notes = "删除相应的EACH信息")
-    public ResponseEntity deleteEach(@PathVariable("id") String id){
+    public ResponseEntity deleteEach(@PathVariable("id") String id,@RequestParam(name="token",required=true) String token,
+                                     @RequestParam(name="userId",required=true) String userId){
         //物理删除，删除each需要把对于的detail状态也置为删除
         try{
+            UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/app/log/each/{id}", "DELETE");
+            if(post.hasError()){
+                return prepareReturnResult(post.getFirstError(),null);
+            }
             AppLogEach appLogEach  = appLogEachService.findEachById(id);
             if(appLogEach==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
@@ -358,6 +378,7 @@ public class AppLogResource extends BaseResource{
     @ApiOperation(value = "创建each信息", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建Each")
     public ResponseEntity createEach(@RequestBody CreateLogEachDTO createLogEachDTO){
         try{
+
             if(Validators.fieldBlank(createLogEachDTO.getTitle())||
                 Validators.fieldBlank(createLogEachDTO.getToken())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
@@ -365,12 +386,16 @@ public class AppLogResource extends BaseResource{
             if(!Validators.verifyBelongDate(createLogEachDTO.getBelongDate())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
-            //验证user是不是存在
-            UaaToken token = uaaLoginService.getUserByToken(createLogEachDTO.getToken());
-            if(token==null){
-                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+            UaaError error = uaaPermissionService.verifyLogin(createLogEachDTO.getUserId(), createLogEachDTO.getToken(), "/api/app/log/each", "PUT");
+            if(error.hasError()){
+                return prepareReturnResult(error.getFirstError(),null);
             }
-            AppLogEachDTO appLogEachDTO = appLogEachService.createEach(createLogEachDTO,token.getCreatedid());
+//            //验证user是不是存在
+//            UaaToken token = uaaLoginService.getUserByToken(createLogEachDTO.getToken());
+//            if(token==null){
+//                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+//            }
+            AppLogEachDTO appLogEachDTO = appLogEachService.createEach(createLogEachDTO,createLogEachDTO.getUserId());
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,appLogEachDTO);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);

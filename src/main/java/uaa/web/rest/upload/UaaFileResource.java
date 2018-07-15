@@ -1,6 +1,6 @@
 package uaa.web.rest.upload;
 
-import core.BaseResource;
+import uaa.web.rest.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,13 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
 import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-//import core.BaseResource;
+//import uaa.web.rest.BaseResource;
 //import core.ReturnCode;
 //import fastdfs.ClientGlobal;
 //import fastdfs.client.UploadFile;

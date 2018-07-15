@@ -9,5 +9,7 @@ import java.util.List;
  * Created by UKi_Hi on 2018/6/4.
  */
 public interface AppLogTagRepository extends JpaRepository<AppLogTag,String> {
-    List<AppLogTag> findAllByStatusNot(String appLogStatusDelete);
+    List<AppLogTag> findAllByStatusNotAndCreatedId(String appLogStatusDelete,String createdId);
+    List<AppLogTag> findAllByTypeAndGroupAndName(String type,String group,String name);
+
 }

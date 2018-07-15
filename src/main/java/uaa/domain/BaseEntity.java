@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  * Created by UKi_Hi on 2018/5/29.
@@ -18,12 +19,12 @@ public abstract class BaseEntity implements Serializable {
 
 
     @CreatedDate
-    @Column(name = "CREATED_DATE", nullable = false)
-    private Instant createdDate = Instant.now();
+    @Column(name = "CREATED_DATE")
+    private ZonedDateTime createdDate = ZonedDateTime.now();
 
     @LastModifiedDate
     @Column(name = "UPDATED_DATE")
-    private Instant updatedDate = Instant.now();
+    private ZonedDateTime updatedDate = ZonedDateTime.now();
 
     @Column(name = "VERSION")
     private String version;
@@ -31,11 +32,11 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "TENANT_CODE")
     private String tenantCode;
 
-    public Instant getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -56,11 +57,11 @@ public abstract class BaseEntity implements Serializable {
         this.tenantCode = tenantCode;
     }
 
-    public Instant getUpdatedDate() {
+    public ZonedDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Instant updatedDate) {
+    public void setUpdatedDate(ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 }

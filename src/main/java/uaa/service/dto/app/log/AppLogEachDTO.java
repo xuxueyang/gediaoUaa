@@ -2,6 +2,7 @@ package uaa.service.dto.app.log;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -16,14 +17,15 @@ public class AppLogEachDTO extends AppLogBaseDTO{
     @ApiModelProperty(name = "所属于的日期")
     private String belongDate;
 
+
     @ApiModelProperty(name = "消息")
     private String message;
 
     @ApiModelProperty(name = "标题")
     private String title;
 
-    @ApiModelProperty(name = "类型")
-    private String type;
+    @ApiModelProperty(name = "状态")
+    private String status;
 
     @ApiModelProperty(name = "标签")
     private Map<String,AppLogTagDTO> tagMap;
@@ -81,13 +83,6 @@ public class AppLogEachDTO extends AppLogBaseDTO{
         this.title = title;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public Map<String, AppLogTagDTO> getTagMap() {
         return tagMap;
@@ -96,4 +91,13 @@ public class AppLogEachDTO extends AppLogBaseDTO{
     public void setTagMap(Map<String, AppLogTagDTO> tagMap) {
         this.tagMap = tagMap;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

@@ -1,16 +1,12 @@
 package uaa.web.rest;
 
 
-import com.sun.org.apache.regexp.internal.RE;
-import core.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uaa.config.Constants;
-import uaa.domain.uaa.UaaToken;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.UaaUserService;
 import uaa.service.dto.CreateUaaUserDTO;

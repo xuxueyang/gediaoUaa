@@ -2,6 +2,7 @@ package uaa.service.permission;
 
 import core.ReturnCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.domain.UaaError;
@@ -22,7 +23,28 @@ public class UaaPermissionService {
     @Autowired
     private UaaLoginService uaaLoginService;
 
-
+    public UaaError verifyLogin(String userId,String token,String apiResource,String methodType){
+        //TODO 之后要加上加密解密才行，不然token很容易被捕获（token+时间+随机的盐），userId+随机的盐，加密，解密（相应的时间和盐会做短暂的记录，已经用过的不能再用！）
+        UaaError uaaError = new UaaError();
+        //走token找出userinfo，验证userId是不是一直与存在，存在则返回UaaUser
+        if(Validators.fieldBlank(token)||Validators.fieldBlank(userId)){
+            uaaError.addError(ReturnCode.ERROR_FIELD_EMPTY);
+        }else{
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            if(userByToken==null){
+                uaaError.addError(ReturnCode.ERROR_USER_HAS_LOGOUT);
+            }else{
+                if(userByToken.getCreatedid().equals(userId)){
+                    UaaUser userById = uaaUserService.findUserById(userId);
+                    uaaError.setValue(userById);
+                }else{
+                    //token但是对不上user，说明瞎写的
+                    uaaError.addError(ReturnCode.ERROR_LOGIN);
+                }
+            }
+        }
+        return uaaError;
+    }
     public UaaError verifyOperation(UaaBasePremissionDTO premissionDTO,String apiResource,String methodType){
         //走token或验证码，来找出user
         UaaError uaaError = new UaaError();

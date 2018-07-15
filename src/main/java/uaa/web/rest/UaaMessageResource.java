@@ -1,7 +1,5 @@
 package uaa.web.rest;
 
-import com.sun.org.apache.regexp.internal.REUtil;
-import core.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,8 +33,7 @@ public class UaaMessageResource extends BaseResource {
     private UaaUserService uaaUserService;
     @Autowired
     private UaaLoginService uaaLoginService;
-    @Autowired
-    private UaaPermissionService uaaPermissionService;
+
 
     @GetMapping("/message")
     @ApiOperation(value = "获取开发日志", httpMethod = "GET", response = ResponseEntity.class, notes = "获取开发日志")

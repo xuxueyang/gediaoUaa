@@ -153,8 +153,8 @@ public class AppLogSingleService {
     }
 
 
-    public List<AppLogTagDTO> fingAllTag() {
-        List<AppLogTag> allByStatusNot = appLogTagRepository.findAllByStatusNot(Constants.APP_LOG_STATUS_DELETE);
+    public List<AppLogTagDTO> fingAllTag(String userId) {
+        List<AppLogTag> allByStatusNot = appLogTagRepository.findAllByStatusNotAndCreatedId(Constants.APP_LOG_STATUS_DELETE,userId);
         List<AppLogTagDTO> list = new ArrayList<>();
         for(AppLogTag tag:allByStatusNot){
             list.add(prepareTagEntityToDTO(tag));
@@ -167,6 +167,8 @@ public class AppLogSingleService {
         appLogTagDTO.setType(appLogTag.getType());
         appLogTagDTO.setName(appLogTag.getName());
         appLogTagDTO.setGroup(appLogTag.getGroup());
+        appLogTagDTO.setId(appLogTag.getId());
+        appLogTagDTO.setUpdatedDate(appLogTag.getUpdatedDate());
         return appLogTagDTO;
     }
 
@@ -184,14 +186,28 @@ public class AppLogSingleService {
     }
 
     public AppLogTagDTO createTag(CreateLogTagDTO createLogTagDTO, String createdid) {
+        //先判断tag有没有，有的话忽视
+        List<AppLogTag> lists = appLogTagRepository.findAllByTypeAndGroupAndName(createLogTagDTO.getType(), createLogTagDTO.getGroup(), createLogTagDTO.getName());
+        if(lists!=null&&lists.size()>0)
+        {
+            AppLogTag appLogTag = lists.get(0);
+            if(Constants.APP_LOG_STATUS_DELETE.equals(appLogTag.getStatus())){
+                appLogTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
+                appLogTagRepository.save(appLogTag);
+            }
+            return prepareTagEntityToDTO(appLogTag);
+        }
+
         AppLogTag appLogTag = new AppLogTag();
         appLogTag.setId(UUIDGenerator.getUUID());
         appLogTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
-        appLogTag.setType(createLogTagDTO.getType());
+        appLogTag.setType(createLogTagDTO.getType()==null?"":createLogTagDTO.getType());
         appLogTag.setName(createLogTagDTO.getName());
-        appLogTag.setGroup(createLogTagDTO.getGroup());
+        appLogTag.setGroup(createLogTagDTO.getGroup()==null?"":createLogTagDTO.getGroup());
         appLogTag.setCreatedId(createdid);
         appLogTag.setUpdatedId(createdid);
+        appLogTag.setVersion("0");
+        appLogTag.setTenantCode("0");
         appLogTagRepository.save(appLogTag);
         return prepareTagEntityToDTO(appLogTag);
     }
