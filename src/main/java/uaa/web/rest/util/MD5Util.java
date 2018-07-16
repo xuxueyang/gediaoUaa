@@ -2,7 +2,21 @@ package uaa.web.rest.util;
 
 
 import java.security.MessageDigest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 public class MD5Util {
+    public static  void main(String[] args){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        try {
+            Date date = sdf.parse("2018-07-16T10:39:16.112+08:00[Asia/Shanghai]");
+            System.out.println(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
     public final static String MD5(String s) {
         char hexDigits[] = { '0', '1', '2', '3', '4',
             '5', '6', '7', '8', '9',
