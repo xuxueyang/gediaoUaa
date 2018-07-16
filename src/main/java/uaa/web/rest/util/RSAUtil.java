@@ -59,34 +59,38 @@ public class RSAUtil {
         "kiuUcRywvsitkdoKHwIDAQAB";
 
 
-    private static String PRIVATE_KEY = "MIICXAIBAAKBgQDMUEUdN4uipfDE1Xzxv5hlDb4LcTd16amKcbAb18ZbDQPLa2vH" +
-        "9Vj/h+JitNwPGTk6rpBMgiYUZgoGrgue5iebwLJKII/J9zuRIaAXXLWlErtrcTAZ" +
-        "42L8xvtSdR9nLwNhwwYj0gVmxHBrGSU6JyflBTCskiuUcRywvsitkdoKHwIDAQAB" +
-        "AoGAD9l6QxX4AxoUX3CgTLCsRcqXH5Qc1UzXFiJToxVOEeokjTc8GTrzOH92FGor" +
-        "WBCA3AiGsSi3g4WW6YW+6Qi5sbvLE1IgE8jIczrrdDQCtio+NtUW7tbmQzADVans" +
-        "RzoMriMXjnoo1L6lQaafEx6gHpHOBAbdFHcow+Rt2Ks9V6ECQQD8/EqaUw28oVuG" +
-        "uBTmsIgh/idlqXE3wLC5c9nymUdD/ymyoeFrjwzOAIPPJkGvnQy5Fr7Eu1gb+LjY" +
-        "PYdJd7YLAkEAzr+CYmpcT71BUag0cG9Z6+LgYQn8XgiC7MXTSQXDwOzYZx3i17Fr" +
-        "6kBatOlU1NYdSUCCM7O+b3bMVaNDooRsvQJAYt0JHnP0e1GnXedUK66zFG2o4b6s" +
-        "wvfnWCHg+0BRLE5r8iX23LyjaWGkIPC3XLSIA1DTLjh0P0IcokyxMNG6bwJAAYh+" +
-        "CQjM4nJ+14It0V+iBRPLoiyWyIO7pNHavUHjr7yR5kHceskACd6sTYclb+aelPp7" +
-        "fLKqiN0SqtfpGn1s6QJBAMmDE6ePt3pmwZc7NLkx7rCoJmCkOY2H3WpsC8o2Z5tP" +
-        "2zJgSfFXG0h5/78wtq6jSwI9pXroU7MwnE8vbCKnOAk=";
-
+//    private static String PRIVATE_KEY = "MIICXAIBAAKBgQDMUEUdN4uipfDE1Xzxv5hlDb4LcTd16amKcbAb18ZbDQPLa2vH" +
+//        "9Vj/h+JitNwPGTk6rpBMgiYUZgoGrgue5iebwLJKII/J9zuRIaAXXLWlErtrcTAZ" +
+//        "42L8xvtSdR9nLwNhwwYj0gVmxHBrGSU6JyflBTCskiuUcRywvsitkdoKHwIDAQAB" +
+//        "AoGAD9l6QxX4AxoUX3CgTLCsRcqXH5Qc1UzXFiJToxVOEeokjTc8GTrzOH92FGor" +
+//        "WBCA3AiGsSi3g4WW6YW+6Qi5sbvLE1IgE8jIczrrdDQCtio+NtUW7tbmQzADVans" +
+//        "RzoMriMXjnoo1L6lQaafEx6gHpHOBAbdFHcow+Rt2Ks9V6ECQQD8/EqaUw28oVuG" +
+//        "uBTmsIgh/idlqXE3wLC5c9nymUdD/ymyoeFrjwzOAIPPJkGvnQy5Fr7Eu1gb+LjY" +
+//        "PYdJd7YLAkEAzr+CYmpcT71BUag0cG9Z6+LgYQn8XgiC7MXTSQXDwOzYZx3i17Fr" +
+//        "6kBatOlU1NYdSUCCM7O+b3bMVaNDooRsvQJAYt0JHnP0e1GnXedUK66zFG2o4b6s" +
+//        "wvfnWCHg+0BRLE5r8iX23LyjaWGkIPC3XLSIA1DTLjh0P0IcokyxMNG6bwJAAYh+" +
+//        "CQjM4nJ+14It0V+iBRPLoiyWyIO7pNHavUHjr7yR5kHceskACd6sTYclb+aelPp7" +
+//        "fLKqiN0SqtfpGn1s6QJBAMmDE6ePt3pmwZc7NLkx7rCoJmCkOY2H3WpsC8o2Z5tP" +
+//        "2zJgSfFXG0h5/78wtq6jSwI9pXroU7MwnE8vbCKnOAk=";
+    static String privateKey="MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJEq5BlUar57utzY+9Tha8GLK/ufni6qdhKZYmCdA6ES8tRvE2sBu4+9nKyK/lgv5QqWh19ygoWhDPmnZvoPGcbeGcHbMZ4YlXGyEgOjmIR33NqG9BrqixOcNPWEfme7Jn5f35iL2pkmMeGZd8aeGYdxDUjpIUgLkctrdyvt3NVhAgMBAAECgYBUaKcnH1HOHq3B2p1b5BM+/8h8UAyvP8jV+cAdQ08n6pet9ERLNT+1TeB653sLFhZM+MgQNMo2HzYnODKFdiBa/bBCjiDFft0xUXlbtXUSBsTFQEiepGii5ILRnSDqEvcpcQ/3sbhZ5q8RKXXcZBignzGN3rcizFJRxodMiFTQAQJBAPiiDY3g4XsAr4KiuLwzjeWKMUnFcabZLQdZ2z0ky82zk7Qr6KnaSMP0tJDqmqtZuset4iNq+2lYE3XMFQd25OECQQCVeAZuyeI33fgh6enl9U7YoJoye0JtHaQKF6MVOVrfN/9rvpeE3RS95E/t8sSStan8IS36JvZVB2u7e95l44CBAkEA1Tyu4ULAP20MGb8TLx4MEZRex0VWPuG987MGC7+WJzpfcEPETIBQrfceMbdzpYfUYFLqQrQLIYMPVZUNaBR5IQJBAIT2F2rYhjdCaufoSFx7Ip+MBn9frJCabIFZ04Ye1lp5WurCydC0Ri5B+mRmsDz+A2+5KEg9/qVXC5vlLcqfXYECQH77xj2FjxWJJR3j2Dwxdq9XTFzVwVjFxqoH25K9YvpFj1cfJc3SdSKxUs8++i2KMIuWugSSA0VCGSQG4GwNWKs=";
+    private static final String PRIVATE_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDMUEUdN4uipfDE1Xzxv5hlDb4L" +
+        "cTd16amKcbAb18ZbDQPLa2vH9Vj/h+JitNwPGTk6rpBMgiYUZgoGrgue5iebwLJK" +
+        "II/J9zuRIaAXXLWlErtrcTAZ42L8xvtSdR9nLwNhwwYj0gVmxHBrGSU6JyflBTCs" +
+        "kiuUcRywvsitkdoKHwIDAQAB";
     private static final String charSet = "UTF-8";
 
     public static final String KEY_ALGORITHM = "RSA";
 
-    //    public static void main(String[] args){
-////        String ps = "B7jJbF+Dbjnhke6QRKYo+zkGVRanzROSIWTFDolVPm7tS0p69kfOveHw7wdbrfDDsTrzZrpRf3UWPI4ALajqqNgb/kCk4arzomqMS/mt8m6+4Dqm3M+J1IwO1fSz4KznG/lGyf5gJ5Fz3tSDNvIGOkAo8pzFQNEkI8tZmHF9keA=";
-//        //你好
+        public static void main(String[] args){
+        String ps = "B7jJbF+Dbjnhke6QRKYo+zkGVRanzROSIWTFDolVPm7tS0p69kfOveHw7wdbrfDDsTrzZrpRf3UWPI4ALajqqNgb/kCk4arzomqMS/mt8m6+4Dqm3M+J1IwO1fSz4KznG/lGyf5gJ5Fz3tSDNvIGOkAo8pzFQNEkI8tZmHF9keA=";
+        //你好
 //        String ps = "ae";
-//        try {
-//            System.out.println(decode(ps));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+        try {
+            System.out.println(decode(ps));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static String decode(String encode)throws Exception{
         return RSAUtil.segmentdecrypt(encode, PRIVATE_KEY,charSet);
     }
