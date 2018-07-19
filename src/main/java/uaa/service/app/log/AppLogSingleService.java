@@ -1,6 +1,7 @@
 package uaa.service.app.log;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
@@ -12,7 +13,12 @@ import uaa.repository.app.log.AppLogDayTagRepository;
 import uaa.repository.app.log.AppLogTagRepository;
 import uaa.service.dto.app.log.*;
 import util.UUIDGenerator;
+import util.Validators;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.*;
 
 /**
@@ -187,28 +193,47 @@ public class AppLogSingleService {
 
     public AppLogTagDTO createTag(CreateLogTagDTO createLogTagDTO, String createdid) {
         //先判断tag有没有，有的话忽视
-        List<AppLogTag> lists = appLogTagRepository.findAllByTypeAndGroupAndName(createLogTagDTO.getType(), createLogTagDTO.getGroup(), createLogTagDTO.getName());
-        if(lists!=null&&lists.size()>0)
-        {
-            AppLogTag appLogTag = lists.get(0);
+//        List<AppLogTag> lists = null;
+//
+//        appLogTagRepository.findAllByTypeAndGroupAndName(createLogTagDTO.getType(), createLogTagDTO.getGroup(), createLogTagDTO.getName());
+//        appLogTagRepository.findAll(new Specification<AppLogTag>() {
+//            @Override
+//            public Predicate toPredicate(Root<AppLogTag> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+//                List<Predicate> predicates = new ArrayList<>();
+//                predicates.add(criteriaBuilder.equal(root.get("name").as(String.class),createLogTagDTO.getName()));
+//                if (Validators.fieldNotBlank()) {
+//                    //大于或等于传入时间
+//                    predicates.add(cb.greaterThanOrEqualTo(root.get("commitTime").as(String.class), stime));
+//                }
+//                if (StringUtils.isNotBlank(etime)) {
+//                    //小于或等于传入时间
+//                    predicates.add(cb.lessThanOrEqualTo(root.get("commitTime").as(String.class), etime));
+//                }
+//
+//                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+//            }
+//        });
+        //TODO 直接让标签不能同名好点，宁愿阔以给它多个组概念
+        AppLogTag appLogTag = appLogTagRepository.findOneByNameAndCreatedId(createLogTagDTO.getName(), createdid);
+        if(appLogTag!=null){
             if(Constants.APP_LOG_STATUS_DELETE.equals(appLogTag.getStatus())){
                 appLogTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
                 appLogTagRepository.save(appLogTag);
             }
             return prepareTagEntityToDTO(appLogTag);
+        }else{
+            appLogTag = new AppLogTag();
+            appLogTag.setId(UUIDGenerator.getUUID());
+            appLogTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
+            appLogTag.setType(createLogTagDTO.getType()==null?"":createLogTagDTO.getType());
+            appLogTag.setName(createLogTagDTO.getName());
+            appLogTag.setGroup(createLogTagDTO.getGroup()==null?"":createLogTagDTO.getGroup());
+            appLogTag.setCreatedId(createdid);
+            appLogTag.setUpdatedId(createdid);
+            appLogTag.setVersion("0");
+            appLogTag.setTenantCode("0");
+            appLogTagRepository.save(appLogTag);
+            return prepareTagEntityToDTO(appLogTag);
         }
-
-        AppLogTag appLogTag = new AppLogTag();
-        appLogTag.setId(UUIDGenerator.getUUID());
-        appLogTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
-        appLogTag.setType(createLogTagDTO.getType()==null?"":createLogTagDTO.getType());
-        appLogTag.setName(createLogTagDTO.getName());
-        appLogTag.setGroup(createLogTagDTO.getGroup()==null?"":createLogTagDTO.getGroup());
-        appLogTag.setCreatedId(createdid);
-        appLogTag.setUpdatedId(createdid);
-        appLogTag.setVersion("0");
-        appLogTag.setTenantCode("0");
-        appLogTagRepository.save(appLogTag);
-        return prepareTagEntityToDTO(appLogTag);
     }
 }

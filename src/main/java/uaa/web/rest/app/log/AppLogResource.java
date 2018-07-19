@@ -307,7 +307,11 @@ public class AppLogResource extends BaseResource{
     @GetMapping("/eachs")
     @ApiOperation(value = "获取用户下的所有each信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的each信息")
     public ResponseEntity getEachInfo(@RequestParam(name="token",required=true) String token,
-                                      @RequestParam(name="userId",required=true) String userId){
+                                      @RequestParam(name="userId",required=true) String userId,
+                                      @RequestParam(name="startDate",required=false) String startDate,
+                                      @RequestParam(name="endDate",required=false) String endDate,
+                                      @RequestParam(name="type",required=false) String type,
+                                      @RequestParam(name = "searchContext",required = false) String searchContext){
         try {
             UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/app/log/eachs", "GET");
             if(post.hasError()){
@@ -317,7 +321,15 @@ public class AppLogResource extends BaseResource{
 //            if (userByToken==null||!userByToken.getCreatedid().equals(userId)){
 //                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
 //            }
-            List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId);
+            //只校验格式
+            if(Validators.fieldNotBlank(startDate)&&Validators.verifyBelongDate(startDate)){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+            }
+            if(Validators.fieldNotBlank(endDate)&&Validators.verifyBelongDate(endDate)){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+            }
+            //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
+            List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);

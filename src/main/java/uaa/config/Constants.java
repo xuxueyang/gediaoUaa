@@ -21,7 +21,7 @@ public final class Constants {
     public static final String USERINFO = "userinfo";
 
     //token超时时间
-    public static final Long TOKEN_VALID_TIME = 30*60L;
+    public static final Long TOKEN_VALID_TIME = 30*30*60L;
 
     public static final Long IP_RECORD_TIME = 30*60L;
 
