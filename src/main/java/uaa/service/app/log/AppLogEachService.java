@@ -169,6 +169,7 @@ public class AppLogEachService {
                     appLogEachTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
                     appLogEachTag.setLogEachId(appLogEach.getId());
                     appLogEachTag.setTagId(one.getId());
+                    appLogEachTag.setId(UUIDGenerator.getUUID());
                     appLogEachTagRepository.save(appLogEachTag);
                     tagSet.add(appLogEachTag);
                 }
