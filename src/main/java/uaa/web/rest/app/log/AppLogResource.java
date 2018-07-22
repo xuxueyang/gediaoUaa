@@ -20,6 +20,7 @@ import uaa.service.app.log.AppLogEachService;
 import uaa.service.app.log.AppLogSingleService;
 import uaa.service.dto.app.log.*;
 import uaa.service.login.UaaLoginService;
+import uaa.web.rest.util.CommonUtil;
 import util.Validators;
 
 import java.util.List;
@@ -322,11 +323,16 @@ public class AppLogResource extends BaseResource{
 //                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
 //            }
             //只校验格式
-            if(Validators.fieldNotBlank(startDate)&&Validators.verifyBelongDate(startDate)){
+            if(Validators.fieldNotBlank(startDate)&&!Validators.verifyBelongDate(startDate)){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
-            if(Validators.fieldNotBlank(endDate)&&Validators.verifyBelongDate(endDate)){
+            if(Validators.fieldNotBlank(endDate)&&!Validators.verifyBelongDate(endDate)){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
+            }
+            //如果日期都为空，那么带出今天的
+            if(Validators.fieldBlank(startDate)&&Validators.fieldBlank(endDate)){
+                startDate = CommonUtil.getTodayBelongDate();
+                endDate = startDate;
             }
             //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
             List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type);
