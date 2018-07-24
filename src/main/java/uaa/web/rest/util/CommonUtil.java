@@ -35,6 +35,21 @@ public final class CommonUtil {
                 0,0,0,0,tmp.getZone());
         }
     }
+    public static String getTodayBelongDate(){
+        ZonedDateTime tmp = ZonedDateTime.now();
+        StringBuffer sb = new StringBuffer();
+        sb.append(tmp.getYear());
+        sb.append("-");
+        if(tmp.getMonthValue()<9){
+            sb.append("0");
+            sb.append(tmp.getMonthValue());
+        }else{
+            sb.append(tmp.getMonthValue());
+        }
+        sb.append("-");
+        sb.append(tmp.getDayOfMonth());
+        return sb.toString();
+    }
     public static ZonedDateTime getBelongDateNextZoneDay(String belongDate){
         ZonedDateTime zonedDateTime = tranferBelongDateToZoneDate(belongDate);
         return zonedDateTime.plusDays(1);
