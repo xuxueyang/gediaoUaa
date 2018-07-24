@@ -4,7 +4,7 @@ VOLUME /tmp
 ARG JAR_FILE
 ADD ${JAR_FILE} app.jar
 RUN bash -c 'touch /app.jar'
-EXPOSE 8800
+EXPOSE 9999
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 
 
@@ -16,3 +16,20 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 #https://blog.csdn.net/a610786189/article/details/79746426
 #docker run -tid --net=host --name docker_host1 qlh/uaa
 
+
+
+#FROM java:8
+
+#ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS \
+#    JHIPSTER_SLEEP=0 \
+#    JAVA_OPTS="" \
+#    TZ=Asia/Shanghai
+
+# add directly the war
+#ADD target/*.war /app.war
+
+#EXPOSE 10168
+#CMD echo "The application will start in ${JHIPSTER_SLEEP}s..." && \
+#    echo "${TZ}" > /etc/timezone && \
+#    sleep ${JHIPSTER_SLEEP} && \
+#    java ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /app.war
