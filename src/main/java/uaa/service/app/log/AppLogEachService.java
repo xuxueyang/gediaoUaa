@@ -96,6 +96,9 @@ public class AppLogEachService {
         }
         return one;
     }
+    public List<AppLogEach> findAllEachByUserId(String userId){
+        return appLogEachRepository.findAllByCreatedIdAndStatusNotOrderByBelongDate(userId,Constants.APP_LOG_STATUS_DELETE);
+    }
     public void updateEach(AppLogEach appLogEach,UpdateLogEachDTO updateLogEachDTO,String updateId) {
         appLogEach.setBelongDate(updateLogEachDTO.getBelongDate());
         appLogEach.setTitle(updateLogEachDTO.getTitle());

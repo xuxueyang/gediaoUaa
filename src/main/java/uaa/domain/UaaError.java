@@ -40,4 +40,14 @@ public class UaaError<T> {
     public void setValue(T value) {
         this.value = value;
     }
+
+    public static UaaError success(){
+        UaaError error = new UaaError();
+        return error;
+    }
+    public static UaaError failure(String message){
+        UaaError error = new UaaError();
+        error.addError(message);
+        return error;
+    }
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface AppLogEachRepository extends JpaRepository<AppLogEach,String>,JpaSpecificationExecutor<AppLogEach> {
     List<AppLogEach> findAllByCreatedIdAndStatusNotOrderByUpdatedDateDesc(String userId,String status);
 
+    List<AppLogEach> findAllByCreatedIdAndStatusNotOrderByBelongDate(String userId,String status);
 }

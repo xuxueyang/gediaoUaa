@@ -21,6 +21,13 @@ public class DictService {
     @Autowired
     private UaaDictRepository uaaDictRepository;
 
+    public String getNameByTypeId(String id){
+        UaaDict one = uaaDictRepository.findOne(id);
+        if(one==null)
+            return "";
+        else
+            return one.getName();
+    }
     public List<DictDTO> getCodeByType(String type) {
         List<DictDTO> dtos = new ArrayList<>();
         List<UaaDict> allByType = uaaDictRepository.findAllByType(type);
