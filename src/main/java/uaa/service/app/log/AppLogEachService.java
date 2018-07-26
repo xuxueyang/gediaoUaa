@@ -159,6 +159,8 @@ public class AppLogEachService {
                     one.setName(tagName);
                     //组合type设置为默认
                     one.setUpdatedId(createdid);
+                    one.setStatus(Constants.APP_LOG_STATUS_SAVE);
+                    one.setVersion("0");
                     one.setCreatedId(createdid);
                     appLogTagRepository.save(one);
                 }else{
