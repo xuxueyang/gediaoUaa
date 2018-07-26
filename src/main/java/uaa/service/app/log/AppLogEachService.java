@@ -230,7 +230,8 @@ public class AppLogEachService {
 //                        ;
 
                 }
-                if (Validators.fieldNotBlank(type)) {
+                //type不为空，且不为默认
+                if (Validators.fieldNotBlank(type)&&!"0".equals(type)) {
                     //状态
                     predicates.add(criteriaBuilder.equal(root.get("type").as(String.class), type));
 
