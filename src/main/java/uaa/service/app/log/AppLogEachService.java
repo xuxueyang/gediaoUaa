@@ -67,6 +67,9 @@ public class AppLogEachService {
         Map<String,AppLogTagDTO> tagMap = new HashMap<>();
         Set<AppLogEachTag> eachTags = appLogEach.getTags();
         for(AppLogEachTag tag:eachTags){
+            if(Validators.fieldBlank(tag.getTagId())){
+                continue;
+            }
             AppLogTag one = appLogTagRepository.findOne(tag.getTagId());
             if(one!=null){
                 AppLogTagDTO appLogTagDTO = new AppLogTagDTO();
@@ -129,6 +132,7 @@ public class AppLogEachService {
                 AppLogEachTag appLogEachTag = new AppLogEachTag();
                 appLogEachTag.setStatus(Constants.APP_LOG_STATUS_SAVE);
                 appLogEachTag.setTagId(tagId);
+                appLogEachTag.setId(UUIDGenerator.getUUID());
                 appLogEachTag.setLogEachId(appLogEach.getId());
                 appLogEachTagRepository.save(appLogEachTag);
             }

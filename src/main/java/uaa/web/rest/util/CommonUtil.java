@@ -47,7 +47,12 @@ public final class CommonUtil {
             sb.append(tmp.getMonthValue());
         }
         sb.append("-");
-        sb.append(tmp.getDayOfMonth());
+        if(tmp.getDayOfMonth()<9){
+            sb.append("0");
+            sb.append(tmp.getDayOfMonth());
+        }else {
+            sb.append(tmp.getDayOfMonth());
+        }
         return sb.toString();
     }
     public static ZonedDateTime getBelongDateNextZoneDay(String belongDate){
