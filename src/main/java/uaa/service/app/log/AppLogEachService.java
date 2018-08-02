@@ -205,7 +205,8 @@ public class AppLogEachService {
         appLogEachRepository.save(appLogEach);
     }
 
-    public List<AppLogEachDTO> getAllEach(String userId,String startDate,String endDate,String searchContext,String type) {
+    public List<AppLogEachDTO> getAllEach(String userId,String startDate,String endDate,String searchContext,String type,String tagId) {
+
         List<AppLogEach> all = appLogEachRepository.findAll(new Specification<AppLogEach>() {
             @Override
             public Predicate toPredicate(Root<AppLogEach> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
@@ -248,7 +249,20 @@ public class AppLogEachService {
         //根据日期排序
         if(all!=null&&all.size()>0){
             for(AppLogEach appLogEach: all){
-                dtoList.add(prepareEachEntityToDTO(appLogEach));
+                if(Validators.fieldNotBlank(tagId)){
+                    Set<AppLogEachTag> tags = appLogEach.getTags();
+                    if(tags!=null&&tags.size()>0){
+                        for(AppLogEachTag tag:tags){
+                            if(tagId.equals(tag.getTagId())){
+                                dtoList.add(prepareEachEntityToDTO(appLogEach));
+                                break;
+                            }
+                        }
+                    }
+                }else{
+                    dtoList.add(prepareEachEntityToDTO(appLogEach));
+                }
+
             }
         }
         return dtoList;

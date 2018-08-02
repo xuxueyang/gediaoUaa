@@ -312,6 +312,7 @@ public class AppLogResource extends BaseResource{
                                       @RequestParam(name="startDate",required=false) String startDate,
                                       @RequestParam(name="endDate",required=false) String endDate,
                                       @RequestParam(name="type",required=false) String type,
+                                      @RequestParam(name="tagId",required=false) String tagId,
                                       @RequestParam(name = "searchContext",required = false) String searchContext){
         try {
             UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/app/log/eachs", "GET");
@@ -335,7 +336,7 @@ public class AppLogResource extends BaseResource{
                 endDate = startDate;
             }
             //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
-            List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type);
+            List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
