@@ -4,7 +4,13 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uaa.config.Constants;
+import uaa.domain.uaa.UaaApiLog;
+import uaa.repository.uaa.UaaApiLogRepository;
 import uaa.service.ResultInfo;
+import util.UUIDGenerator;
+
+import java.time.ZonedDateTime;
 //import uaa.service.common.redis.RedisClient;
 
 @Service
@@ -14,6 +20,24 @@ public class UaaCommonService {
     protected enum NOTIFY_TYPE {
         PHONE, EMAIL;
     }
+
+    @Autowired
+    private UaaApiLogRepository apiLogRepository;
+    //记录API日志
+    public void  log(String apiUrl,String message,String object,String type,String projectType,String belongDate){
+        UaaApiLog log = new UaaApiLog();
+        log.setApiUri(apiUrl);
+        log.setMessage(message);
+        log.setId(UUIDGenerator.getUUID());
+        log.setType(type);
+        log.setObject(object);
+        log.setStatus(Constants.SAVE);
+        log.setProjectType(projectType);
+        //TODO 如果belongDate为空，那么不需要显示在前端
+        log.setBelongDate(belongDate);
+        apiLogRepository.save(log);
+    }
+
 //    @Autowired
 //    private RedisClient redisClient;
 //

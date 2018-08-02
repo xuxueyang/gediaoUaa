@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import uaa.config.Constants;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,7 +28,7 @@ public abstract class BaseEntity implements Serializable {
     private ZonedDateTime updatedDate = ZonedDateTime.now();
 
     @Column(name = "VERSION")
-    private String version;
+    private String version = Constants.VERSION;
 
     @Column(name = "TENANT_CODE")
     private String tenantCode;

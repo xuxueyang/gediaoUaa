@@ -4,7 +4,9 @@ package uaa.config;
  * Application constants.
  */
 public final class Constants {
-
+    public enum ProjectType{
+        GEDIAO,QLH,NULL
+    }
     // Regex for acceptable logins
     public static final String LOGIN_REGEX = "^[_'.@A-Za-z0-9-]*$";
 
@@ -27,8 +29,8 @@ public final class Constants {
 
 
     //LogEach状态
-    public static final String APP_LOG_STATUS_SAVE = "S";///保存状态
-    public static final String APP_LOG_STATUS_DELETE = "D";//删除
+    public static final String APP_LOG_STATUS_SAVE = Constants.SAVE;///保存状态
+    public static final String APP_LOG_STATUS_DELETE = Constants.DELETE;//删除
     public static final String APP_LOG_STATUS_Y = "Y";//完成
     public static final String APP_LOG_STATUS_N = "N";//未完成
 
@@ -37,8 +39,8 @@ public final class Constants {
     public static final String APP_LOG_DAY_TYPE_DIARY = "DIARY";//日志
 
     //File的文件状态
-    public static final String FILE_STATUS_SAVE = "S";//保存状态
-    public static final String FILE_STATUS_DELETE = "D";//删除状态
+    public static final String FILE_STATUS_SAVE = Constants.SAVE;//保存状态
+    public static final String FILE_STATUS_DELETE = Constants.DELETE;//删除状态
 
     /**
      * 消息
@@ -62,15 +64,40 @@ public final class Constants {
     public static final String MESSAGE_TYPE_MEMBER_SAY = "MEMBER_SAY";//作者吐槽——青龙会
     public static final String MESSAGE_TYPE_PAD = "PAD"; //备忘录
     //消息的状态
-    public static final String MESSAGE_STATUS_DELETE = "DELETE";//删除
-    public static final String MESSAGE_STATUS_SAVE  = "SAVE";//保存
+    public static final String MESSAGE_STATUS_DELETE = Constants.DELETE;//删除
+    public static final String MESSAGE_STATUS_SAVE  = Constants.SAVE;//保存
     //用户状态
-    public static final String USER_STATUS_SAVE = "S";///保存状态
-    public static final String USER_STATUS_DELETE = "D";//删除
+    public static final String USER_STATUS_SAVE = Constants.SAVE;///保存状态
+    public static final String USER_STATUS_DELETE = Constants.DELETE;//删除
     //表单状态
     public static final String TASK_FORM_DATA_WAIT = "WAIT";///待审核
     public static final String TASK_FORM_DATA_PASS = "PASS";///保存状态
 
+    public static final String VERSION = "0";
+
+    //状态
+    public static final String SAVE = "S";///保存状态
+    public static final String DELETE = "D";//删除
+
+    public enum LogStatus{
+        //静态、动态、删除、保存
+        STATIC,
+        DYNAMIC,
+        DELETE,
+        SAVE
+    }
+    //DICT 的 type
+    public enum DictType{
+        APP_GEDIAO_LOG_MESSAGE_STATUS,
+    }
+    //Http 的 type
+    public enum HttpType{
+        POST,
+        GET,
+        OPTIONS,
+        DELETE,
+        PUT
+    }
     private Constants() {
     }
 }

@@ -38,7 +38,7 @@ public class DictService {
         }
         return dtos;
     }
-    private class DictDTO{
+    public class DictDTO{
         private String type;
         private String label;
         private String value;

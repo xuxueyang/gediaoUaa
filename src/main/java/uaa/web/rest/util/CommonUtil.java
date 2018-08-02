@@ -2,7 +2,9 @@ package uaa.web.rest.util;
 
 import util.Validators;
 
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * 工具类
@@ -36,31 +38,39 @@ public final class CommonUtil {
         }
     }
     public static String getTodayBelongDate(){
-        ZonedDateTime tmp = ZonedDateTime.now();
-        StringBuffer sb = new StringBuffer();
-        sb.append(tmp.getYear());
-        sb.append("-");
-        if(tmp.getMonthValue()<9){
-            sb.append("0");
-            sb.append(tmp.getMonthValue());
-        }else{
-            sb.append(tmp.getMonthValue());
-        }
-        sb.append("-");
-        if(tmp.getDayOfMonth()<9){
-            sb.append("0");
-            sb.append(tmp.getDayOfMonth());
-        }else {
-            sb.append(tmp.getDayOfMonth());
-        }
-        return sb.toString();
+//        ZonedDateTime tmp = ZonedDateTime.now();
+//        StringBuffer sb = new StringBuffer();
+//        sb.append(tmp.getYear());
+//        sb.append("-");
+//        if(tmp.getMonthValue()<9){
+//            sb.append("0");
+//            sb.append(tmp.getMonthValue());
+//        }else{
+//            sb.append(tmp.getMonthValue());
+//        }
+//        sb.append("-");
+//        if(tmp.getDayOfMonth()<9){
+//            sb.append("0");
+//            sb.append(tmp.getDayOfMonth());
+//        }else {
+//            sb.append(tmp.getDayOfMonth());
+//        }
+//        return sb.toString();
+        return formatDateToBelongDate(new Date());
     }
     public static ZonedDateTime getBelongDateNextZoneDay(String belongDate){
         ZonedDateTime zonedDateTime = tranferBelongDateToZoneDate(belongDate);
         return zonedDateTime.plusDays(1);
     }
     public static void main(String[] args){
-        int k = Integer.parseInt("08");
-        System.out.println(k);
+        String belongDate = formatDateToBelongDate(new Date());
+        System.out.println(belongDate);
+    }
+
+    public static String formatDateToBelongDate(Date date) {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        String format = sf.format(date);
+        return format;
     }
 }
+

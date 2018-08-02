@@ -50,4 +50,20 @@ public class AppLogStatisResource extends BaseResource{
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
         }
     }
+    //TODO
+
+    /**
+     * 得到统计数据：
+     * 1.一个折线图，显示每天的未完成、已完成的创建数目（每天晚上12点统计之前的）、今天的则是动态变化的、、、、记录五天的
+     * 2.折线图的上面，显示一行文字，全部的，已完成和未完成数。。。。根据type，显示每种type的数目
+     * 3.最下面的一栏是一个消息列表。记录最近的操作日志（最毒十条，显示：编号（ID）：时间（创建时间）：消息日志（比如更新了便签，创建了TAG，创建了TAG）
+     * @return
+     */
+    public ResponseEntity getStaticDate(){
+        try {
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
 }

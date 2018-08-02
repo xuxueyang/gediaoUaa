@@ -15,6 +15,9 @@ public class AppLogDayDTO extends  AppLogBaseDTO{
     @ApiModelProperty(name = "消息")
     private String message;
 
+    @ApiModelProperty(name = "所属天")
+    private String belongDate;
+
     @ApiModelProperty(name = "标签")
     private Map<String,AppLogTagDTO> tagMap;
 
@@ -49,5 +52,13 @@ public class AppLogDayDTO extends  AppLogBaseDTO{
 
     public void setTagMap(Map<String, AppLogTagDTO> tagMap) {
         this.tagMap = tagMap;
+    }
+
+    public String getBelongDate() {
+        return belongDate;
+    }
+
+    public void setBelongDate(String belongDate) {
+        this.belongDate = belongDate;
     }
 }

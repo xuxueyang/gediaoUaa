@@ -85,6 +85,7 @@ public class AppLogSingleService {
     public AppLogDayDTO prepareDayEntityToDTO(AppLogDay appLogDay){
         AppLogDayDTO dto = new AppLogDayDTO();
         dto.setId(appLogDay.getId());
+        dto.setBelongDate(appLogDay.getBelongDate());
         dto.setMessage(appLogDay.getMessage());
         dto.setUpdatedDate(appLogDay.getUpdatedDate());
         dto.setCreatedDate(appLogDay.getCreatedDate());
