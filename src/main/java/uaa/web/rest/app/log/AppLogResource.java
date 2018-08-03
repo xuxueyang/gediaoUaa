@@ -1,6 +1,7 @@
 package uaa.web.rest.app.log;
 
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -368,9 +369,13 @@ public class AppLogResource extends BaseResource{
                                       @RequestParam(name="type",required=false) String type,
                                       @RequestParam(name="tagId",required=false) String tagId,
                                       @RequestParam(name = "searchContext",required = false) String searchContext,
-                                      @PageableDefault(value = 15, sort = { "updatedDate" }, direction = Sort.Direction.DESC)
-                                              Pageable pageable){
+                                      @RequestParam(name="size",required=true) int size,
+                                      @RequestParam(name="page",required=true) int page
+//                                      @PageableDefault(value = 15, sort = { "updatedDate" }, direction = Sort.Direction.DESC)
+//                                              Pageable pageable
+    ){
         try {
+            Pageable pageable = new PageRequest(page, size);
             //默认15个，。根据时间逆序
             UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/app/log/eachs", "GET");
             if(post.hasError()){
