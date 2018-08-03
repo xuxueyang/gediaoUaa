@@ -371,6 +371,7 @@ public class AppLogResource extends BaseResource{
                                       @PageableDefault(value = 15, sort = { "updatedDate" }, direction = Sort.Direction.DESC)
                                               Pageable pageable){
         try {
+            //默认15个，。根据时间逆序
             UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/app/log/eachs", "GET");
             if(post.hasError()){
                 return prepareReturnResult(post.getFirstError(),null);
