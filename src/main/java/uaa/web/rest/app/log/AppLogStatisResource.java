@@ -4,10 +4,7 @@ import core.ReturnCode;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.app.log.AppLogStatisService;
@@ -64,6 +61,17 @@ public class AppLogStatisResource extends BaseResource{
             return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
+
+//    @GetMapping("/test/staticDate")
+    @ApiOperation(value = "统计", httpMethod = "GET", response = ResponseEntity.class, notes = "统计")
+    public ResponseEntity staticDate(){
+        try{
+            appLogStatisService.staticDate();
+            return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
         }
     }
 }

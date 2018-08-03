@@ -53,14 +53,15 @@ public class UaaUserService {
 
     public List<UserInfo> getUserInfosByProjectType(String projectType) {
         List<UaaUser> users = uaaUserRepository.findAllByProjectType(projectType);
+        List<UserInfo> infoList = new ArrayList<>();
         if(users!=null&&users.size()>0){
-            List<UserInfo> infoList = new ArrayList<>();
+
             for(UaaUser user:users){
                 UserInfo userInfo = uaaLoginService.prepareForUserInfo(user);
                 if(userInfo!=null)
                     infoList.add(userInfo);
             }
         }
-        return null;
+        return infoList;
     }
 }
