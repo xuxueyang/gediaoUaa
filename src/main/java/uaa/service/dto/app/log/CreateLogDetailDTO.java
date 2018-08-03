@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Created by UKi_Hi on 2018/6/4.
  */
 public class CreateLogDetailDTO {
-    @ApiModelProperty(name = "标题")
+    @ApiModelProperty(name = "ID")
     private String logEachId;
 
     @ApiModelProperty(name = "消息")
