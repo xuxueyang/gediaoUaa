@@ -27,6 +27,7 @@ import uaa.web.rest.util.CommonUtil;
 import util.Validators;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/app/log")
@@ -391,7 +392,7 @@ public class AppLogResource extends BaseResource{
                 endDate = startDate;
             }
             //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
-            List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId,pageable);
+            Map eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId,pageable);
             logApi("/api/app/log/eachs","获取了所有的标签",
                 Constants.HttpType.GET.name(),
                 null,
