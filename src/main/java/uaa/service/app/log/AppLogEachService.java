@@ -2,6 +2,8 @@ package uaa.service.app.log;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -205,20 +207,22 @@ public class AppLogEachService {
         appLogEachRepository.save(appLogEach);
     }
 
-    public List<AppLogEachDTO> getAllEach(String userId,String startDate,String endDate,String searchContext,String type,String tagId) {
+    public Map<String,Object> getAllEach(String userId, String startDate,
+                                          String endDate, String searchContext, String type, String tagId,
+                                          Pageable pageable) {
 
-        List<AppLogEach> all = appLogEachRepository.findAll(new Specification<AppLogEach>() {
+        Specification<AppLogEach> specification = new Specification<AppLogEach>() {
             @Override
             public Predicate toPredicate(Root<AppLogEach> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                predicates.add(criteriaBuilder.notEqual(root.get("status").as(String.class),Constants.APP_LOG_STATUS_DELETE));
-                predicates.add(criteriaBuilder.equal(root.get("createdId").as(String.class),userId));
+                predicates.add(criteriaBuilder.notEqual(root.get("status").as(String.class), Constants.APP_LOG_STATUS_DELETE));
+                predicates.add(criteriaBuilder.equal(root.get("createdId").as(String.class), userId));
 
-                if (Validators.fieldNotBlank(startDate)&&Validators.verifyBelongDate(startDate)) {
+                if (Validators.fieldNotBlank(startDate) && Validators.verifyBelongDate(startDate)) {
                     //大于或等于传入时间
                     predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("belongDate").as(String.class), startDate));
                 }
-                if (Validators.fieldNotBlank(endDate)&&Validators.verifyBelongDate(endDate)) {
+                if (Validators.fieldNotBlank(endDate) && Validators.verifyBelongDate(endDate)) {
                     //小于或等于传入时间
                     predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("belongDate").as(String.class), endDate));
                 }
@@ -236,15 +240,23 @@ public class AppLogEachService {
 
                 }
                 //type不为空，且不为默认
-                if (Validators.fieldNotBlank(type)&&!"0".equals(type)) {
+                if (Validators.fieldNotBlank(type) && !"0".equals(type)) {
                     //状态
                     predicates.add(criteriaBuilder.equal(root.get("type").as(String.class), type));
 
                 }
-                    // and到一起的话所有条件就是且关系，or就是或关系
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedDate").as(ZonedDateTime.class)));
+//                query.orderBy(
+//                    criteriaBuilder.desc(
+//                        criteriaBuilder.selectCase()
+//                            .when(criteriaBuilder.equal(root.get("address"),"112"),1)
+//                            .otherwise(0)));
+                // and到一起的话所有条件就是且关系，or就是或关系
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
-        });
+        };
+        Page<AppLogEach> allPage = appLogEachRepository.findAll(specification,pageable);
+        List<AppLogEach> all = allPage.getContent();
         List<AppLogEachDTO> dtoList = new ArrayList<>();
         //根据日期排序
         if(all!=null&&all.size()>0){
@@ -265,7 +277,14 @@ public class AppLogEachService {
 
             }
         }
-        return dtoList;
+        Map<String,Object> map = new HashMap();
+        map.put("data",dtoList);
+        map.put("totalPages",allPage.getTotalPages());
+        map.put("totalElements",allPage.getTotalElements());
+        map.put("number",allPage.getNumber());
+        map.put("size",allPage.getSize());
+        map.put("numberOfElements",allPage.getNumberOfElements());
+        return map;
 
     }
 

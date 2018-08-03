@@ -1,6 +1,9 @@
 package uaa.web.rest.app.log;
 
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaUser;
 import uaa.web.rest.BaseResource;
@@ -363,7 +366,9 @@ public class AppLogResource extends BaseResource{
                                       @RequestParam(name="endDate",required=false) String endDate,
                                       @RequestParam(name="type",required=false) String type,
                                       @RequestParam(name="tagId",required=false) String tagId,
-                                      @RequestParam(name = "searchContext",required = false) String searchContext){
+                                      @RequestParam(name = "searchContext",required = false) String searchContext,
+                                      @PageableDefault(value = 15, sort = { "updatedDate" }, direction = Sort.Direction.DESC)
+                                              Pageable pageable){
         try {
             UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/app/log/eachs", "GET");
             if(post.hasError()){
@@ -386,7 +391,7 @@ public class AppLogResource extends BaseResource{
                 endDate = startDate;
             }
             //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
-            List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId);
+            List<AppLogEachDTO> eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId,pageable);
             logApi("/api/app/log/eachs","获取了所有的标签",
                 Constants.HttpType.GET.name(),
                 null,
