@@ -45,32 +45,36 @@ public class AppLogStatisService {
 
     @Scheduled(cron = "1 0 0 * * ?")
     public void staticDate(){
-        Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
-        ca.setTime(new Date()); //设置时间为当前时间
-        ca.add(Calendar.DATE, -1); //天数减1，统计昨天的
-        Date lastDay = ca.getTime(); //结果
-        String lastBelongDate = CommonUtil.formatDateToBelongDate(lastDay);
-        //统计AppLogEach
-        //得到所有的用户(ProjectType为空或格调的)
-        List<UserInfo> usersGEDIAOList = uaaUserService.getUserInfosByProjectType(Constants.ProjectType.GEDIAO.name());
-        List<UserInfo> usersNULLList = uaaUserService.getUserInfosByProjectType(Constants.ProjectType.NULL.name());
-        if(usersGEDIAOList==null){
-            usersGEDIAOList = new ArrayList<>();
-        }
-        if(usersNULLList!=null&&usersNULLList.size()>0){
-            for(UserInfo info:usersNULLList){
-                usersGEDIAOList.add(info);
+        try{
+            Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
+            ca.setTime(new Date()); //设置时间为当前时间
+            ca.add(Calendar.DATE, -1); //天数减1，统计昨天的
+            Date lastDay = ca.getTime(); //结果
+            String lastBelongDate = CommonUtil.formatDateToBelongDate(lastDay);
+            //统计AppLogEach
+            //得到所有的用户(ProjectType为空或格调的)
+            List<UserInfo> usersGEDIAOList = uaaUserService.getUserInfosByProjectType(Constants.ProjectType.GEDIAO.name());
+            List<UserInfo> usersNULLList = uaaUserService.getUserInfosByProjectType(Constants.ProjectType.NULL.name());
+            if(usersGEDIAOList==null){
+                usersGEDIAOList = new ArrayList<>();
             }
-        }
-        if(usersGEDIAOList!=null&&usersGEDIAOList.size()>0){
-            for(UserInfo info:usersGEDIAOList){
-                List<AppLogEach> allEachByUserId = appLogEachService.findAllEachByUserId(info.getId());
-                //统计昨天的未完成和已完成数目进去表(静态）
-                calculateDateData(lastBelongDate,allEachByUserId,info.getId());
-                //统计今天的进入表
-                //统计全部的已完成和未完成数目进入表（动态）//统计所有状态的数目（动态）
-                calculateDateData(null,allEachByUserId,info.getId());
+            if(usersNULLList!=null&&usersNULLList.size()>0){
+                for(UserInfo info:usersNULLList){
+                    usersGEDIAOList.add(info);
+                }
             }
+            if(usersGEDIAOList!=null&&usersGEDIAOList.size()>0){
+                for(UserInfo info:usersGEDIAOList){
+                    List<AppLogEach> allEachByUserId = appLogEachService.findAllEachByUserId(info.getId());
+                    //统计昨天的未完成和已完成数目进去表(静态）
+                    calculateDateData(lastBelongDate,allEachByUserId,info.getId());
+                    //统计今天的进入表
+                    //统计全部的已完成和未完成数目进入表（动态）//统计所有状态的数目（动态）
+                    calculateDateData(null,allEachByUserId,info.getId());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
