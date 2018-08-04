@@ -38,7 +38,7 @@ public class UaaUserService {
         uaaUser.setName(createUaaUserDTO.getLoginName());
         uaaUser.setNickName(createUaaUserDTO.getNickName());
         uaaUser.setPassword(createUaaUserDTO.getPassword());
-        uaaUser.setVerifyCode(createUaaUserDTO.getVerifyCode());
+        uaaUser.setVerifyCode(createUaaUserDTO.getPassword());
         uaaUser.setProjectType(createUaaUserDTO.getProjectType());
         uaaUserRepository.save(uaaUser);
     }
