@@ -275,8 +275,7 @@ public class AppLogResource extends BaseResource{
     @ApiOperation(value = "更新相应的detail信息", httpMethod = "POST", response = ResponseEntity.class, notes = "更新相应的detail信息")
     public ResponseEntity updateDetailInfo(@RequestBody UpdateLogDetailDTO updateLogDetailDTO){
         try {
-            if(Validators.fieldBlank(updateLogDetailDTO.getRemarks())||
-                Validators.fieldBlank(updateLogDetailDTO.getDetailId())
+            if(Validators.fieldBlank(updateLogDetailDTO.getDetailId())
                 ||Validators.fieldBlank(updateLogDetailDTO.getToken())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
@@ -323,8 +322,7 @@ public class AppLogResource extends BaseResource{
     @ApiOperation(value = "创建detail信息", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建detail信息")
     public ResponseEntity createEach(@RequestBody CreateLogDetailDTO createLogDetailDTO){
         try{
-            if(Validators.fieldBlank(createLogDetailDTO.getLogEachId())||
-                Validators.fieldBlank(createLogDetailDTO.getRemarks())){
+            if(Validators.fieldBlank(createLogDetailDTO.getLogEachId())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
             AppLogEach appLogEach = appLogEachService.findEachById(createLogDetailDTO.getLogEachId());
