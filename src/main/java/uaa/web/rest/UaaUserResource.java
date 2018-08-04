@@ -11,6 +11,7 @@ import uaa.domain.uaa.UaaUser;
 import uaa.service.UaaUserService;
 import uaa.service.dto.CreateUaaUserDTO;
 import uaa.service.dto.login.UserInfo;
+import uaa.service.login.UaaLoginService;
 import util.Validators;
 
 import javax.websocket.server.PathParam;
@@ -24,6 +25,10 @@ public class UaaUserResource extends BaseResource {
     @Autowired
     private UaaUserService uaaUserService;
 
+    @Autowired
+    private UaaLoginService uaaLoginService;
+
+
     @PostMapping("/user/reg")
     @ApiOperation(value = "注册", httpMethod = "POST", response = ResponseEntity.class, notes = "注册")
     public ResponseEntity updateDayInfo(@RequestBody CreateUaaUserDTO createUaaUserDTO) {
@@ -32,8 +37,15 @@ public class UaaUserResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
             }
             if (Validators.fieldBlank(createUaaUserDTO.getPassword()) ||
+                Validators.fieldBlank(createUaaUserDTO.getGraphCaptchaCode())||
+                Validators.fieldBlank(createUaaUserDTO.getGraphCaptchaCodeId())||
                 Validators.fieldBlank(createUaaUserDTO.getLoginName())) {
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY, null);
+            }
+            //验证图形码
+            boolean b = uaaLoginService.verifyGraph(createUaaUserDTO.getGraphCaptchaCodeId(), createUaaUserDTO.getGraphCaptchaCode());
+            if(!b){
+                return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE, null);
             }
             //名字不能重复
             UaaUser userByName = uaaUserService.findUserByName(createUaaUserDTO.getLoginName());
