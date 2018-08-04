@@ -23,6 +23,6 @@ public class BaseResource<T> implements Serializable {
     }
 
     protected void logApi(String apiUrl,String message,String type,String object,String projectType,String belongDate){
-        uaaCommonService.log(apiUrl,message,type,object,projectType,belongDate);
+        uaaCommonService.log(apiUrl,message,object,type,projectType,belongDate);
     }
 }
