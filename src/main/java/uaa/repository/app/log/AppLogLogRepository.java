@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AppLogLogRepository extends JpaRepository<AppLogLog,String> {
 //    List<AppLogLog> findAllByBelongDateAndStatus(String belongDate, String status);
-    AppLogLog findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(String belongDate, String status,String userId,String type);
+    List<AppLogLog> findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(String belongDate, String status,String userId,String type);
 
 }
 

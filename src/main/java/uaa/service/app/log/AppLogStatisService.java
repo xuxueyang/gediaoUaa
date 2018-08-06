@@ -197,7 +197,12 @@ public class AppLogStatisService {
 
     }
 
-    public List<Map<String,Integer>> getEachLineData(String userId,String type) {
+    public Map<String,Object> getEachLineData(String userId) {
+        Map<String,Object> returnMap = new HashMap<>();
+        List<String> types = new ArrayList<>();
+        types.add("1");
+        types.add("2");
+        for(String type:types){
         //默认得到最近5天的
         List<Map<String,Integer>>  mapList = new ArrayList<>();
         int k=5;
@@ -205,40 +210,53 @@ public class AppLogStatisService {
         Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
         ca.setTime(new Date()); //设置时间为当前时间
         ca.add(Calendar.DATE, -k); //天数减1，统计昨天的
-        for(int i=4;i>=0;i--){
-            ca.add(Calendar.DATE, 1);
-            Date lastDay = ca.getTime(); //结果
-            String lastBelongDate = CommonUtil.formatDateToBelongDate(lastDay);
-            AppLogLog log = appLogLogRepository.findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(lastBelongDate,
-                Constants.LogStatus.STATIC.name(),userId,type);
-            //先找静态的，没有就找动态的
-            if(log==null){
-                log = appLogLogRepository.findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(lastBelongDate,
-                    Constants.LogStatus.DYNAMIC.name(),userId,type);
-            }
-            //如果都没有--那就新创建
-            if(log==null){
-                //写入数据库
-                AppLogLog appLogLog = new AppLogLog();
-                appLogLog.setStatus(Constants.LogStatus.DYNAMIC.name());
-                appLogLog.setProjectType(Constants.ProjectType.GEDIAO.name());
-                appLogLog.setBelongDate(lastBelongDate);
-                appLogLog.setCreatedId(userId);
-                appLogLog.setUpdatedId(userId);
-                appLogLog.setDictType(Constants.DictType.APP_GEDIAO_LOG_MESSAGE_STATUS.name());
-                appLogLog.setType(type);
-                appLogLog.setId(UUIDGenerator.getUUID());
-                appLogLog.setNum(0);
+            for(int i=4;i>=0;i--){
+                ca.add(Calendar.DATE, 1);
+                Date lastDay = ca.getTime(); //结果
+                String lastBelongDate = CommonUtil.formatDateToBelongDate(lastDay);
+                List<AppLogLog> log = appLogLogRepository.findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(lastBelongDate,
+                    Constants.LogStatus.STATIC.name(),userId,type);
+                //先找静态的，没有就找动态的
+                if(log==null||log.size()==0){
+                    log = appLogLogRepository.findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(lastBelongDate,
+                        Constants.LogStatus.DYNAMIC.name(),userId,type);
+                    //需要实时统计--
+                    if(log!=null&&log.size()>0){
+                        List<AppLogEach> dyEachs = appLogEachRepository.
+                            findAllByBelongDateAndCreatedIdAndStatusNotAndTypeOrderByUpdatedDateDesc(lastBelongDate, userId,Constants.APP_LOG_STATUS_DELETE, type);
+                        for(AppLogLog each:log){
+                            each.setNum(dyEachs.size());
+                        }
+                        appLogLogRepository.save(log);
+                    }
+                }
+                //如果都没有--那就新创建
+                if(log==null||log.size()==0){
+                    //写入数据库
+                    AppLogLog appLogLog = new AppLogLog();
+                    appLogLog.setStatus(Constants.LogStatus.DYNAMIC.name());
+                    appLogLog.setProjectType(Constants.ProjectType.GEDIAO.name());
+                    appLogLog.setBelongDate(lastBelongDate);
+                    appLogLog.setCreatedId(userId);
+                    appLogLog.setUpdatedId(userId);
+                    appLogLog.setDictType(Constants.DictType.APP_GEDIAO_LOG_MESSAGE_STATUS.name());
+                    appLogLog.setType(type);
+                    appLogLog.setId(UUIDGenerator.getUUID());
+                    appLogLog.setNum(0);
+                    //塞入值
+                    appLogLogRepository.save(appLogLog);
+                    log = new ArrayList<>();
+                    log.add(appLogLog);
+                }
                 //塞入值
-                appLogLogRepository.save(appLogLog);
-                log = appLogLog;
+                Map map = new HashMap();
+                map.put(lastBelongDate,log.get(0).getNum());
+                mapList.add(map);
             }
-            //塞入值
-            Map map = new HashMap();
-            map.put(lastBelongDate,log.getNum());
-            mapList.add(map);
+            returnMap.put(type,mapList);
         }
-        return mapList;
+
+        return returnMap;
     }
 
     public Map<String, ShowDto> getEachBieData(String createdid) {

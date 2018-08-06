@@ -68,8 +68,7 @@ public class AppLogStatisResource extends BaseResource{
      */
     @GetMapping("/each-line-data")
     @ApiOperation(value = "获取每日each的完成和未完成折现统计图数据", httpMethod = "GET", response = ResponseEntity.class, notes = "获取每日each的完成和未完成折现统计图数据")
-    public ResponseEntity getEachEachLineData(@RequestParam(value = "type",required = true) String type,
-                                              @RequestParam(value = "token",required = true) String token){
+    public ResponseEntity getEachEachLineData(@RequestParam(value = "token",required = true) String token){
         try {
             //需要的数据：日期，数目，type（今日是动态，前几天的是获取到最新的静态的）
             //list<Map<Key:日期，value：num>>
@@ -77,8 +76,8 @@ public class AppLogStatisResource extends BaseResource{
             if(userByToken==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
-            List<Map<String,Integer>>  map = new ArrayList<>();
-            map = appLogStatisService.getEachLineData(userByToken.getCreatedid(),type);
+            Map<String,Object>map = new HashMap<>();
+            map = appLogStatisService.getEachLineData(userByToken.getCreatedid());
             return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
