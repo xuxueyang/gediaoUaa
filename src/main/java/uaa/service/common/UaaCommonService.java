@@ -24,7 +24,7 @@ public class UaaCommonService {
     @Autowired
     private UaaApiLogRepository apiLogRepository;
     //记录API日志
-    public void  log(String apiUrl,String message,String object,String type,String projectType,String belongDate){
+    public void  log(String apiUrl,String message,String type,String  object,String projectType,String belongDate,String usrId){
         UaaApiLog log = new UaaApiLog();
         log.setApiUri(apiUrl);
         log.setMessage(message);

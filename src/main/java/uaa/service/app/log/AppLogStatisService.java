@@ -10,6 +10,7 @@ import uaa.config.Constants;
 import uaa.domain.UaaError;
 import uaa.domain.app.log.*;
 import uaa.domain.uaa.UaaUser;
+import uaa.repository.app.log.AppLogEachRepository;
 import uaa.repository.app.log.AppLogLogRepository;
 import uaa.service.UaaUserService;
 import uaa.service.dto.login.UserInfo;
@@ -32,6 +33,9 @@ public class AppLogStatisService {
 
     @Autowired
     private AppLogSingleService appLogSingleService;
+
+    @Autowired
+    private AppLogEachRepository appLogEachRepository;
 
     @Autowired
     private AppLogLogRepository appLogLogRepository;
@@ -121,6 +125,7 @@ public class AppLogStatisService {
     }
 
     private void calculateDateData(String belongDate,List<AppLogEach> list,String userId){
+        //TODO 对于每天其实应该只有一个统计,现在会有多个
         //统计
         List<DictService.DictDTO> codeByType = dictService.getCodeByType(Constants.DictType.APP_GEDIAO_LOG_MESSAGE_STATUS.name());
         //根据code值统计
@@ -190,5 +195,105 @@ public class AppLogStatisService {
             }
         }
 
+    }
+
+    public List<Map<String,Integer>> getEachLineData(String userId,String type) {
+        //默认得到最近5天的
+        List<Map<String,Integer>>  mapList = new ArrayList<>();
+        int k=5;
+        List<String> date = new ArrayList<>();
+        Calendar ca = Calendar.getInstance();//得到一个Calendar的实例
+        ca.setTime(new Date()); //设置时间为当前时间
+        ca.add(Calendar.DATE, -k); //天数减1，统计昨天的
+        for(int i=4;i>=0;i--){
+            ca.add(Calendar.DATE, 1);
+            Date lastDay = ca.getTime(); //结果
+            String lastBelongDate = CommonUtil.formatDateToBelongDate(lastDay);
+            AppLogLog log = appLogLogRepository.findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(lastBelongDate,
+                Constants.LogStatus.STATIC.name(),userId,type);
+            //先找静态的，没有就找动态的
+            if(log==null){
+                log = appLogLogRepository.findOneByBelongDateAndStatusAndCreatedIdAndTypeOrderByUpdatedDateDesc(lastBelongDate,
+                    Constants.LogStatus.DYNAMIC.name(),userId,type);
+            }
+            //如果都没有--那就新创建
+            if(log==null){
+                //写入数据库
+                AppLogLog appLogLog = new AppLogLog();
+                appLogLog.setStatus(Constants.LogStatus.DYNAMIC.name());
+                appLogLog.setProjectType(Constants.ProjectType.GEDIAO.name());
+                appLogLog.setBelongDate(lastBelongDate);
+                appLogLog.setCreatedId(userId);
+                appLogLog.setUpdatedId(userId);
+                appLogLog.setDictType(Constants.DictType.APP_GEDIAO_LOG_MESSAGE_STATUS.name());
+                appLogLog.setType(type);
+                appLogLog.setId(UUIDGenerator.getUUID());
+                appLogLog.setNum(0);
+                //塞入值
+                appLogLogRepository.save(appLogLog);
+                log = appLogLog;
+            }
+            //塞入值
+            Map map = new HashMap();
+            map.put(lastBelongDate,log.getNum());
+            mapList.add(map);
+        }
+        return mapList;
+    }
+
+    public Map<String, ShowDto> getEachBieData(String createdid) {
+        //获取所有type。然后，统计数目（以及type和name）
+        Map<String,ShowDto> map = new HashMap<>();
+        List<DictService.DictDTO> codeByType = dictService.getCodeByType(Constants.DictType.APP_GEDIAO_LOG_MESSAGE_STATUS.name());
+        if(codeByType!=null&&codeByType.size()>0){
+            for(DictService.DictDTO dict:codeByType){
+                //统计不同type的数目
+                int num = 0;
+                ShowDto dto = new ShowDto();
+                dto.setId(dict.getValue());
+                dto.setLabel(dict.getLabel());
+                dto.setNum(num);
+                List<AppLogEach> eaches = appLogEachRepository.findAllByCreatedIdAndStatusNotAndType(createdid, Constants.APP_LOG_STATUS_DELETE, dict.getValue());
+                if(eaches!=null){
+                    num = eaches.size();
+                }
+                dto.setNum(num);
+                map.put(dict.getValue(),dto);
+            }
+        }
+        return map;
+    }
+    public class  ShowDto{
+        private String label;
+        private Integer num;
+//        private String type;
+        private String id;
+
+
+
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public Integer getNum() {
+            return num;
+        }
+
+        public void setNum(Integer num) {
+            this.num = num;
+        }
     }
 }

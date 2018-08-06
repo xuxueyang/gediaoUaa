@@ -27,6 +27,7 @@ import uaa.service.login.UaaLoginService;
 import uaa.web.rest.util.CommonUtil;
 import util.Validators;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 
@@ -110,6 +111,11 @@ public class AppLogResource extends BaseResource{
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
             }
             appLogSingleService.deleteTag(tag);
+            logApi("/api/app/log/tag/{id}","删除了标签："+tag.getName(),
+                Constants.HttpType.DELETE.name(),
+                id,
+                Constants.ProjectType.GEDIAO.name(),
+                CommonUtil.getTodayBelongDate(),((UaaUser)get.getValue()).getId());
             return prepareReturnResult(ReturnCode.DELETE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_DELETE,null);
@@ -129,6 +135,11 @@ public class AppLogResource extends BaseResource{
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
             AppLogTagDTO appLogTagDTO = appLogSingleService.createTag(createLogTagDTO,token.getCreatedid());
+            logApi("/api/app/log/tag","创建了标签："+createLogTagDTO.getName(),
+                Constants.HttpType.PUT.name(),
+                appLogTagDTO.getId(),
+                Constants.ProjectType.GEDIAO.name(),
+                CommonUtil.getTodayBelongDate(),token.getCreatedid());
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,appLogTagDTO);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
@@ -148,7 +159,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.POST.name(),
                 id,
                 Constants.ProjectType.GEDIAO.name(),
-                appLogDayDTO.getBelongDate());
+                appLogDayDTO.getBelongDate(),null);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,appLogDayDTO);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
@@ -167,7 +178,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.POST.name(),
                 belongDate,
                 Constants.ProjectType.GEDIAO.name(),
-                null);
+                null,null);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,list);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
@@ -197,7 +208,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.POST.name(),
                 updateLogDayDTO.getId(),
                 Constants.ProjectType.GEDIAO.name(),
-                updateLogDayDTO.getBelongDate());
+                updateLogDayDTO.getBelongDate(),null);
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
@@ -217,7 +228,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.DELETE.name(),
                 id,
                 Constants.ProjectType.GEDIAO.name(),
-                CommonUtil.getTodayBelongDate());
+                CommonUtil.getTodayBelongDate(),null);
             return prepareReturnResult(ReturnCode.DELETE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_DELETE,null);
@@ -248,7 +259,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.PUT.name(),
                 appLogDayDTO.getId(),
                 Constants.ProjectType.GEDIAO.name(),
-                createLogDayDTO.getBelongDate());
+                createLogDayDTO.getBelongDate(),null);
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,appLogDayDTO);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
@@ -258,14 +269,16 @@ public class AppLogResource extends BaseResource{
     //*******************************************Detail的API**********************************
     @GetMapping("/detail/{id}")
     @ApiOperation(value = "获取相应的detail信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的detail信息")
-    public ResponseEntity getDetailInfo(@PathVariable("id") String id){
+    public ResponseEntity getDetailInfo(@PathVariable("id") String id,
+                                        @RequestParam(name="token",required=true) String token){
         try {
+
             AppLogDetailDTO detailInfoById = appLogDetailService.getDetailInfoById(id);
             logApi("/api/app/log/detail/{id}","查看了消息详情面板",
                 Constants.HttpType.GET.name(),
                 id,
                 Constants.ProjectType.GEDIAO.name(),
-                CommonUtil.getTodayBelongDate());
+                CommonUtil.getTodayBelongDate(),null);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,detailInfoById);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
@@ -292,13 +305,13 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.POST.name(),
                 updateLogDetailDTO.getDetailId(),
                 Constants.ProjectType.GEDIAO.name(),
-                CommonUtil.getTodayBelongDate());
+                CommonUtil.getTodayBelongDate(),userByToken.getCreatedid());
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
         }
     }
-    @DeleteMapping("/detail/{id}")
+//    @DeleteMapping("/detail/{id}")
     @ApiOperation(value = "删除想要的detail信息", httpMethod = "DELETE", response = ResponseEntity.class, notes = "删除想要的detail信息")
     public ResponseEntity deleteDetail(@PathVariable("id") String id){
         //物理删除，删除each需要把对于的detail状态也置为删除
@@ -312,7 +325,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.DELETE.name(),
                 id,
                 Constants.ProjectType.GEDIAO.name(),
-                CommonUtil.getTodayBelongDate());
+                CommonUtil.getTodayBelongDate(),null);
             return prepareReturnResult(ReturnCode.DELETE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_DELETE,null);
@@ -320,11 +333,16 @@ public class AppLogResource extends BaseResource{
     }
     @PutMapping("/detail")
     @ApiOperation(value = "创建detail信息", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建detail信息")
-    public ResponseEntity createEach(@RequestBody CreateLogDetailDTO createLogDetailDTO){
+    public ResponseEntity createDetail(@RequestBody CreateLogDetailDTO createLogDetailDTO){
         try{
-            if(Validators.fieldBlank(createLogDetailDTO.getLogEachId())){
+            if(Validators.fieldBlank(createLogDetailDTO.getLogEachId())
+                ||Validators.fieldBlank(createLogDetailDTO.getToken())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
+            UaaToken userByToken = uaaLoginService.getUserByToken(createLogDetailDTO.getToken());
+            if(userByToken==null)
+                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+
             AppLogEach appLogEach = appLogEachService.findEachById(createLogDetailDTO.getLogEachId());
             if(appLogEach==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
@@ -335,7 +353,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.PUT.name(),
                 appLogDetailDTO.getId(),
                 Constants.ProjectType.GEDIAO.name(),
-                CommonUtil.getTodayBelongDate());
+                CommonUtil.getTodayBelongDate(),userByToken.getCreatedid());
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,appLogDetailDTO);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
@@ -343,7 +361,7 @@ public class AppLogResource extends BaseResource{
     }
 
     //*******************************************Each的API**********************************
-    @GetMapping("/each/{id}")
+//    @GetMapping("/each/{id}")
     @ApiOperation(value = "获取相应的each信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的each信息")
     public ResponseEntity getEachInfo(@PathVariable("id") String id){
         try {
@@ -352,7 +370,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.GET.name(),
                 id,
                 Constants.ProjectType.GEDIAO.name(),
-                CommonUtil.getTodayBelongDate());
+                CommonUtil.getTodayBelongDate(),null);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachInfoById);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
@@ -397,11 +415,12 @@ public class AppLogResource extends BaseResource{
             }
             //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
             Map eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId,pageable);
-            logApi("/api/app/log/eachs","获取了所有的标签",
-                Constants.HttpType.GET.name(),
-                null,
-                Constants.ProjectType.GEDIAO.name(),
-                null);
+//            logApi("/api/app/log/eachs","获取了所有的标签",
+//                Constants.HttpType.GET.name(),
+//                null,
+//                Constants.ProjectType.GEDIAO.name(),
+//                null,
+//                userId);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
@@ -437,7 +456,7 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.POST.name(),
                 updateLogEachDTO.getId(),
                 Constants.ProjectType.GEDIAO.name(),
-                updateLogEachDTO.getBelongDate());
+                updateLogEachDTO.getBelongDate(),updateLogEachDTO.getUserId());
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
@@ -462,7 +481,9 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.DELETE.name(),
                 appLogEach.getId(),
                 Constants.ProjectType.GEDIAO.name(),
-                CommonUtil.getTodayBelongDate());
+                CommonUtil.getTodayBelongDate(),
+                userId
+                );
             return prepareReturnResult(ReturnCode.DELETE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_DELETE,null);
@@ -494,9 +515,12 @@ public class AppLogResource extends BaseResource{
                 Constants.HttpType.PUT.name(),
                 appLogEachDTO.getId(),
                 Constants.ProjectType.GEDIAO.name(),
-                createLogEachDTO.getBelongDate());
+                createLogEachDTO.getBelongDate(),
+                createLogEachDTO.getUserId()
+            );
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,appLogEachDTO);
         }catch (Exception e){
+            e.printStackTrace();
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
         }
     }

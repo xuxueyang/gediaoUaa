@@ -22,7 +22,7 @@ public class BaseResource<T> implements Serializable {
         return new ResponseEntity<ReturnResultDTO<?>>(new ReturnResultDTO(returnCode, data), HttpStatus.OK);
     }
 
-    protected void logApi(String apiUrl,String message,String type,String object,String projectType,String belongDate){
-        uaaCommonService.log(apiUrl,message,object,type,projectType,belongDate);
+    protected void logApi(String apiUrl,String message,String type,String object,String projectType,String belongDate,String usrId){
+        uaaCommonService.log(apiUrl,message,type,object,projectType,belongDate,usrId);
     }
 }

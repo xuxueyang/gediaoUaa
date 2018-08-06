@@ -6,13 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uaa.domain.UaaError;
+import uaa.domain.uaa.UaaToken;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.app.log.AppLogStatisService;
+import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.util.excel.vo.app.log.LogEachInVO;
 import util.Validators;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by UKi_Hi on 2018/6/4.
@@ -26,6 +32,10 @@ public class AppLogStatisResource extends BaseResource{
 
     @Autowired
     private AppLogStatisService appLogStatisService;
+
+    @Autowired
+    private UaaLoginService uaaLoginService;
+
 
     @PostMapping("/export-each")
     @ApiOperation(value = "导出each信息", httpMethod = "POST", response = ResponseEntity.class, notes = "导出each信息")
@@ -56,14 +66,40 @@ public class AppLogStatisResource extends BaseResource{
      * 3.最下面的一栏是一个消息列表。记录最近的操作日志（最毒十条，显示：编号（ID）：时间（创建时间）：消息日志（比如更新了便签，创建了TAG，创建了TAG）
      * @return
      */
-    public ResponseEntity getStaticDate(){
+    @GetMapping("/each-line-data")
+    @ApiOperation(value = "获取每日each的完成和未完成折现统计图数据", httpMethod = "GET", response = ResponseEntity.class, notes = "获取每日each的完成和未完成折现统计图数据")
+    public ResponseEntity getEachEachLineData(@RequestParam(value = "type",required = true) String type,
+                                              @RequestParam(value = "token",required = true) String token){
         try {
-            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
+            //需要的数据：日期，数目，type（今日是动态，前几天的是获取到最新的静态的）
+            //list<Map<Key:日期，value：num>>
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            if(userByToken==null){
+                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+            }
+            List<Map<String,Integer>>  map = new ArrayList<>();
+            map = appLogStatisService.getEachLineData(userByToken.getCreatedid(),type);
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }
     }
-
+    @GetMapping("/each-bie-data")
+    @ApiOperation(value = "获取整体each的饼状图", httpMethod = "GET", response = ResponseEntity.class, notes = "获取整体each的饼状图")
+    public ResponseEntity getEachEachBieData(@RequestParam(value = "token",required = true) String token){
+        try {
+            //需要的数据是。不同type下的数目（key：type,vale:num-name)
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            if(userByToken==null){
+                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+            }
+            Map<String,AppLogStatisService.ShowDto> map = new HashMap<>();
+            map = appLogStatisService.getEachBieData(userByToken.getCreatedid());
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
 //    @GetMapping("/test/staticDate")
     @ApiOperation(value = "统计", httpMethod = "GET", response = ResponseEntity.class, notes = "统计")
     public ResponseEntity staticDate(){
