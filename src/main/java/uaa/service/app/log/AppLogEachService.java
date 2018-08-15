@@ -226,16 +226,11 @@ public class AppLogEachService {
 
                 if (Validators.fieldNotBlank(searchContext)) {
                     //模糊查找
-                    predicates.add(criteriaBuilder.like(root.get("message").as(String.class), "%" + searchContext + "%"));
-                    predicates.add(criteriaBuilder.like(root.get("title").as(String.class), "%" + searchContext + "%"));
-//                    //TODO 标签也在模糊搜索中 以后加吧--
-//                    String tagSearch = "select * from app_log_each where id in"+
-//                                "("+
-//                                " select eachTag.BASE_ID from app_log_each_tag  eachTag where TAG_ID in "
-//                                    + "("+"select tag.id from app_log_tag tag where name like" +"%"+searchContext+"%" +")"
-//                                +")"
-//                        ;
-
+                    List<Predicate> content = new ArrayList<>();
+                    content.add(criteriaBuilder.like(root.get("message").as(String.class), "%" + searchContext + "%"));
+                    content.add(criteriaBuilder.like(root.get("title").as(String.class), "%" + searchContext + "%"));
+                    Predicate andContent = criteriaBuilder.or(content.toArray(new Predicate[content.size()]));
+                    predicates.add(andContent);
                 }
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedDate").as(ZonedDateTime.class)));
                 //type不为空，且不为默认
@@ -260,13 +255,17 @@ public class AppLogEachService {
                     List<Predicate> unfinished = new ArrayList<>();
                     unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.UNFinished));
                     unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.Mem));
+                    Predicate unfinisedType = criteriaBuilder.or(unfinished.toArray(new Predicate[unfinished.size()]));
+
                     if (Validators.fieldNotBlank(searchContext)) {
+                        List<Predicate> content = new ArrayList<>();
                         //模糊查找
-                        unfinished.add(criteriaBuilder.like(root.get("message").as(String.class), "%" + searchContext + "%"));
-                        unfinished.add(criteriaBuilder.like(root.get("title").as(String.class), "%" + searchContext + "%"));
+                        content.add(criteriaBuilder.like(root.get("message").as(String.class), "%" + searchContext + "%"));
+                        content.add(criteriaBuilder.like(root.get("title").as(String.class), "%" + searchContext + "%"));
+                        Predicate andContent = criteriaBuilder.or(content.toArray(new Predicate[content.size()]));
+                        unfinisedType = criteriaBuilder.and(unfinisedType,andContent);
                     }
 
-                    Predicate unfinisedType = criteriaBuilder.and(unfinished.toArray(new Predicate[unfinished.size()]));
 
                     return criteriaBuilder.or(noType,unfinisedType);
                 }
