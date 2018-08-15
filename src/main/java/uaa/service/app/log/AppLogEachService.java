@@ -156,8 +156,13 @@ public class AppLogEachService {
         //插入到分类表中（传的是名字——id有详细的附加信息好处，但是名字可以在没有的时候添加，也不错)
         Set<AppLogEachTag> tagSet = new HashSet<>();
         if(createLogEachDTO.getTags()!=null||createLogEachDTO.getTags().size()>0){
+            //也可能是ID的（或者说--现在塞入的都是ID）
             for(String tagName:createLogEachDTO.getTags()){
                 AppLogTag one = appLogTagRepository.findOneByNameAndCreatedId(tagName,createdid);
+                if(one==null){
+                    //可能因为传入的是ID，再搜素一下
+                    one = appLogTagRepository.findOneByIdAndCreatedId(tagName,createdid);
+                }
                 if(one==null){
                     //创建标签，并且设置到关联中
                     one = new AppLogTag();

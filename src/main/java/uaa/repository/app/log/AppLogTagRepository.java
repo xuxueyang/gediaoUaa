@@ -14,4 +14,6 @@ public interface AppLogTagRepository extends JpaRepository<AppLogTag,String>,Jpa
     List<AppLogTag> findAllByTypeAndGroupAndName(String type,String group,String name);
     List<AppLogTag> findAllByCreatedId(String createdId);
     AppLogTag findOneByNameAndCreatedId(String name,String createdId);
+    AppLogTag findOneByIdAndCreatedId(String id,String createdId);
+
 }
