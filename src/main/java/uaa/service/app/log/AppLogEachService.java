@@ -250,13 +250,24 @@ public class AppLogEachService {
                     }
                     return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
                 }else{
+                    //如果没有type的话，还是(因为发现未完成数目可能很多，所以，这里，仅仅做备忘录的修改）
+                    if (Validators.fieldNotBlank(startDate) && Validators.verifyBelongDate(startDate)) {
+                        //对于备忘录和未完成的type，是不会考虑时间的
+                        //大于或等于传入时间
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("belongDate").as(String.class), startDate));
+                    }
+                    if (Validators.fieldNotBlank(endDate) && Validators.verifyBelongDate(endDate)) {
+                        //小于或等于传入时间
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("belongDate").as(String.class), endDate));
+                    }
                     Predicate noType = criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
                     //未完成的内容+type搜索即可
                     List<Predicate> unfinished = new ArrayList<>();
-                    unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.UNFinished));
+//                    unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.UNFinished));
                     unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.Mem));
                     Predicate unfinisedType = criteriaBuilder.or(unfinished.toArray(new Predicate[unfinished.size()]));
 
+                    //
                     if (Validators.fieldNotBlank(searchContext)) {
                         List<Predicate> content = new ArrayList<>();
                         //模糊查找
