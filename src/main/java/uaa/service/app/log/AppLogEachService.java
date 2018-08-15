@@ -223,14 +223,7 @@ public class AppLogEachService {
                 predicates.add(criteriaBuilder.notEqual(root.get("status").as(String.class), Constants.APP_LOG_STATUS_DELETE));
                 predicates.add(criteriaBuilder.equal(root.get("createdId").as(String.class), userId));
 
-                if (Validators.fieldNotBlank(startDate) && Validators.verifyBelongDate(startDate)) {
-                    //大于或等于传入时间
-                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("belongDate").as(String.class), startDate));
-                }
-                if (Validators.fieldNotBlank(endDate) && Validators.verifyBelongDate(endDate)) {
-                    //小于或等于传入时间
-                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("belongDate").as(String.class), endDate));
-                }
+
                 if (Validators.fieldNotBlank(searchContext)) {
                     //模糊查找
                     predicates.add(criteriaBuilder.like(root.get("message").as(String.class), "%" + searchContext + "%"));
@@ -249,6 +242,17 @@ public class AppLogEachService {
                 if (Validators.fieldNotBlank(type) && !"0".equals(type)) {
                     //状态
                     predicates.add(criteriaBuilder.equal(root.get("type").as(String.class), type));
+                    if(!Constants.LogEach_Type.UNFinished.equals(type)&&!Constants.LogEach_Type.Mem.equals(type)){
+                        if (Validators.fieldNotBlank(startDate) && Validators.verifyBelongDate(startDate)) {
+                            //对于备忘录和未完成的type，是不会考虑时间的
+                            //大于或等于传入时间
+                            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("belongDate").as(String.class), startDate));
+                        }
+                        if (Validators.fieldNotBlank(endDate) && Validators.verifyBelongDate(endDate)) {
+                            //小于或等于传入时间
+                            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("belongDate").as(String.class), endDate));
+                        }
+                    }
                     return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
                 }else{
                     Predicate noType = criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
