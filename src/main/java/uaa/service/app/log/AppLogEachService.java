@@ -239,20 +239,28 @@ public class AppLogEachService {
 //                        ;
 
                 }
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedDate").as(ZonedDateTime.class)));
                 //type不为空，且不为默认
                 if (Validators.fieldNotBlank(type) && !"0".equals(type)) {
                     //状态
                     predicates.add(criteriaBuilder.equal(root.get("type").as(String.class), type));
+                    return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+                }else{
+                    Predicate noType = criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+                    //未完成的内容+type搜索即可
+                    List<Predicate> unfinished = new ArrayList<>();
+                    unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.UNFinished));
+                    if (Validators.fieldNotBlank(searchContext)) {
+                        //模糊查找
+                        unfinished.add(criteriaBuilder.like(root.get("message").as(String.class), "%" + searchContext + "%"));
+                        unfinished.add(criteriaBuilder.like(root.get("title").as(String.class), "%" + searchContext + "%"));
+                    }
 
+                    Predicate unfinisedType = criteriaBuilder.and(unfinished.toArray(new Predicate[unfinished.size()]));
+
+                    return criteriaBuilder.or(noType,unfinisedType);
                 }
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedDate").as(ZonedDateTime.class)));
-//                query.orderBy(
-//                    criteriaBuilder.desc(
-//                        criteriaBuilder.selectCase()
-//                            .when(criteriaBuilder.equal(root.get("address"),"112"),1)
-//                            .otherwise(0)));
-                // and到一起的话所有条件就是且关系，or就是或关系
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+
             }
         };
         Page<AppLogEach> allPage = appLogEachRepository.findAll(specification,pageable);

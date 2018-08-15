@@ -100,4 +100,7 @@ public final class Constants {
     }
     private Constants() {
     }
+    public interface LogEach_Type{
+        String UNFinished = "1";//1
+    }
 }
