@@ -101,6 +101,7 @@ public final class Constants {
     private Constants() {
     }
     public interface LogEach_Type{
-        String UNFinished = "1";//1
+        String UNFinished = "1";//未完成的ID
+        String Mem = "6";//备忘录的ID
     }
 }

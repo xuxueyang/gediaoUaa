@@ -255,6 +255,7 @@ public class AppLogEachService {
                     //未完成的内容+type搜索即可
                     List<Predicate> unfinished = new ArrayList<>();
                     unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.UNFinished));
+                    unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.Mem));
                     if (Validators.fieldNotBlank(searchContext)) {
                         //模糊查找
                         unfinished.add(criteriaBuilder.like(root.get("message").as(String.class), "%" + searchContext + "%"));
