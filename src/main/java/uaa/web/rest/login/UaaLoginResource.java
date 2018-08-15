@@ -1,5 +1,7 @@
 package uaa.web.rest.login;
 
+import uaa.config.Constants;
+import uaa.domain.uaa.UaaTenantCode;
 import uaa.web.rest.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
@@ -73,12 +75,21 @@ public class UaaLoginResource extends BaseResource{
             if(!Validators.fieldBlank(loginDTO.getGraphCaptchaCodeId())){
                 if(!uaaLoginService.verifyGraph(loginDTO.getGraphCaptchaCodeId(),loginDTO.getGraphCaptchaCode())){
                     return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE,null);
-
                 }
             }
+            //判断有没有空间，且看见下有没有这个用户
             UaaUser uaaUser = uaaUserService.findUserByName(loginDTO.getName());
             if(uaaUser==null){
                 return prepareReturnResult(ReturnCode.ERROR_PASSWORD_NOT_CORRECT_CODE,null);
+            }
+            //判断有没有空间，且看见下有没有这个用户
+            {
+                if(Validators.fieldNotBlank(loginDTO.getTenantCode())){
+                    UaaTenantCode tenant = getTenant(loginDTO.getTenantCode());
+                    if(tenant==null){
+                        return prepareReturnResult(ReturnCode.ERROR_HEADER_NOT_TENANT_CODE,null);
+                    }
+                }
             }
             if(!uaaUser.getPassword().equals(loginDTO.getPassword())){
                 return prepareReturnResult(ReturnCode.ERROR_PASSWORD_NOT_CORRECT_CODE,null);

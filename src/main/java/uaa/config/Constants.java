@@ -66,6 +66,9 @@ public final class Constants {
     //消息的状态
     public static final String MESSAGE_STATUS_DELETE = Constants.DELETE;//删除
     public static final String MESSAGE_STATUS_SAVE  = Constants.SAVE;//保存
+    //空间状态
+    public static final String TENANT_STATUS_DELETE = Constants.DELETE;//删除
+    public static final String TENANT_STATUS_SAVE  = Constants.SAVE;//保存
     //用户状态
     public static final String USER_STATUS_SAVE = Constants.SAVE;///保存状态
     public static final String USER_STATUS_DELETE = Constants.DELETE;//删除

@@ -18,6 +18,8 @@ public class LoginDTO {
 
     private String graphCaptchaCodeId;
 
+    @ApiModelProperty(name = "登陆的空间")
+    private String tenantCode;
 
     public String getName() {
         return name;
@@ -49,5 +51,13 @@ public class LoginDTO {
 
     public void setGraphCaptchaCodeId(String graphCaptchaCodeId) {
         this.graphCaptchaCodeId = graphCaptchaCodeId;
+    }
+
+    public String getTenantCode() {
+        return tenantCode;
+    }
+
+    public void setTenantCode(String tenantCode) {
+        this.tenantCode = tenantCode;
     }
 }

@@ -4,6 +4,7 @@ import core.ReturnResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import uaa.domain.uaa.UaaTenantCode;
 import uaa.service.common.UaaCommonService;
 import uaa.service.permission.UaaPermissionService;
 
@@ -24,5 +25,13 @@ public class BaseResource<T> implements Serializable {
 
     protected void logApi(String apiUrl,String message,String type,String object,String projectType,String belongDate,String usrId){
         uaaCommonService.log(apiUrl,message,type,object,projectType,belongDate,usrId);
+    }
+
+    protected boolean verifyTenantExist(String id){
+        UaaTenantCode tenantById = uaaCommonService.findTenantById(id);
+        return  tenantById!=null;
+    }
+    protected UaaTenantCode getTenant(String id){
+        return uaaCommonService.findTenantById(id);
     }
 }

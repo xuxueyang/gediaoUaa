@@ -27,6 +27,9 @@ public class CreateUaaUserDTO {
     @ApiModelProperty(name = "不同项目用户标识，目前只支持青龙会成员注册")
     private String projectType;
 
+    @ApiModelProperty(name = "某空间下的用户")
+    private String tenantCode;
+
     public String getPassword() {
         return password;
     }
@@ -91,5 +94,13 @@ public class CreateUaaUserDTO {
 
     public void setGraphCaptchaCode(String graphCaptchaCode) {
         this.graphCaptchaCode = graphCaptchaCode;
+    }
+
+    public String getTenantCode() {
+        return tenantCode;
+    }
+
+    public void setTenantCode(String tenantCode) {
+        this.tenantCode = tenantCode;
     }
 }

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
 import uaa.domain.uaa.UaaApiLog;
+import uaa.domain.uaa.UaaTenantCode;
 import uaa.repository.uaa.UaaApiLogRepository;
+import uaa.repository.uaa.UaaTenantCodeRepository;
 import uaa.service.ResultInfo;
 import util.UUIDGenerator;
 
@@ -23,6 +25,10 @@ public class UaaCommonService {
 
     @Autowired
     private UaaApiLogRepository apiLogRepository;
+
+    @Autowired
+    private UaaTenantCodeRepository tenantCodeRepository;
+
     //记录API日志
     public void  log(String apiUrl,String message,String type,String  object,String projectType,String belongDate,String usrId){
         UaaApiLog log = new UaaApiLog();
@@ -36,6 +42,14 @@ public class UaaCommonService {
         //TODO 如果belongDate为空，那么不需要显示在前端
         log.setBelongDate(belongDate);
         apiLogRepository.save(log);
+    }
+
+    public UaaTenantCode findTenantById(String id){
+        UaaTenantCode oneById = tenantCodeRepository.findOneById(id);
+        if(oneById!=null&&Constants.TENANT_STATUS_DELETE.equals(oneById.getStatus())){
+            return null;
+        }
+        return oneById;
     }
 
 //    @Autowired

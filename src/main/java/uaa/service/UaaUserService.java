@@ -40,6 +40,7 @@ public class UaaUserService {
         uaaUser.setPassword(createUaaUserDTO.getPassword());
         uaaUser.setVerifyCode(createUaaUserDTO.getPassword());
         uaaUser.setProjectType(createUaaUserDTO.getProjectType());
+        uaaUser.setTenantCode(createUaaUserDTO.getTenantCode());
         uaaUserRepository.save(uaaUser);
     }
 
