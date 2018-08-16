@@ -99,12 +99,24 @@ public class AppLogStatisResource extends BaseResource{
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }
     }
-//    @GetMapping("/test/staticDate")
-    @ApiOperation(value = "统计", httpMethod = "GET", response = ResponseEntity.class, notes = "统计")
-    public ResponseEntity staticDate(){
+    @GetMapping("/each-day-operator-data")
+    @ApiOperation(value = "按照日期统计那天下的所有操作", httpMethod = "GET", response = ResponseEntity.class, notes = "按照日期统计那天下的所有操作")
+    public ResponseEntity getEachDayOperatorData(@RequestParam(value = "token",required = true)String token,
+                                                 @RequestParam(value = "belongDate",required = true)String belongDate
+                                                 ){
         try{
-            appLogStatisService.staticDate();
-            return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
+            //根据所属日期获取那天的操作日志
+            if(Validators.fieldBlank(belongDate)||Validators.fieldBlank(token))
+            {
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            if(userByToken==null){
+                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+            }
+            //按照时间顺序赛入值
+            List<Map<String, String>> eachDayOperatorData = appLogStatisService.getEachDayOperatorData(userByToken.getCreatedid(), belongDate);
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,eachDayOperatorData);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
         }
