@@ -2,150 +2,150 @@ package core;
 
 public class ReturnCode {
 
-    //Õı³£·µ»Ø2XXX
-    public static final String DEFAULT_SUCCESS = "2000"; //³É¹¦
-    public static final String CREATE_SUCCESS = "2001"; //´´½¨³É¹¦
-    public static final String UPDATE_SUCCESS = "2002"; //ĞŞ¸Ä³É¹¦
-    public static final String DELETE_SUCCESS = "2003"; //É¾³ı³É¹¦
-    public static final String GET_SUCCESS = "2004"; //»ñÈ¡³É¹¦
+    //æ­£å¸¸è¿”å›2XXX
+    public static final String DEFAULT_SUCCESS = "2000"; //æˆåŠŸ
+    public static final String CREATE_SUCCESS = "2001"; //åˆ›å»ºæˆåŠŸ
+    public static final String UPDATE_SUCCESS = "2002"; //ä¿®æ”¹æˆåŠŸ
+    public static final String DELETE_SUCCESS = "2003"; //åˆ é™¤æˆåŠŸ
+    public static final String GET_SUCCESS = "2004"; //è·å–æˆåŠŸ
 
-    //È¨ÏŞÑéÖ¤´íÎó 3XXX
+    //æƒé™éªŒè¯é”™è¯¯ 3XXX
 
-    public static final String ERROR_AOTHEN_MISS_USERNAME = "3000"; //ÕËºÅ²»´æÔÚ
-    public static final String ERROR_AOTHEN_MISS_TEL = "3001"; //Î´ÔÚÏµÍ³ÀïÆ¥Åäµ½¸ÃÓÃ»§(¿ìËÙµÇÂ¼Î´Æ¥ÅäÊÖ»úºÅÂë)
-    public static final String ERROR_NO_PERMISSIONS_DELETE = "3002"; //Ã»ÓĞÈ¨ÏŞÉ¾³ı×ÊÔ´
-    public static final String ERROR_DEFAULT_USER_HAS_NO_ROLES = "3003"; //Ä¬ÈÏÉí·İÏÂÃ»ÓĞ½ÇÉ«
-    public static final String ERROR_ACCT_IS_NOT_ACTIVATED = "3004"; //ÕËºÅÎ´¼¤»î
-    public static final String ERROR_HAS_NOT_USERS = "3005"; //ÕËºÅÏÂÎ´ÕÒµ½ÓĞĞ§Éí·İ
-    public static final String ERROR_PASSWORD_NOT_CORRECT_CODE = "3006"; //ÕËºÅÃÜÂë²»ÕıÈ·
-    public static final String ERROR_AUTHORIZATION = "3007"; //ÎŞĞ§µÄAuthorization
-    public static final String ERROR_USER_HAS_LOGOUT = "3008"; //ÓÃ»§ÒÑ¾­µÇ³ö
-    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION = "3009"; //Ã»ÓĞÈ¨ÏŞ½øĞĞ²Ù×÷
-    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_SYS_ROLE = "3010"; //Ã»ÓĞÈ¨ÏŞ²Ù×÷ÏµÍ³½ÇÉ«
-    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_OWNER_ROLE = "3011"; //Ã»ÓĞÈ¨ÏŞ²Ù×÷owner½ÇÉ«
-    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_MEMBER_ROLE = "3012"; //Ã»ÓĞÈ¨ÏŞ²Ù×÷member½ÇÉ«
-    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_OWNER_USER = "3013"; //Ã»ÓĞÈ¨ÏŞ²Ù×÷ownerÓÃ»§
-    public static final String ERROR_USER_HAVE_NO_SYS_ROLE = "3014"; //ÓÃ»§È±Ê§ÏµÍ³½ÇÉ«
-    public static final String ERROR_NO_PERMISSIONS_UPDATE = "3015"; //Ã»ÓĞÈ¨ÏŞ±à¼­×ÊÔ´
-
-
-
-    //-----------------------¶ÔÓ¦µÄ·µ»ØÇëÇóÉÏµÄhttpStatus Îª401-------------------------------
-    public static final String ERROR_TOKEN_INVALID = "3016"; //tokenÎŞĞ§
-
-    public static final String ERROR_NOT_FIND_CODE_WITH_APP_ID_CODE = "3017"; //Î´ÖªµÄappId
-    public static final String ERROR_HEADER_NOT_FIND_APP_ID_CODE = "3018"; //headerÀïÃ»ÓĞÕÒµ½²ÎÊıappId
-    public static final String ERROR_HEADER_SPACEURI_TENANT_CODE_IS_DEFFRENT_WITH_TOKEN_CODE = "3019";// tokenÀïµÄtenantCodeÓë spaceUriÀïµÄtenantCode²»Ò»ÖÂ
-    public static final String ERROR_NOT_FIND_USER_BY_SPACEURI_CODE = "3020"; //µ±Ç°spaceUriÏÂÎŞ·¨ÕÒµ½ÓĞĞ§Éí·İ£¨ÇĞ»»Éí·İÊ±£©
-    public static final String ERROR_NOT_FIND_CODE_WITH_SPACE_URI_CODE = "3021"; //¸ù¾İspaceUriÎ´Æ¥Åäµ½InstanceCode¡¢TenantCode¡¢SpaceCode
-    public static final String ERROR_HEADER_NOT_FIND_SPACE_URI_CODE = "3022"; //headerÀïÃ»ÓĞÕÒµ½²ÎÊıspaceUri
-//    public static final String ERROR_HEADER_NOT_TENANT_CODE = "3023"; //²»´æÔÚµÄ¿Õ¼ä
-
-    //-----------------------¶ÔÓ¦µÄ·µ»ØÇëÇóÉÏµÄhttpStatus Îª401-------------------------------
-
-    public static final String ERROR_ACCT_NEED_CHECK = "3030"; //ÕËºÅĞèÒªÉóºË
-
-    //Òì³£´íÎó  4XXX
-    public static final String ERROR_QUERY = "4000"; //²éÑ¯Ê§°Ü
-    public static final String ERROR_CREATE = "4001"; //´´½¨Ê§°Ü
-    public static final String ERROR_UPDATE = "4002"; //¸üĞÂÊ§°Ü
-    public static final String ERROR_DELETE = "4003"; //É¾³ıÊ§°Ü
-    public static final String ERROR_SEND_SMS = "4004"; //¶ÌĞÅ·¢ËÍÊ§°Ü
-    public static final String ERROR_UPLOAD_FILE = "4005"; //ÎÄ¼şÉÏ´«Ê§°Ü
-    public static final String ERROR_SEND_EMAIL = "4006"; //ÓÊ¼ş·¢ËÍÊ§°Ü
-    public static final String ERROR_LOGIN = "4007"; // µÇÂ¼Ê§°Ü
-
-    public static final String ERROR_UN_KNOW_PROGRAM = "4999"; //°üº¬ÒÔÉÏÒì³£
+    public static final String ERROR_AOTHEN_MISS_USERNAME = "3000"; //è´¦å·ä¸å­˜åœ¨
+    public static final String ERROR_AOTHEN_MISS_TEL = "3001"; //æœªåœ¨ç³»ç»Ÿé‡ŒåŒ¹é…åˆ°è¯¥ç”¨æˆ·(å¿«é€Ÿç™»å½•æœªåŒ¹é…æ‰‹æœºå·ç )
+    public static final String ERROR_NO_PERMISSIONS_DELETE = "3002"; //æ²¡æœ‰æƒé™åˆ é™¤èµ„æº
+    public static final String ERROR_DEFAULT_USER_HAS_NO_ROLES = "3003"; //é»˜è®¤èº«ä»½ä¸‹æ²¡æœ‰è§’è‰²
+    public static final String ERROR_ACCT_IS_NOT_ACTIVATED = "3004"; //è´¦å·æœªæ¿€æ´»
+    public static final String ERROR_HAS_NOT_USERS = "3005"; //è´¦å·ä¸‹æœªæ‰¾åˆ°æœ‰æ•ˆèº«ä»½
+    public static final String ERROR_PASSWORD_NOT_CORRECT_CODE = "3006"; //è´¦å·å¯†ç ä¸æ­£ç¡®
+    public static final String ERROR_AUTHORIZATION = "3007"; //æ— æ•ˆçš„Authorization
+    public static final String ERROR_USER_HAS_LOGOUT = "3008"; //ç”¨æˆ·å·²ç»ç™»å‡º
+    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION = "3009"; //æ²¡æœ‰æƒé™è¿›è¡Œæ“ä½œ
+    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_SYS_ROLE = "3010"; //æ²¡æœ‰æƒé™æ“ä½œç³»ç»Ÿè§’è‰²
+    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_OWNER_ROLE = "3011"; //æ²¡æœ‰æƒé™æ“ä½œownerè§’è‰²
+    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_MEMBER_ROLE = "3012"; //æ²¡æœ‰æƒé™æ“ä½œmemberè§’è‰²
+    public static final String ERROR_HAVE_NO_PERMISSION_OPERATION_OWNER_USER = "3013"; //æ²¡æœ‰æƒé™æ“ä½œownerç”¨æˆ·
+    public static final String ERROR_USER_HAVE_NO_SYS_ROLE = "3014"; //ç”¨æˆ·ç¼ºå¤±ç³»ç»Ÿè§’è‰²
+    public static final String ERROR_NO_PERMISSIONS_UPDATE = "3015"; //æ²¡æœ‰æƒé™ç¼–è¾‘èµ„æº
 
 
-    //·ÇÂß¼­ÑéÖ¤´íÎó 50XX£º×Ö¶Î   51XX£º×ÊÔ´
-    public static final String ERROR_FIELD_EMPTY = "5001"; //×Ö¶Î²»ÄÜÎª¿Õ
-    public static final String ERROR_FIELD_FORMAT = "5002"; //×Ö¶Î¸ñÊ½²»ÕıÈ·
-    public static final String ERROR_GRAPH_CODE = "5003"; //Í¼ĞÎÑéÖ¤Âë²»ÕıÈ·
-    public static final String ERROR_SMS_CODE = "5004"; //ÊÖ»úÑéÖ¤Âë²»ÕıÈ·
-    public static final String ERROR_ATTACHMENT_URL_BLANK = "5005"; //¸½¼şURLÎª¿Õ
-    public static final String ERROR_LINK_CODE = "5006"; //Á´½Ó²»ÕıÈ·
-    public static final String ERROR_LINK_EXPIRED_CODE = "5007"; //Á´½Ó¹ıÆÚ
-    public static final String ERROR_FIELD_NOT_EMPTY = "5008"; //×Ö¶Î±ØĞëÎª¿Õ
-    public static final String ERROR_FIELD_STRING_LENGTH = "5009"; //×Ö¶ÎµÄ³¤¶È²»·ûºÏ
-    public static final String ERROR_CAPTCHA_CODE = "5010"; //ÑéÖ¤Âë²»ÕıÈ·
-    public static final String ERROR_FIELD_UPDATE = "5011"; //×Ö¶Î²»ÄÜ¸ü¸Ä
-    public static final String ERROR_CONFIG = "5012"; //ÅäÖÃÒì³£
-    public static final String ERROR_FIELD_RANGE = "5013"; //×Ö¶ÎµÄÖµ²»ÔÚ¹æ¶¨·¶Î§ÄÚ
 
-    //Âß¼­ÑéÖ¤´íÎó 6XXX
-    public static final String ERROR_ACCT_NOT_EXIST_CODE = "6000"; //ÕËºÅ²»´æÔÚ
-    public static final String ERROR_FIELD_EXIST_CODE = "6001"; //×Ö¶ÎÒÑ¾­´æÔÚ
-    public static final String ERROR_DELETE_NOT_EXIST_CODE = "6003"; //É¾³ıµÄ×ÊÔ´²»´æÔÚ
-    public static final String ERROR_RESOURCE_NOT_EXIST_CODE = "6004"; //×ÊÔ´²»´æÔÚ
-    public static final String ERROR_RESOURCE_HAS_CHILDREN_CODE = "6005"; //×ÊÔ´ÓĞ×ÓÔªËØ£¬ÎŞ·¨É¾³ı
-    public static final String ERROR_RESOURCE_IS_USED_CODE = "6006"; //×ÊÔ´ÒÑ±»Ê¹ÓÃ£¬ÎŞ·¨É¾³ı
-    public static final String ERROR_CURRENT_USER_NOT_EXIST = "6007"; //µ±Ç°ÓÃ»§²»´æÔÚ£¨tokenÖĞÎ´È¡µ½userId£©
-    public static final String ERROR_INVALID_STATUS_CODE = "6008"; //×ÊÔ´²»ÊÇÓĞĞ§×´Ì¬
-    public static final String ERROR_RESOURCE_NOT_ALLOWED_DELETE = "6009"; //×ÊÔ´²»ÔÊĞí±»É¾³ı
-    public static final String ERROR_RESOURCE_NOT_ALLOWED_UPDATE = "6010"; //×ÊÔ´²»ÔÊĞí±»ĞŞ¸Ä
-    public static final String ERROR_RESOURCE_EXIST_CODE = "6011"; //×ÊÔ´ÒÑ¾­´æÔÚ
-    public static final String ERROR_RESOURCE_NUMBER_UPPER_LIMIT = "6012"; //×ÊÔ´ÊıÄ¿ÉÏÏŞ
-    public static final String ERROR_NOT_INVITED = "6013"; //ÓÃ»§Î´±»ÑûÇë
-    public static final String ERROR_USER_NOT_EXIST_CODE = "6013"; //ÓÃ»§Éí·İ(user)²»´æÔÚ
-    public static final String ERROR_PERMISSION_NOT_EXIST_CODE = "6014"; //È¨ÏŞ²»´æÔÚ
-    public static final String ERROR_ROLE_NOT_EXIST_CODE = "6015"; //½ÇÉ«²»´æÔÚ
-    public static final String ERROR_ROLE_HAS_USERS_CODE = "6016"; //½ÇÉ«ÏÂÓĞÓÃ»§£¬²»ÔÊĞíÉ¾³ı½ÇÉ«
-    public static final String ERROR_UPDATE_SYS_ROLE_CODE = "6017"; //ÏµÍ³½ÇÉ«£¬²»ÔÊĞíÉ¾³ı»ò¸üĞÂ
-    public static final String ERROR_CHECK_NO_CHECK_STATUS_CODE = "6018"; //¼ÇÂ¼²»ÊÇ´ıÉóÅú×´Ì¬£¬ÎŞ·¨½øĞĞÉóÅú
-    public static final String ERROR_SPACE_IS_NOT_ACTIVATED = "6019"; //¿Õ¼ä²»ÊÇ¼¤»î×´Ì¬
-    public static final String ERROR_TENANT_HAS_NO_SPACE_CODE = "6020"; //×â»§ÏÂ²»´æÔÚ¿Õ¼ä
-    public static final String ERROR_ACCT_ID_UNMATCHED = "6021"; //ÕËºÅÃûÓëÕËºÅID²»Æ¥Åä
-    public static final String ERROR_USER_ID_UNMATCHED = "6022"; //ÕËºÅÃûÓëÓÃ»§ID²»Æ¥Åä
-    public static final String ERROR_DATA_HAS_CHILDREN_CODE = "6023"; //Êı¾İ´æÔÚ×Ó½Úµã
-    public static final String ERROR_ORGANIZATION_SPACE_HAS_EXIST = "6024";//ÆóÒµ¿Õ¼äÒÑ¾­±»×¢²á
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_EMAIL_CODE = "6030";//²»Ö§³ÖEMAILµÇÂ¼×¢²á
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_PHONE_CODE = "6031";//²»Ö§³ÖÊÖ»úµÇÂ¼×¢²á
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_PHONE_CODE_CODE = "6032";//²»Ö§³Ö¿ìËÙµÇÂ¼
-    public static final String ERROR_LOGIN_CONFIG_SUPPORT_ADMIN_INVITATION_CODE = "6033";//Ö»Ö§³Ö¹ÜÀíÔ±ÑûÇë
-    public static final String ERROR_INVITATION_ROLE_CODE = "6034";//ÑûÇëÓÃ»§µÄÉí·İÖ»ÄÜÊÇ»áÔ±(member)
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_INVITATION_CODE = "6035";//²»Ö§³ÖÑûÇë
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_EMAIL_NVITATION_CODE = "6036";//²»Ö§³ÖÓÊÏä·½Ê½ÑûÇë
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_PHONE_NVITATION_CODE = "6037";//²»Ö§³ÖÊÖ»ú·½Ê½ÑûÇë
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_REGISTY_CHECK_CODE = "6038";//²»Ö§³Ö×¢²áÉóºË
-    public static final String ERROR_CONFIRM_PASSWORD_CODE = "6039";//È·ÈÏÃÜÂëÓëÃÜÂëÖµ²»ÏàµÈ
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_NAME_CODE = "6040";//²»Ö§³ÖÓÃ»§ÃûµÇÂ¼
-    public static final String ERROR_PARENT_ID_NOT_EXIST_CODE = "6041";//¸¸½Úµã²»´æÔÚ
-    public static final String ERROR_INVITATION_NOT_EXIST_CODE = "6042";//ÑûÇëID²»´æÔÚ
-    public static final String ERROR_INVITATION_DISABLE_CODE = "6043";  //ÑûÇëÊ§Ğ§
-    public static final String ERROR_SUPER_ADMIN_EXISTS_CODE = "6044";  //³¬¼¶¹ÜÀíÔ±ÒÑ´æÔÚ
-    public static final String ERROR_ROLE_IS_NOT_SUPER_ADMIN_CODE = "6045";  //²»ÊÇ³¬¼¶¹ÜÀíÔ±
-    public static final String ERROR_MODIFY_SUPER_ADMIN_CODE = "6046";  //²»ÄÜ¶Ô³¬¼¶¹ÜÀíÔ±½øĞĞ²Ù×÷
-    public static final String ERROR_DISABLE_ENABLE_ROLE_CODE = "6047";  //µ±Ç°µÄ½ÇÉ«²»ÄÜ½øĞĞÆôÓÃ½ûÓÃ²Ù×÷
-    public static final String ERROR_EAMIL_VERIFIED_CODE = "6048";  //ÓÃ»§ÓÊÏäÒÑÈÏÖ¤
-    public static final String ERROR_CONTENT_CHANGE_STATUS_PUBLISHED_TO_DRAFT = "6049";  //²»ÔÊĞíÓÉ·¢²¼×´Ì¬ĞŞ¸ÄÎª²İ¸å×´Ì¬
-    public static final String ERROR_USER_HAS_GROUP = "6050"; // ÓÃ»§ÒÑ·ÖÅä×éÖ¯¼Ü¹¹
-    public static final String ERROR_RESOURCE_UPLOADING = "6051"; // ·¢²¼Ê§°Ü¡¢×ÊÔ´ÉÏ´«ÖĞ
-    public static final String ERROR_EAMIL_NOT_VERIFIED_CODE = "6052";  //ÓÃ»§ÓÊÏäÎ´ÈÏÖ¤
-    public static final String ERROR_STATRTIME_IS_GREATER_THAN_ENDTIME = "6053"; //¿ªÊ¼Ê±¼ä´óÓÚ½áÊøÊ±¼ä
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_IC_CARD_CODE = "6054";//²»Ö§³ÖÉí·İÖ¤µÇÂ¼
-    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_CREDIT_CODE = "6055";//²»Ö§³ÖÆóÒµĞÅÓÃÂëµÇÂ¼
-    public static final String ERROR_UPDATE_SELF_ROLE_CODE = "6056";//¹ÜÀíÔ±²»ÄÜÈ¡Ïû×Ô¼º
-    public static final String ERROR_STATUS_FROM_R_TO_DA = "6057";//(ÉóÅú¾Ü¾ø)²»ÄÜĞŞ¸ÄÎª(½ûÓÃ)
-    public static final String ERROR_ACTIVITY_TIME_GREATER_THAN_REGISTRATION_TIME = "6058";//±¨ÃûÊ±¼ä²»ÄÜ´óÓÚ»î¶¯Ê±¼ä
-    public static final String ERROR_ACTIVITY_ENDED_EDIT = "6059";//»î¶¯ÒÑ¾­½áÊø,²»ÄÜ±à¼­
-    public static final String ERROR_ACTIVITY_PROCESSING_EDIT_ONLY_EXTEND_TIME  = "6060";//»î¶¯½øĞĞÖĞ£¬Ö»ÄÜÑÓ³¤±¨ÃûÊ±¼ä»ò»î¶¯Ê±¼ä
-    public static final String ERROR_ACTIVITY_REG_USERNAME_MUST  = "6061";//»î¶¯±¨Ãû£¬±ØĞëÊäÈëÓÃ»§Ãû
-    public static final String ERROR_ACTIVITY_REG_TEL_MUST  = "6062";//»î¶¯±¨Ãû£¬±ØĞëÊäÈëÊÖ»ú
-    public static final String ERROR_ACTIVITY_REG_EMAIL_MUST  = "6063";//»î¶¯±¨Ãû£¬±ØĞëÊäÈëÓÊÏä
-    public static final String ERROR_ACTIVITY_REG_EXCEED_LIMIT_SUM  = "6064";//»î¶¯±¨Ãû£¬²»ÄÜ³¬¹ı×ÜÆ±Êı
-    public static final String ERROR_ACTIVITY_REG_EXCEED_PER_LIMIT_SUM  = "6065";//»î¶¯±¨Ãû£¬²»ÄÜ³¬¹ıµ¥ÈËÆ±Êı
-    public static final String ERROR_ACTIVITY_REG_NOT_IN_REG_TIME  = "6066";//»î¶¯±¨Ãû£¬±ØĞëÔÚ±¨ÃûÊ±¼äÄÚ
-    public static final String ERROR_ACTIVITY_REG_CANCEL_KEY_INVALID  = "6067";//»î¶¯±¨Ãû£¬±ØĞëÔÚ±¨ÃûÊ±¼äÄÚ
-    public static final String ERROR_ERROR_ORDER_NO_HAS_DISABLED  = "6068";//¶©µ¥ÒÑ¾­È¡Ïû£¬²»ÄÜÖØ¸´È¡Ïû
-    public static final String ERROR_DELETE_REASON_MAST  = "6069";//É¾³ıÀíÓÉ±ØÌî
+    //-----------------------å¯¹åº”çš„è¿”å›è¯·æ±‚ä¸Šçš„httpStatus ä¸º401-------------------------------
+    public static final String ERROR_TOKEN_INVALID = "3016"; //tokenæ— æ•ˆ
 
-    public static final String ERROR_PUBLISH  = "6070";//½ûÖ¹·¢²¼
-    public static final String ERROR_PUBLISH_VERSION  = "6071";//½ûÖ¹·¢²¼°æ±¾
-    public static final String ERROR_UN_PUBLISH = "6072";//Î´·¢²¼
-    public static final String ERROR_APP_CONFIG = "6073"; //Ó¦ÓÃÅäÖÃ´íÎó
+    public static final String ERROR_NOT_FIND_CODE_WITH_APP_ID_CODE = "3017"; //æœªçŸ¥çš„appId
+    public static final String ERROR_HEADER_NOT_FIND_APP_ID_CODE = "3018"; //headeré‡Œæ²¡æœ‰æ‰¾åˆ°å‚æ•°appId
+    public static final String ERROR_HEADER_SPACEURI_TENANT_CODE_IS_DEFFRENT_WITH_TOKEN_CODE = "3019";// tokené‡Œçš„tenantCodeä¸ spaceUrié‡Œçš„tenantCodeä¸ä¸€è‡´
+    public static final String ERROR_NOT_FIND_USER_BY_SPACEURI_CODE = "3020"; //å½“å‰spaceUriä¸‹æ— æ³•æ‰¾åˆ°æœ‰æ•ˆèº«ä»½ï¼ˆåˆ‡æ¢èº«ä»½æ—¶ï¼‰
+    public static final String ERROR_NOT_FIND_CODE_WITH_SPACE_URI_CODE = "3021"; //æ ¹æ®spaceUriæœªåŒ¹é…åˆ°InstanceCodeã€TenantCodeã€SpaceCode
+    public static final String ERROR_HEADER_NOT_FIND_SPACE_URI_CODE = "3022"; //headeré‡Œæ²¡æœ‰æ‰¾åˆ°å‚æ•°spaceUri
+    public static final String ERROR_HEADER_NOT_TENANT_CODE = "3023"; //ä¸å­˜åœ¨çš„ç©ºé—´
 
-    public static final String ERROR_APP_NOT_EXIST_CODE = "6999"; //Ó¦ÓÃ²»´æÔÚ
+    //-----------------------å¯¹åº”çš„è¿”å›è¯·æ±‚ä¸Šçš„httpStatus ä¸º401-------------------------------
+
+    public static final String ERROR_ACCT_NEED_CHECK = "3030"; //è´¦å·éœ€è¦å®¡æ ¸
+
+    //å¼‚å¸¸é”™è¯¯  4XXX
+    public static final String ERROR_QUERY = "4000"; //æŸ¥è¯¢å¤±è´¥
+    public static final String ERROR_CREATE = "4001"; //åˆ›å»ºå¤±è´¥
+    public static final String ERROR_UPDATE = "4002"; //æ›´æ–°å¤±è´¥
+    public static final String ERROR_DELETE = "4003"; //åˆ é™¤å¤±è´¥
+    public static final String ERROR_SEND_SMS = "4004"; //çŸ­ä¿¡å‘é€å¤±è´¥
+    public static final String ERROR_UPLOAD_FILE = "4005"; //æ–‡ä»¶ä¸Šä¼ å¤±è´¥
+    public static final String ERROR_SEND_EMAIL = "4006"; //é‚®ä»¶å‘é€å¤±è´¥
+    public static final String ERROR_LOGIN = "4007"; // ç™»å½•å¤±è´¥
+
+    public static final String ERROR_UN_KNOW_PROGRAM = "4999"; //åŒ…å«ä»¥ä¸Šå¼‚å¸¸
+
+
+    //éé€»è¾‘éªŒè¯é”™è¯¯ 50XXï¼šå­—æ®µ   51XXï¼šèµ„æº
+    public static final String ERROR_FIELD_EMPTY = "5001"; //å­—æ®µä¸èƒ½ä¸ºç©º
+    public static final String ERROR_FIELD_FORMAT = "5002"; //å­—æ®µæ ¼å¼ä¸æ­£ç¡®
+    public static final String ERROR_GRAPH_CODE = "5003"; //å›¾å½¢éªŒè¯ç ä¸æ­£ç¡®
+    public static final String ERROR_SMS_CODE = "5004"; //æ‰‹æœºéªŒè¯ç ä¸æ­£ç¡®
+    public static final String ERROR_ATTACHMENT_URL_BLANK = "5005"; //é™„ä»¶URLä¸ºç©º
+    public static final String ERROR_LINK_CODE = "5006"; //é“¾æ¥ä¸æ­£ç¡®
+    public static final String ERROR_LINK_EXPIRED_CODE = "5007"; //é“¾æ¥è¿‡æœŸ
+    public static final String ERROR_FIELD_NOT_EMPTY = "5008"; //å­—æ®µå¿…é¡»ä¸ºç©º
+    public static final String ERROR_FIELD_STRING_LENGTH = "5009"; //å­—æ®µçš„é•¿åº¦ä¸ç¬¦åˆ
+    public static final String ERROR_CAPTCHA_CODE = "5010"; //éªŒè¯ç ä¸æ­£ç¡®
+    public static final String ERROR_FIELD_UPDATE = "5011"; //å­—æ®µä¸èƒ½æ›´æ”¹
+    public static final String ERROR_CONFIG = "5012"; //é…ç½®å¼‚å¸¸
+    public static final String ERROR_FIELD_RANGE = "5013"; //å­—æ®µçš„å€¼ä¸åœ¨è§„å®šèŒƒå›´å†…
+
+    //é€»è¾‘éªŒè¯é”™è¯¯ 6XXX
+    public static final String ERROR_ACCT_NOT_EXIST_CODE = "6000"; //è´¦å·ä¸å­˜åœ¨
+    public static final String ERROR_FIELD_EXIST_CODE = "6001"; //å­—æ®µå·²ç»å­˜åœ¨
+    public static final String ERROR_DELETE_NOT_EXIST_CODE = "6003"; //åˆ é™¤çš„èµ„æºä¸å­˜åœ¨
+    public static final String ERROR_RESOURCE_NOT_EXIST_CODE = "6004"; //èµ„æºä¸å­˜åœ¨
+    public static final String ERROR_RESOURCE_HAS_CHILDREN_CODE = "6005"; //èµ„æºæœ‰å­å…ƒç´ ï¼Œæ— æ³•åˆ é™¤
+    public static final String ERROR_RESOURCE_IS_USED_CODE = "6006"; //èµ„æºå·²è¢«ä½¿ç”¨ï¼Œæ— æ³•åˆ é™¤
+    public static final String ERROR_CURRENT_USER_NOT_EXIST = "6007"; //å½“å‰ç”¨æˆ·ä¸å­˜åœ¨ï¼ˆtokenä¸­æœªå–åˆ°userIdï¼‰
+    public static final String ERROR_INVALID_STATUS_CODE = "6008"; //èµ„æºä¸æ˜¯æœ‰æ•ˆçŠ¶æ€
+    public static final String ERROR_RESOURCE_NOT_ALLOWED_DELETE = "6009"; //èµ„æºä¸å…è®¸è¢«åˆ é™¤
+    public static final String ERROR_RESOURCE_NOT_ALLOWED_UPDATE = "6010"; //èµ„æºä¸å…è®¸è¢«ä¿®æ”¹
+    public static final String ERROR_RESOURCE_EXIST_CODE = "6011"; //èµ„æºå·²ç»å­˜åœ¨
+    public static final String ERROR_RESOURCE_NUMBER_UPPER_LIMIT = "6012"; //èµ„æºæ•°ç›®ä¸Šé™
+    public static final String ERROR_NOT_INVITED = "6013"; //ç”¨æˆ·æœªè¢«é‚€è¯·
+    public static final String ERROR_USER_NOT_EXIST_CODE = "6013"; //ç”¨æˆ·èº«ä»½(user)ä¸å­˜åœ¨
+    public static final String ERROR_PERMISSION_NOT_EXIST_CODE = "6014"; //æƒé™ä¸å­˜åœ¨
+    public static final String ERROR_ROLE_NOT_EXIST_CODE = "6015"; //è§’è‰²ä¸å­˜åœ¨
+    public static final String ERROR_ROLE_HAS_USERS_CODE = "6016"; //è§’è‰²ä¸‹æœ‰ç”¨æˆ·ï¼Œä¸å…è®¸åˆ é™¤è§’è‰²
+    public static final String ERROR_UPDATE_SYS_ROLE_CODE = "6017"; //ç³»ç»Ÿè§’è‰²ï¼Œä¸å…è®¸åˆ é™¤æˆ–æ›´æ–°
+    public static final String ERROR_CHECK_NO_CHECK_STATUS_CODE = "6018"; //è®°å½•ä¸æ˜¯å¾…å®¡æ‰¹çŠ¶æ€ï¼Œæ— æ³•è¿›è¡Œå®¡æ‰¹
+    public static final String ERROR_SPACE_IS_NOT_ACTIVATED = "6019"; //ç©ºé—´ä¸æ˜¯æ¿€æ´»çŠ¶æ€
+    public static final String ERROR_TENANT_HAS_NO_SPACE_CODE = "6020"; //ç§Ÿæˆ·ä¸‹ä¸å­˜åœ¨ç©ºé—´
+    public static final String ERROR_ACCT_ID_UNMATCHED = "6021"; //è´¦å·åä¸è´¦å·IDä¸åŒ¹é…
+    public static final String ERROR_USER_ID_UNMATCHED = "6022"; //è´¦å·åä¸ç”¨æˆ·IDä¸åŒ¹é…
+    public static final String ERROR_DATA_HAS_CHILDREN_CODE = "6023"; //æ•°æ®å­˜åœ¨å­èŠ‚ç‚¹
+    public static final String ERROR_ORGANIZATION_SPACE_HAS_EXIST = "6024";//ä¼ä¸šç©ºé—´å·²ç»è¢«æ³¨å†Œ
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_EMAIL_CODE = "6030";//ä¸æ”¯æŒEMAILç™»å½•æ³¨å†Œ
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_PHONE_CODE = "6031";//ä¸æ”¯æŒæ‰‹æœºç™»å½•æ³¨å†Œ
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_PHONE_CODE_CODE = "6032";//ä¸æ”¯æŒå¿«é€Ÿç™»å½•
+    public static final String ERROR_LOGIN_CONFIG_SUPPORT_ADMIN_INVITATION_CODE = "6033";//åªæ”¯æŒç®¡ç†å‘˜é‚€è¯·
+    public static final String ERROR_INVITATION_ROLE_CODE = "6034";//é‚€è¯·ç”¨æˆ·çš„èº«ä»½åªèƒ½æ˜¯ä¼šå‘˜(member)
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_INVITATION_CODE = "6035";//ä¸æ”¯æŒé‚€è¯·
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_EMAIL_NVITATION_CODE = "6036";//ä¸æ”¯æŒé‚®ç®±æ–¹å¼é‚€è¯·
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_PHONE_NVITATION_CODE = "6037";//ä¸æ”¯æŒæ‰‹æœºæ–¹å¼é‚€è¯·
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_REGISTY_CHECK_CODE = "6038";//ä¸æ”¯æŒæ³¨å†Œå®¡æ ¸
+    public static final String ERROR_CONFIRM_PASSWORD_CODE = "6039";//ç¡®è®¤å¯†ç ä¸å¯†ç å€¼ä¸ç›¸ç­‰
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_NAME_CODE = "6040";//ä¸æ”¯æŒç”¨æˆ·åç™»å½•
+    public static final String ERROR_PARENT_ID_NOT_EXIST_CODE = "6041";//çˆ¶èŠ‚ç‚¹ä¸å­˜åœ¨
+    public static final String ERROR_INVITATION_NOT_EXIST_CODE = "6042";//é‚€è¯·IDä¸å­˜åœ¨
+    public static final String ERROR_INVITATION_DISABLE_CODE = "6043";  //é‚€è¯·å¤±æ•ˆ
+    public static final String ERROR_SUPER_ADMIN_EXISTS_CODE = "6044";  //è¶…çº§ç®¡ç†å‘˜å·²å­˜åœ¨
+    public static final String ERROR_ROLE_IS_NOT_SUPER_ADMIN_CODE = "6045";  //ä¸æ˜¯è¶…çº§ç®¡ç†å‘˜
+    public static final String ERROR_MODIFY_SUPER_ADMIN_CODE = "6046";  //ä¸èƒ½å¯¹è¶…çº§ç®¡ç†å‘˜è¿›è¡Œæ“ä½œ
+    public static final String ERROR_DISABLE_ENABLE_ROLE_CODE = "6047";  //å½“å‰çš„è§’è‰²ä¸èƒ½è¿›è¡Œå¯ç”¨ç¦ç”¨æ“ä½œ
+    public static final String ERROR_EAMIL_VERIFIED_CODE = "6048";  //ç”¨æˆ·é‚®ç®±å·²è®¤è¯
+    public static final String ERROR_CONTENT_CHANGE_STATUS_PUBLISHED_TO_DRAFT = "6049";  //ä¸å…è®¸ç”±å‘å¸ƒçŠ¶æ€ä¿®æ”¹ä¸ºè‰ç¨¿çŠ¶æ€
+    public static final String ERROR_USER_HAS_GROUP = "6050"; // ç”¨æˆ·å·²åˆ†é…ç»„ç»‡æ¶æ„
+    public static final String ERROR_RESOURCE_UPLOADING = "6051"; // å‘å¸ƒå¤±è´¥ã€èµ„æºä¸Šä¼ ä¸­
+    public static final String ERROR_EAMIL_NOT_VERIFIED_CODE = "6052";  //ç”¨æˆ·é‚®ç®±æœªè®¤è¯
+    public static final String ERROR_STATRTIME_IS_GREATER_THAN_ENDTIME = "6053"; //å¼€å§‹æ—¶é—´å¤§äºç»“æŸæ—¶é—´
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_IC_CARD_CODE = "6054";//ä¸æ”¯æŒèº«ä»½è¯ç™»å½•
+    public static final String ERROR_LOGIN_CONFIG_NOT_SUPPORT_CREDIT_CODE = "6055";//ä¸æ”¯æŒä¼ä¸šä¿¡ç”¨ç ç™»å½•
+    public static final String ERROR_UPDATE_SELF_ROLE_CODE = "6056";//ç®¡ç†å‘˜ä¸èƒ½å–æ¶ˆè‡ªå·±
+    public static final String ERROR_STATUS_FROM_R_TO_DA = "6057";//(å®¡æ‰¹æ‹’ç»)ä¸èƒ½ä¿®æ”¹ä¸º(ç¦ç”¨)
+    public static final String ERROR_ACTIVITY_TIME_GREATER_THAN_REGISTRATION_TIME = "6058";//æŠ¥åæ—¶é—´ä¸èƒ½å¤§äºæ´»åŠ¨æ—¶é—´
+    public static final String ERROR_ACTIVITY_ENDED_EDIT = "6059";//æ´»åŠ¨å·²ç»ç»“æŸ,ä¸èƒ½ç¼–è¾‘
+    public static final String ERROR_ACTIVITY_PROCESSING_EDIT_ONLY_EXTEND_TIME  = "6060";//æ´»åŠ¨è¿›è¡Œä¸­ï¼Œåªèƒ½å»¶é•¿æŠ¥åæ—¶é—´æˆ–æ´»åŠ¨æ—¶é—´
+    public static final String ERROR_ACTIVITY_REG_USERNAME_MUST  = "6061";//æ´»åŠ¨æŠ¥åï¼Œå¿…é¡»è¾“å…¥ç”¨æˆ·å
+    public static final String ERROR_ACTIVITY_REG_TEL_MUST  = "6062";//æ´»åŠ¨æŠ¥åï¼Œå¿…é¡»è¾“å…¥æ‰‹æœº
+    public static final String ERROR_ACTIVITY_REG_EMAIL_MUST  = "6063";//æ´»åŠ¨æŠ¥åï¼Œå¿…é¡»è¾“å…¥é‚®ç®±
+    public static final String ERROR_ACTIVITY_REG_EXCEED_LIMIT_SUM  = "6064";//æ´»åŠ¨æŠ¥åï¼Œä¸èƒ½è¶…è¿‡æ€»ç¥¨æ•°
+    public static final String ERROR_ACTIVITY_REG_EXCEED_PER_LIMIT_SUM  = "6065";//æ´»åŠ¨æŠ¥åï¼Œä¸èƒ½è¶…è¿‡å•äººç¥¨æ•°
+    public static final String ERROR_ACTIVITY_REG_NOT_IN_REG_TIME  = "6066";//æ´»åŠ¨æŠ¥åï¼Œå¿…é¡»åœ¨æŠ¥åæ—¶é—´å†…
+    public static final String ERROR_ACTIVITY_REG_CANCEL_KEY_INVALID  = "6067";//æ´»åŠ¨æŠ¥åï¼Œå¿…é¡»åœ¨æŠ¥åæ—¶é—´å†…
+    public static final String ERROR_ERROR_ORDER_NO_HAS_DISABLED  = "6068";//è®¢å•å·²ç»å–æ¶ˆï¼Œä¸èƒ½é‡å¤å–æ¶ˆ
+    public static final String ERROR_DELETE_REASON_MAST  = "6069";//åˆ é™¤ç†ç”±å¿…å¡«
+
+    public static final String ERROR_PUBLISH  = "6070";//ç¦æ­¢å‘å¸ƒ
+    public static final String ERROR_PUBLISH_VERSION  = "6071";//ç¦æ­¢å‘å¸ƒç‰ˆæœ¬
+    public static final String ERROR_UN_PUBLISH = "6072";//æœªå‘å¸ƒ
+    public static final String ERROR_APP_CONFIG = "6073"; //åº”ç”¨é…ç½®é”™è¯¯
+
+    public static final String ERROR_APP_NOT_EXIST_CODE = "6999"; //åº”ç”¨ä¸å­˜åœ¨
 
 
 }

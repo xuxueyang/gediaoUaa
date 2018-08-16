@@ -263,7 +263,7 @@ public class AppLogEachService {
                     Predicate noType = criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
                     //未完成的内容+type搜索即可
                     List<Predicate> unfinished = new ArrayList<>();
-//                    unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.UNFinished));
+                    unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.UNFinished));
                     unfinished.add(criteriaBuilder.equal(root.get("type").as(String.class), Constants.LogEach_Type.Mem));
                     Predicate unfinisedType = criteriaBuilder.or(unfinished.toArray(new Predicate[unfinished.size()]));
 
@@ -276,7 +276,13 @@ public class AppLogEachService {
                         Predicate andContent = criteriaBuilder.or(content.toArray(new Predicate[content.size()]));
                         unfinisedType = criteriaBuilder.and(unfinisedType,andContent);
                     }
+                    //附加基本的查找
+                    List<Predicate> basePList = new ArrayList<>();
+                    basePList.add(criteriaBuilder.notEqual(root.get("status").as(String.class), Constants.APP_LOG_STATUS_DELETE));
+                    basePList.add(criteriaBuilder.equal(root.get("createdId").as(String.class), userId));
+                    Predicate base = criteriaBuilder.and(basePList.toArray(new Predicate[basePList.size()]));
 
+                    unfinisedType = criteriaBuilder.and(unfinisedType,base);
 
                     return criteriaBuilder.or(noType,unfinisedType);
                 }
