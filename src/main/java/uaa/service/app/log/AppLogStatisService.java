@@ -127,8 +127,8 @@ public class AppLogStatisService {
                         title = "某条消息";
                     }
                 }
-                if(title.length()>10){
-                    message.append(title.substring(0,7));
+                if(title.length()>20){
+                    message.append(title.substring(0,17));
                     message.append("...");
                 }else {
                     message.append(title);
