@@ -136,7 +136,9 @@ public class AppLogStatisService {
                 Map<String,String> map = new HashMap<>();
                 //塞入时间，塞入消息
                 map.put("message",message.toString());
-                map.put("date",updatedFormat);
+                DateTimeFormatter showFormatter = DateTimeFormatter.ofPattern("HH点mm分ss秒", Locale.CHINA);
+                String date = entry.getValue().getUpdatedDate().format(showFormatter);
+                map.put("date",date);
                 soryList.add(map);
             }
         }
