@@ -107,6 +107,10 @@ public class AppLogStatisService {
 
         //先将这群数据按照顺序排序
         if(logMap!=null){
+            List<String> eachIds = new ArrayList<>();
+            ZonedDateTime today = CommonUtil.tranferBelongDateToZoneDate(belongDate);
+            ZonedDateTime nextDay = CommonUtil.getBelongDateNextZoneDay(belongDate);
+
             for (Map.Entry<String, AppLogEach> entry : logMap.entrySet()) {
                 //如果update和created一样就创建，如果updated晚created就是更新
                 //如果标题为空就设置为消息体，默认最多10个字符，多的塞入...
@@ -116,7 +120,11 @@ public class AppLogStatisService {
                 StringBuffer message = new StringBuffer();
                 String date=null;
                 DateTimeFormatter showFormatter = DateTimeFormatter.ofPattern("HH点mm分ss秒", Locale.CHINA);
-                if(createdFormat.equals(updatedFormat)){
+                //可是对于一些记录，需要有个创建了，可是因为...所以，对于第一条这个AppLogEach，总应该是创建了
+                //如果这条记录不是今天的，一定不是创建；如果今天这条记录是今天创建的，并且没在list中，说明是创建
+                if(!eachIds.contains(entry.getValue().getId())
+                    &&entry.getValue().getCreatedDate().isAfter(today)
+                    &&entry.getValue().getCreatedDate().isBefore(nextDay)){
                     //说明同时创建
                     message.append("创建了： ");
                     date = entry.getValue().getCreatedDate().format(showFormatter);
@@ -143,6 +151,7 @@ public class AppLogStatisService {
                 map.put("message",message.toString());
                 map.put("date",date);
                 soryList.add(map);
+                eachIds.add(entry.getValue().getId());
             }
         }
         return  soryList;
