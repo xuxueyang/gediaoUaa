@@ -55,7 +55,7 @@ public class AppLogStatisService {
     @Autowired
     private UaaUserService uaaUserService;
 
-    public List<Map<String,String>> getEachDayOperatorData(String createdid, String belongDate) {
+    public List<Map<String,String>> getEachDayOperatorData(String userId, String belongDate) {
         //查找出更新时间和创建时间在今天的（如果创建时间和更新时间相同，或者误差不超过1s，那么视为一个）
         //先查询出创建的（文案是在前面加上创建了XXX）
         List<AppLogEach> allByCreatedDate = appLogEachRepository.findAll(new Specification<AppLogEach>() {
@@ -64,6 +64,7 @@ public class AppLogStatisService {
                 ZonedDateTime zonedDateTime = CommonUtil.tranferBelongDateToZoneDate(belongDate);
                 ZonedDateTime nextDay = CommonUtil.getBelongDateNextZoneDay(belongDate);
                 List<Predicate> predicates = new ArrayList<>();
+                predicates.add(criteriaBuilder.equal(root.get("createdId").as(String.class),userId));
                 //大于或等于传入时间
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate").as(ZonedDateTime.class), zonedDateTime));
                 //小于或等于传入时间
@@ -80,6 +81,7 @@ public class AppLogStatisService {
                 ZonedDateTime zonedDateTime = CommonUtil.tranferBelongDateToZoneDate(belongDate);
                 ZonedDateTime nextDay = CommonUtil.getBelongDateNextZoneDay(belongDate);
                 List<Predicate> predicates = new ArrayList<>();
+                predicates.add(criteriaBuilder.equal(root.get("updatedID").as(String.class),userId));
                 //大于或等于传入时间
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("updatedDate").as(ZonedDateTime.class), zonedDateTime));
                 //小于或等于传入时间
