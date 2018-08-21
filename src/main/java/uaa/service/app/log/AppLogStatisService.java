@@ -110,15 +110,20 @@ public class AppLogStatisService {
             for (Map.Entry<String, AppLogEach> entry : logMap.entrySet()) {
                 //如果update和created一样就创建，如果updated晚created就是更新
                 //如果标题为空就设置为消息体，默认最多10个字符，多的塞入...
+                //TODO 现在这种只会显示最后一条更新记录
                 String createdFormat = entry.getValue().getCreatedDate().format(formatter);
                 String updatedFormat = entry.getValue().getUpdatedDate().format(formatter);
                 StringBuffer message = new StringBuffer();
+                String date=null;
+                DateTimeFormatter showFormatter = DateTimeFormatter.ofPattern("HH点mm分ss秒", Locale.CHINA);
                 if(createdFormat.equals(updatedFormat)){
                     //说明同时创建
                     message.append("创建了： ");
+                    date = entry.getValue().getCreatedDate().format(showFormatter);
                 }else{
                     //那肯定是更新在后面
                     message.append("更新了： ");
+                    date = entry.getValue().getUpdatedDate().format(showFormatter);
                 }
                 String title = entry.getValue().getTitle();
                 if(title==null||"".equals(title)){
@@ -136,8 +141,6 @@ public class AppLogStatisService {
                 Map<String,String> map = new HashMap<>();
                 //塞入时间，塞入消息
                 map.put("message",message.toString());
-                DateTimeFormatter showFormatter = DateTimeFormatter.ofPattern("HH点mm分ss秒", Locale.CHINA);
-                String date = entry.getValue().getUpdatedDate().format(showFormatter);
                 map.put("date",date);
                 soryList.add(map);
             }
