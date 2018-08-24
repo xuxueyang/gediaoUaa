@@ -9,6 +9,13 @@
     <name>Uaa</name>
     <repositories>
         <repository>
+            <id>neo4j</id>
+            <url>http://m2.neo4j.org/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
             <id>xxyTX</id>
             <name>xxt TX Server private maven</name>
             <url>http://193.112.161.157:8080/nexus/service/local/repositories/public/content</url>
@@ -140,6 +147,19 @@
             <artifactId>cglib</artifactId>
             <version>2.2.2</version>
         </dependency>
+        <!-- 服务器开发需要的jar包 -->
+        <dependency>
+        <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+        <dependency>
+            <!-- 嵌入式开发需要的jar包 -->
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>3.3.4</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
