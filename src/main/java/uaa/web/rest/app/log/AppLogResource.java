@@ -378,7 +378,7 @@ public class AppLogResource extends BaseResource{
     }
     @GetMapping("/eachs")
     @ApiOperation(value = "获取用户下的所有each信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的each信息")
-    public ResponseEntity getEachInfo(@RequestParam(name="token",required=true) String token,
+    public ResponseEntity getAllEachInfo(@RequestParam(name="token",required=true) String token,
                                       @RequestParam(name="userId",required=true) String userId,
                                       @RequestParam(name="startDate",required=false) String startDate,
                                       @RequestParam(name="endDate",required=false) String endDate,
@@ -409,7 +409,8 @@ public class AppLogResource extends BaseResource{
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_FORMAT,null);
             }
             //如果日期都为空，那么带出今天的
-            if(Validators.fieldBlank(startDate)&&Validators.fieldBlank(endDate)){
+            //但是如果搜索内容不为空日期为空，视为搜索全部的
+            if(Validators.fieldBlank(startDate)&&Validators.fieldBlank(endDate)&&Validators.fieldBlank(searchContext)){
                 startDate = CommonUtil.getTodayBelongDate();
                 endDate = startDate;
             }
@@ -464,7 +465,7 @@ public class AppLogResource extends BaseResource{
     }
     @DeleteMapping("/each/{id}")
     @ApiOperation(value = "删除想要的each信息", httpMethod = "DELETE", response = ResponseEntity.class, notes = "删除相应的EACH信息")
-    public ResponseEntity deleteEach(@PathVariable("id") String id,@RequestParam(name="token",required=true) String token,
+    public ResponseEntity deleteEachInfo(@PathVariable("id") String id,@RequestParam(name="token",required=true) String token,
                                      @RequestParam(name="userId",required=true) String userId){
         //物理删除，删除each需要把对于的detail状态也置为删除
         try{
@@ -491,7 +492,7 @@ public class AppLogResource extends BaseResource{
     }
     @PutMapping("/each")
     @ApiOperation(value = "创建each信息", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建Each")
-    public ResponseEntity createEach(@RequestBody CreateLogEachDTO createLogEachDTO){
+    public ResponseEntity createEachInfo(@RequestBody CreateLogEachDTO createLogEachDTO){
         try{
 
             if(Validators.fieldBlank(createLogEachDTO.getTitle())||

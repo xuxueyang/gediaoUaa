@@ -185,7 +185,7 @@ public class ExcelUtil {
             LOGGER.error(var22.getMessage(), var22);
         } finally {
             IOUtils.closeQuietly(fileOut);
-            IOUtils.closeQuietly(wb);
+//            IOUtils.closeQuietly(wb);
         }
 
         return bytes;

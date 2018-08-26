@@ -32,27 +32,28 @@ public class AppLogAspect {
 
      */
     //TODO Test
-    @Pointcut(value="execution(* com.cn.spring.aspectj.NotVeryUsefulAspectService.*(..)) && args(param)")
-    private void pointcut(String param){
-        System.out.println("切入点pointcut()"+param);
-    }
-    //方法体将不执行
-    @Pointcut("within(com.cn.spring.aspectj.*)")
-    public String inWebLayer() {
-        System.out.println("切入点inWebLayer()");
-        return "返回值加载";
-    }
-    @Before(value="inWebLayer()")
-    private void beforeinWebLayer(){
-        System.out.println("beforeinWebLayer~~");
-    }
-
-    @AfterReturning(pointcut="inWebLayer()",returning="retVal")
-    public void doAccessCheck(Object retVal) {
-        System.out.println("doAccessCheck:"+retVal);
-    }
+//    @Pointcut(value="execution(* com.cn.spring.aspectj.NotVeryUsefulAspectService.*(..)) && args(param)")
+//    private void pointcut(String param){
+//        System.out.println("切入点pointcut()"+param);
+//    }
+//    //方法体将不执行
+//    @Pointcut("within(com.cn.spring.aspectj.*)")
+//    public String inWebLayer() {
+//        System.out.println("切入点inWebLayer()");
+//        return "返回值加载";
+//    }
+//
+//    @Before(value="inWebLayer()")
+//    private void beforeinWebLayer(){
+//        System.out.println("beforeinWebLayer~~");
+//    }
+//
+//    @AfterReturning(pointcut="inWebLayer()",returning="retVal")
+//    public void doAccessCheck(Object retVal) {
+//        System.out.println("doAccessCheck:"+retVal);
+//    }
     //TODO logEachInfo
-    @Before("logEachInfo")
+    @Before("logEachInfo()")
     public void beforeEachInfo(JoinPoint joinPoint){
         System.out.println("AppLogAspect BeforeTest:"+joinPoint.getSignature().getName());
     }
