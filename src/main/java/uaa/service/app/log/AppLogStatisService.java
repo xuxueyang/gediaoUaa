@@ -2,6 +2,11 @@ package uaa.service.app.log;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,7 +32,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -196,6 +205,56 @@ public class AppLogStatisService {
 
 
 
+    public UaaError exportDetailPDF(AppLogDetail detail,HttpServletResponse response)
+        throws ServletException, IOException{
+        //http://sunjavaee.blog.163.com/blog/static/180411197201111963917885/
+        //先保存到服务器中，然后再
+        String remarks = detail.getRemarks();
+        StringBuffer html=new StringBuffer("<html>");
+        html.append("<body>");
+        html.append(remarks);
+        html.append("</body>");
+        html.append("</html>");
+        Document doc = new Document();
+        ByteArrayOutputStream ba = new ByteArrayOutputStream();
+        try {
+            PdfWriter writer = PdfWriter.getInstance(doc, ba);
+            doc.open();
+            doc.add(new Paragraph(html.toString()));
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        doc.close();
+
+        response.setContentType("application/pdf");
+        response.setContentLength(ba.size());
+        ServletOutputStream out = response.getOutputStream();
+        ba.writeTo(out);
+        out.flush();
+//        //下载
+//        InputStream is = null;
+//        OutputStream os = null;
+//        try {
+//            is = new BufferedInputStream(new ByteArrayInputStream(jFile.getFileContent()));
+//            byte[] buffer = new byte[BUFFER_INITIALLY];//一次读取4000个字节
+//            response.reset();//清除首部的空白行
+//            response.addHeader("Content-Length", Integer.toString(jFile.getFileContent().length));
+//            os = new BufferedOutputStream(response.getOutputStream());
+//            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(jFile.getExpectedFullFileName(), "UTF-8"));
+//            response.setContentType("application/vnd.ms-excel");
+//            while(is.read(buffer)>0){
+//                os.write(buffer);
+//                os.flush();
+//            }
+//        } catch (Exception e) {
+//            return UaaError.failure(e.getMessage());
+//        }finally{
+//            IOUtils.closeQuietly(is);
+//            IOUtils.closeQuietly(os);
+//        }
+        return UaaError.success();
+    }
 
 
 
@@ -393,6 +452,7 @@ public class AppLogStatisService {
         }
         return map;
     }
+
 
 
     public class  ShowDto{

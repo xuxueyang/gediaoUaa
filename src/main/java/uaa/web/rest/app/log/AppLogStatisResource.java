@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uaa.domain.UaaError;
+import uaa.domain.app.log.AppLogDetail;
 import uaa.domain.uaa.UaaToken;
 import uaa.domain.uaa.UaaUser;
+import uaa.service.app.log.AppLogDetailService;
 import uaa.service.app.log.AppLogStatisService;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
@@ -35,6 +37,8 @@ public class AppLogStatisResource extends BaseResource{
 
     @Autowired
     private UaaLoginService uaaLoginService;
+    @Autowired
+    private AppLogDetailService appLogDetailService;
 
 
     @PostMapping("/export-each")
@@ -119,6 +123,37 @@ public class AppLogStatisResource extends BaseResource{
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachDayOperatorData);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
+        }
+    }
+    @GetMapping("/export-each-detail/{detailId}")
+    @ApiOperation(value = "导出", httpMethod = "GET", response = ResponseEntity.class, notes = "导出")
+    public ResponseEntity exportEachDetailPDF(@RequestParam(value = "token",required = true)String token,
+                                                 @RequestParam(value = "detailId",required = true)String detailId,
+                                              HttpServletResponse response
+    ){
+        try{
+            //根据所属日期获取那天的操作日志
+            if(Validators.fieldBlank(detailId)||Validators.fieldBlank(token))
+            {
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            if(userByToken==null){
+                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+            }
+            //导出detail文件pdf格式
+            AppLogDetail detailBy = appLogDetailService.findDetailBy(detailId);
+            if(detailBy==null){
+                return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
+
+            }
+            UaaError uaaError = appLogStatisService.exportDetailPDF(detailBy, response);
+            if(uaaError.hasError()){
+                return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+            }
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }
     }
 }
