@@ -28,7 +28,7 @@ public class UaaPermissionService {
         UaaError uaaError = new UaaError();
         //走token找出userinfo，验证userId是不是一直与存在，存在则返回UaaUser
         if(Validators.fieldBlank(token)||Validators.fieldBlank(userId)){
-            uaaError.addError(ReturnCode.ERROR_FIELD_EMPTY);
+            uaaError.addError(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION);
         }else{
             UaaToken userByToken = uaaLoginService.getUserByToken(token);
             if(userByToken==null){
@@ -41,6 +41,32 @@ public class UaaPermissionService {
                     //token但是对不上user，说明瞎写的
                     uaaError.addError(ReturnCode.ERROR_LOGIN);
                 }
+            }
+        }
+        return uaaError;
+    }
+
+    /**
+     * 因为一些情况没法登陆只能走code验证获取数据
+     * @param userId
+     * @param code
+     * @param apiResource
+     * @param methodType
+     * @return
+     */
+    public UaaError verifyByCode(String userId,String code,String apiResource,String methodType){
+        //TODO 之后要加上加密解密才行，不然token很容易被捕获（token+时间+随机的盐），userId+随机的盐，加密，解密（相应的时间和盐会做短暂的记录，已经用过的不能再用！）
+        UaaError uaaError = new UaaError();
+        //走token找出userinfo，验证userId是不是一直与存在，存在则返回UaaUser
+        if(Validators.fieldBlank(code)||Validators.fieldBlank(userId)){
+            uaaError.addError(ReturnCode.ERROR_FIELD_EMPTY);
+        }else{
+            UaaUser user = uaaUserService.findUserById(userId);
+            if(user.getVerifyCode()!=null&&!user.getVerifyCode().equals(code)){
+                //code验证失败
+                uaaError.addError(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION);
+            }else{
+                uaaError.setValue(user);
             }
         }
         return uaaError;
