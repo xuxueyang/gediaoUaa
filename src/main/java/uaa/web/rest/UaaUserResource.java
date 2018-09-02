@@ -48,10 +48,10 @@ public class UaaUserResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE, null);
             }
             //验证空间存不存在
-            boolean tenantExist = verifyTenantExist(createUaaUserDTO.getTenantCode());
-            if(!tenantExist){
-                return prepareReturnResult(ReturnCode.ERROR_HEADER_NOT_TENANT_CODE,null);
-            }
+//            boolean tenantExist = verifyTenantExist(createUaaUserDTO.getTenantCode());
+//            if(!tenantExist){
+//                return prepareReturnResult(ReturnCode.ERROR_HEADER_NOT_TENANT_CODE,null);
+//            }
             //名字不能重复
             UaaUser userByName = uaaUserService.findUserByName(createUaaUserDTO.getLoginName());
             if(userByName!=null)

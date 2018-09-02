@@ -100,7 +100,7 @@ public class UaaLoginService {
         if(uaaGraph==null){
             return false;
         }
-        if(!uaaGraph.getValue().equals(value)){
+        if(!uaaGraph.getValue().toUpperCase().equals(value.toUpperCase())){
             return false;
         }else{
             //删除
