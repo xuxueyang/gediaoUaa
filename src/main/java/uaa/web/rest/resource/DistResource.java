@@ -1,6 +1,10 @@
 package uaa.web.rest.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import uaa.domain.UaaError;
+import uaa.domain.uaa.UaaUser;
+import uaa.service.dto.UaaBasePremissionDTO;
+import uaa.service.dto.dict.UpdateDictValeDTO;
 import uaa.service.resource.DictService;
 import uaa.web.rest.BaseResource;
 import core.ReturnCode;
@@ -47,4 +51,91 @@ public class DistResource extends BaseResource {
         }
     }
 
+    @GetMapping("/code/{code}")
+    @ResponseBody
+    @ApiOperation(value = "根据code获取到code的值", httpMethod = "GET", response = ResponseEntity.class, notes = "根据code获取到code的值")
+    public ResponseEntity<?> getCodeValue(@PathVariable("code") String code,
+                                          @RequestParam(name="content",required=false) String content) {
+        try{
+            if(Validators.fieldBlank(code)){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,dictService.getValueByCode(code,content));
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
+    @DeleteMapping("/code/{id}")
+    @ResponseBody
+    @ApiOperation(value = "根据code删除到code的值", httpMethod = "GET", response = ResponseEntity.class, notes = "根据code删除到code的值")
+    public ResponseEntity<?> getCodeValue(@PathVariable("id") String id,
+                                          @RequestParam(name="token",required=true) String token,
+                                          @RequestParam(name="userId",required=true) String userId) {
+        try{
+            if(Validators.fieldBlank(token)){
+                return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
+            }
+            if(Validators.fieldBlank(id)){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaError post = uaaPermissionService.verifyLogin(userId, token, "/api/dist/code/{id}", "DELETE");
+            if(post.hasError()){
+                return prepareReturnResult(post.getFirstError(),null);
+            }
+            dictService.deleteValeById(id);
+            return prepareReturnResult(ReturnCode.DELETE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
+    @PostMapping("/code/{code}")
+    @ResponseBody
+    @ApiOperation(value = "改变code下的值", httpMethod = "GET", response = ResponseEntity.class, notes = "改变code下的值")
+    public ResponseEntity<?> updateCodeValue(@PathVariable("code") String code,
+                                          @RequestBody UpdateDictValeDTO updateDictValeDTO) {
+        try{
+            //需要token
+            if(Validators.fieldBlank(updateDictValeDTO.getToken())){
+                return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
+            }
+            if(Validators.fieldBlank(code)){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaError error = uaaPermissionService.verifyOperation(updateDictValeDTO, "/api/code/{code}", "PUT");
+            if(error.hasError()){
+                return prepareReturnResult(error.getFirstError(),null);
+            }
+            UaaUser value = (UaaUser)error.getValue();
+            dictService.updateValueByCode(code,updateDictValeDTO.getValue(),updateDictValeDTO.getId(),value.getId());
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
+    @PutMapping("/code/{code}")
+    @ResponseBody
+    @ApiOperation(value = "添加code下的值", httpMethod = "GET", response = ResponseEntity.class, notes = "添加code下的值")
+    public ResponseEntity<?> getCodeValue(@PathVariable("code") String code,
+                                          @RequestBody UpdateDictValeDTO updateDictValeDTO) {
+        try{
+            //需要token
+            if(Validators.fieldBlank(updateDictValeDTO.getToken())){
+                return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
+            }
+            if(Validators.fieldBlank(code)
+                ||Validators.fieldBlank(updateDictValeDTO.getValue())){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaError error = uaaPermissionService.verifyOperation(updateDictValeDTO, "/api/code/{code}", "PUT");
+            if(error.hasError()){
+                return prepareReturnResult(error.getFirstError(),null);
+            }
+            UaaUser value = (UaaUser)error.getValue();
+            dictService.addValueByCode(code,updateDictValeDTO.getValue(),value.getId());
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
 }

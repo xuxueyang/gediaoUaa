@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class UaaDict  extends BaseEntity implements Serializable {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "CODE")
@@ -25,6 +25,26 @@ public class UaaDict  extends BaseEntity implements Serializable {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "CREATED_ID")
+    private String createdId;
+    @Column(name = "UPDATED_ID")
+    private String updatedId;
+
+    public String getCreatedId() {
+        return createdId;
+    }
+
+    public void setCreatedId(String createdId) {
+        this.createdId = createdId;
+    }
+
+    public String getUpdatedId() {
+        return updatedId;
+    }
+
+    public void setUpdatedId(String updatedId) {
+        this.updatedId = updatedId;
+    }
 
     public String getId() {
         return id;

@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface UaaDictRepository extends JpaRepository<UaaDict, String>,JpaSpecificationExecutor<UaaDict> {
     List<UaaDict> findAllByType(String type);
+    UaaDict findOneByCode(String code);
+
 }

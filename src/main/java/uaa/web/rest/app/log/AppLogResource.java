@@ -59,14 +59,22 @@ public class AppLogResource extends BaseResource{
     }
 
     @GetMapping("/tags")
-    @ApiOperation(value = "获取相应的day信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的day信息")
-    public ResponseEntity getTags(@RequestParam( name = "token",required = true) String token,
+    @ApiOperation(value = "获取相应的tags信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的tags信息")
+    public ResponseEntity getTags(@RequestParam( name = "token",required = false) String token,
+                                  @RequestParam( name = "verifyCode",required = false) String verifyCode,
                                   @RequestParam( name = "userId",required = true) String userId
                                   ){
         try {
-            UaaError get = uaaPermissionService.verifyLogin(userId, token, "/tags", "GET");
-            if(get.hasError())
-                return prepareReturnResult(get.getFirstError(),null);
+            if(Validators.fieldBlank(token)){
+                //走code验证
+                UaaError get = uaaPermissionService.verifyByCode(userId, verifyCode, "/tags", "GET");
+                if(get.hasError())
+                    return prepareReturnResult(get.getFirstError(),null);
+            }else{
+                UaaError get = uaaPermissionService.verifyLogin(userId, token, "/tags", "GET");
+                if(get.hasError())
+                    return prepareReturnResult(get.getFirstError(),null);
+            }
             //得到下属用户下的tags
             List<AppLogTagDTO> list = appLogSingleService.fingAllTag(userId);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,list);
@@ -80,9 +88,11 @@ public class AppLogResource extends BaseResource{
     public ResponseEntity updateTagInfo(@RequestBody UpdateLogTagDTO updateLogTagDTO){
         try {
             if(Validators.fieldBlank(updateLogTagDTO.getTagId())
-                ||Validators.fieldBlank(updateLogTagDTO.getName())
-                ||Validators.fieldBlank(updateLogTagDTO.getToken())){
+                ||Validators.fieldBlank(updateLogTagDTO.getName())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            if(Validators.fieldBlank(Validators.fieldBlank(updateLogTagDTO.getToken()))){
+                return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
             }
             AppLogTag tag = appLogSingleService.findTagBy(updateLogTagDTO.getTagId());
             if(tag==null){
@@ -125,9 +135,11 @@ public class AppLogResource extends BaseResource{
     @ApiOperation(value = "创建tag信息", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建tag信息")
     public ResponseEntity createTag(@RequestBody CreateLogTagDTO createLogTagDTO){
         try{
-            if(Validators.fieldBlank(createLogTagDTO.getName())
-                ||Validators.fieldBlank(createLogTagDTO.getToken())){
+            if(Validators.fieldBlank(createLogTagDTO.getName())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            if(Validators.fieldBlank(Validators.fieldBlank(createLogTagDTO.getToken()))){
+                return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
             }
             //验证user是不是存在
             UaaToken token = uaaLoginService.getUserByToken(createLogTagDTO.getToken());
