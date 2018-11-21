@@ -210,11 +210,12 @@ public class AppLogStatisService {
         //http://sunjavaee.blog.163.com/blog/static/180411197201111963917885/
         //先保存到服务器中，然后再
         String remarks = detail.getRemarks();
-        StringBuffer html=new StringBuffer("<html>");
-        html.append("<body>");
-        html.append(remarks);
-        html.append("</body>");
-        html.append("</html>");
+//        StringBuffer html=new StringBuffer("<html>");
+//        html.append("<body>");
+//        html.append(remarks);
+//        html.append("</body>");
+//        html.append("</html>");
+        String html = detail.getRemarks();
         Document doc = new Document();
         ByteArrayOutputStream ba = new ByteArrayOutputStream();
         try {

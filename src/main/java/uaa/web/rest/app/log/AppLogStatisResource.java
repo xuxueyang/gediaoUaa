@@ -125,7 +125,7 @@ public class AppLogStatisResource extends BaseResource{
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
         }
     }
-    @GetMapping("/export-each-detail/{detailId}")
+    @GetMapping("/export-each-detail")
     @ApiOperation(value = "导出", httpMethod = "GET", response = ResponseEntity.class, notes = "导出")
     public ResponseEntity exportEachDetailPDF(@RequestParam(value = "token",required = true)String token,
                                                  @RequestParam(value = "detailId",required = true)String detailId,
