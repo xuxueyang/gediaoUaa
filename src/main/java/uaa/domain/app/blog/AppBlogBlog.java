@@ -1,6 +1,7 @@
 package uaa.domain.app.blog;
 
 
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uaa.domain.BaseEntity;
@@ -39,6 +40,11 @@ public class AppBlogBlog extends BaseEntity implements Serializable {
 
     @Column(name = "UPDATE_ID")
     private String updateId;
+
+    @Column(name="READ_COUNT")
+    private int readCount;
+    @Column(name = "SOURCE_TYPE")
+    private String sourceType;
 
     public String getId() {
         return id;
@@ -95,5 +101,21 @@ public class AppBlogBlog extends BaseEntity implements Serializable {
 
     public void setUpdateId(String updateId) {
         this.updateId = updateId;
+    }
+
+    public int getReadCount() {
+        return readCount;
+    }
+
+    public void setReadCount(int readCount) {
+        this.readCount = readCount;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 }

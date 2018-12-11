@@ -106,5 +106,18 @@ public final class Constants {
     public interface LogEach_Type{
         String UNFinished = "1";//未完成的ID
         String Mem = "6";//备忘录的ID
+        String JOURNAL = "9";//流水账的ID
+        String FINISHED = "2";//已完成的ID
+    }
+
+    public static enum  PERMISSION_TYPE{
+        //权限类型
+        OnlyOne , //仅自己可见
+        KeyCan , //通关验证密码，可见
+        NoLimit //不需要限制，均可见
+    }
+    public static enum sourceType{
+        Owner,//原创
+        Transfer//转载
     }
 }
