@@ -1,5 +1,11 @@
 package uaa.config;
 
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Application constants.
  */
@@ -110,14 +116,44 @@ public final class Constants {
         String FINISHED = "2";//已完成的ID
     }
 
-    public static enum  PERMISSION_TYPE{
+    public  enum  PERMISSION_TYPE{
         //权限类型
         OnlyOne , //仅自己可见
         KeyCan , //通关验证密码，可见
         NoLimit //不需要限制，均可见
     }
-    public static enum sourceType{
+    public  enum sourceType{
         Owner,//原创
         Transfer//转载
     }
+    private static  String[] SourceType = null;
+    public static String[] getSourceType() {
+        if(SourceType==null){
+            sourceType[] values = sourceType.values();
+            List<String> SourceTypes = new ArrayList<>();
+            for(int i=0;i<values.length;i++){
+                SourceTypes.add(values[i].name());
+            }
+            SourceType = (String[])SourceTypes.toArray();
+        }
+        return SourceType;
+    }
+    private static  String[] PermissionType = null;
+
+    public static String[] getPermissionType() {
+        if(PermissionType==null){
+            PERMISSION_TYPE[] permission_values = PERMISSION_TYPE.values();
+            List<String> permission_types = new ArrayList<>();
+            for(int i=0;i<permission_values.length;i++){
+                permission_types.add(permission_values[i].name());
+            }
+            PermissionType = (String[])permission_types.toArray();
+        }
+        return PermissionType;
+    }
+//    @Test
+//    public void testToArray(){
+//        getPermissionType();
+//    }
+
 }

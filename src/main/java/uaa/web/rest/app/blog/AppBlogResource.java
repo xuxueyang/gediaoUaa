@@ -28,17 +28,17 @@ public class AppBlogResource extends BaseResource {
     @Autowired
     private UaaLoginService uaaLoginService;
 
-    @PostMapping("/blog/create")
-    @ApiOperation(value = "创建博客", httpMethod = "GET", response = ResponseEntity.class, notes = "创建博客")
-    public ResponseEntity createBlog(AppBlogCreateDto dto){
+    @PutMapping("/blog")
+    @ApiOperation(value = "创建博客", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客")
+    public ResponseEntity createBlog(@RequestBody AppBlogCreateDto dto){
         try{
             if(Validators.fieldBlank(dto.getPermissionType())
                 ||Validators.fieldBlank(dto.getSourceType())||Validators.fieldBlank(dto.getTitle())||Validators.fieldBlank(dto.getToken())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
             //判断类型和来源是不是在范围里
-            if(!Validators.fieldRangeValue(dto.getPermissionType(), Constants.PERMISSION_TYPE.values())
-                ||!Validators.fieldRangeValue(dto.getSourceType(),Constants.sourceType.values())){
+            if(!Validators.fieldRangeValue(dto.getPermissionType(), Constants.getPermissionType())
+                ||!Validators.fieldRangeValue(dto.getSourceType(),Constants.getSourceType())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_RANGE,null);
             }
             UaaToken userByToken = uaaLoginService.getUserByToken(dto.getToken());
@@ -72,7 +72,19 @@ public class AppBlogResource extends BaseResource {
             }
 
         }catch (Exception e){
-
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }
     }
+    @GetMapping("/blogs")
+    @ApiOperation(value = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记",
+        httpMethod = "GET",response = ResponseEntity.class,
+        notes = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记")
+    public ResponseEntity getAllBlogs(@RequestParam(value = "token",required = false) String token){
+        try {
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
+
 }

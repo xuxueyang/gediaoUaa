@@ -509,6 +509,11 @@
             <artifactId>jsch</artifactId>
             <version>0.1.51</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
 
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
