@@ -29,6 +29,12 @@ public class AppBlogDto {
     @ApiModelProperty(name = "作者ID")
     private String authorId;
 
+    @ApiModelProperty(name = "博客ID")
+    private String id;
+
+    @ApiModelProperty(name = "标题")
+    private String title;
+
     public String getAuthorName() {
         return authorName;
     }
@@ -83,5 +89,21 @@ public class AppBlogDto {
 
     public void setReadCount(int readCount) {
         this.readCount = readCount;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

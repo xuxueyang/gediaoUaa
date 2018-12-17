@@ -22,6 +22,10 @@ public class AppBlogBlog extends BaseEntity implements Serializable {
     private String id;
 
 
+    @Column(name = "TITLE")
+    private String title;
+
+
     @Column(name = "CONTENT")
     private String content;
 
@@ -117,5 +121,13 @@ public class AppBlogBlog extends BaseEntity implements Serializable {
 
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

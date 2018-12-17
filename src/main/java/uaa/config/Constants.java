@@ -126,28 +126,28 @@ public final class Constants {
         Owner,//原创
         Transfer//转载
     }
-    private static  String[] SourceType = null;
-    public static String[] getSourceType() {
+    private static  List<String> SourceType = null;
+    public static List<String> getSourceType() {
         if(SourceType==null){
             sourceType[] values = sourceType.values();
             List<String> SourceTypes = new ArrayList<>();
             for(int i=0;i<values.length;i++){
                 SourceTypes.add(values[i].name());
             }
-            SourceType = (String[])SourceTypes.toArray();
+            SourceType = SourceTypes;
         }
         return SourceType;
     }
-    private static  String[] PermissionType = null;
+    private static  List<String> PermissionType = null;
 
-    public static String[] getPermissionType() {
+    public static List<String> getPermissionType() {
         if(PermissionType==null){
             PERMISSION_TYPE[] permission_values = PERMISSION_TYPE.values();
             List<String> permission_types = new ArrayList<>();
             for(int i=0;i<permission_values.length;i++){
                 permission_types.add(permission_values[i].name());
             }
-            PermissionType = (String[])permission_types.toArray();
+            PermissionType = permission_types;
         }
         return PermissionType;
     }

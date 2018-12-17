@@ -6,15 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uaa.config.Constants;
+import uaa.domain.app.blog.AppBlogBlog;
 import uaa.domain.uaa.UaaToken;
 import uaa.service.app.blog.AppBlogService;
 import uaa.service.dto.app.blog.AppBlogCreateDto;
 import uaa.service.dto.app.blog.AppBlogDto;
+import uaa.service.dto.app.blog.AppBlogSaveDto;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.util.CommonUtil;
 import util.Validators;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,20 +41,54 @@ public class AppBlogResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
             }
             //判断类型和来源是不是在范围里
-            if(!Validators.fieldRangeValue(dto.getPermissionType(), Constants.getPermissionType())
-                ||!Validators.fieldRangeValue(dto.getSourceType(),Constants.getSourceType())){
+            if(!Validators.fieldRangeValue(dto.getPermissionType(),
+                Constants.PERMISSION_TYPE.KeyCan.name(),
+                Constants.PERMISSION_TYPE.NoLimit.name(),
+                Constants.PERMISSION_TYPE.OnlyOne.name())
+                ||!Validators.fieldRangeValue(dto.getSourceType(),
+                    Constants.sourceType.Owner.name(),
+                    Constants.sourceType.Transfer.name())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_RANGE,null);
             }
             UaaToken userByToken = uaaLoginService.getUserByToken(dto.getToken());
             if(userByToken==null)
                 return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
-            String id = appBlogService.createAppBlogDTO(dto,userByToken.getId());
-            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,id);
+            String id = appBlogService.createAppBlogDTO(dto,userByToken.getCreatedid());
+            Map<String,Object> map = new HashMap<>();
+            map.put("id",id);
+            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,map);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
         }
     }
 
+    @PostMapping("/blog")
+    @ApiOperation(value = "保存博客", httpMethod = "POST",response = ResponseEntity.class,notes = "保存博客")
+    public ResponseEntity saveBlog(@RequestBody AppBlogSaveDto dto){
+        try {
+            //验证token权限和自断非空
+            if(Validators.fieldBlank(dto.getId())||Validators.fieldBlank(dto.getTitle())||Validators.fieldBlank(dto.getToken())){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaToken userByToken = uaaLoginService.getUserByToken(dto.getToken());
+            if(userByToken==null)
+                return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
+            AppBlogBlog blog = appBlogService.getBlogById(dto.getId());
+            if(blog==null){
+                return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
+            }
+            //判断是不是创建者
+            if(!blog.getCreateId().equals(userByToken.getCreatedid())){
+                return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
+            }
+            //更新
+            //TODO 权限和标签的更新调整暂时没有添加
+            appBlogService.updateBlog(blog,dto);
+            return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
+        }
+    }
     @GetMapping("/blog/{id}")
     @ApiOperation(value = "获取博客", httpMethod = "GET", response = ResponseEntity.class, notes = "获取博客")
     public ResponseEntity getBlog(@PathVariable("id") String id,
@@ -58,7 +96,7 @@ public class AppBlogResource extends BaseResource {
                                   @RequestParam(value = "verify",required = false) String verify){
         try {
             UaaToken userByToken = uaaLoginService.getUserByToken(token);
-            AppBlogDto blog = appBlogService.getBlog(id,userByToken==null?null:userByToken.getId(),verify);
+            AppBlogDto blog = appBlogService.getBlog(id,userByToken==null?null:userByToken.getCreatedid(),verify);
             //判断权限
             if(blog==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
@@ -81,7 +119,9 @@ public class AppBlogResource extends BaseResource {
         notes = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记")
     public ResponseEntity getAllBlogs(@RequestParam(value = "token",required = false) String token){
         try {
-            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid());
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,allBlogs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }

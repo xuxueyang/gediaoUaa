@@ -102,7 +102,7 @@ public class AppLogResource extends BaseResource{
             if(userByToken==null)
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
 
-            appLogSingleService.updateTag(tag,updateLogTagDTO,userByToken.getId());
+            appLogSingleService.updateTag(tag,updateLogTagDTO,userByToken.getCreatedid());
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
@@ -215,7 +215,7 @@ public class AppLogResource extends BaseResource{
             if(userByToken==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
-            appLogSingleService.updateDay(appLogDay,updateLogDayDTO,userByToken.getId());
+            appLogSingleService.updateDay(appLogDay,updateLogDayDTO,userByToken.getCreatedid());
             logApi("/api/app/log/day","更新了日志",
                 Constants.HttpType.POST.name(),
                 updateLogDayDTO.getId(),
@@ -312,7 +312,7 @@ public class AppLogResource extends BaseResource{
             if(userByToken==null)
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
 
-            appLogDetailService.updateDetail(appLogDetail,updateLogDetailDTO.getRemarks(),userByToken.getId());
+            appLogDetailService.updateDetail(appLogDetail,updateLogDetailDTO.getRemarks(),userByToken.getCreatedid());
             logApi("/api/app/log/detail","更新了消息详情面板",
                 Constants.HttpType.POST.name(),
                 updateLogDetailDTO.getDetailId(),
