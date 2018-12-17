@@ -13,6 +13,7 @@ import uaa.service.UaaUserService;
 import uaa.service.dto.app.blog.AppBlogCreateDto;
 import uaa.service.dto.app.blog.AppBlogDto;
 import uaa.service.dto.app.blog.AppBlogSaveDto;
+import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
 import util.UUIDGenerator;
 import util.Validators;
 
@@ -68,6 +69,7 @@ public class AppBlogService {
                 dto.setReadCount(one.getReadCount());
                 dto.setCreatedDate(one.getCreatedDate());
                 dto.setTitle(one.getTitle());
+                dto.setPermissionType(one.getPermissionType());
                 dto.setUpdatedDate(one.getUpdatedDate());
                 String createId = one.getCreateId();
                 UaaUser userById = uaaUserService.findUserById(createId);
@@ -110,6 +112,7 @@ public class AppBlogService {
             dto.setTitle(one.getTitle());
             dto.setId(one.getId());
             dto.setCreatedDate(one.getCreatedDate());
+            dto.setPermissionType(one.getPermissionType());
             dto.setUpdatedDate(one.getUpdatedDate());
             String createId = one.getCreateId();
             UaaUser userById = uaaUserService.findUserById(createId);
@@ -128,6 +131,19 @@ public class AppBlogService {
     public void updateBlog(AppBlogBlog blog, AppBlogSaveDto dto) {
         blog.setTitle(dto.getTitle());
         blog.setContent(dto.getContent());
+        blog.setPermissionType(dto.getPermissionType());
+        if(PERMISSION_TYPE.KeyCan.name().equals(dto.getPermissionType())){
+            dto.setPermissionVerify(dto.getPermissionVerify());
+        }
+        blog.setUpdatedDate(ZonedDateTime.now());
+        blogRepository.save(blog);
+    }
+
+    public void updateBlogPermission(AppBlogBlog blog, AppBlogUpdatePermissionDto dto) {
+        blog.setPermissionType(dto.getPermissionType());
+        if(PERMISSION_TYPE.KeyCan.name().equals(dto.getPermissionType())){
+            dto.setPermissionVerify(dto.getPermissionVerify());
+        }
         blog.setUpdatedDate(ZonedDateTime.now());
         blogRepository.save(blog);
     }

@@ -35,6 +35,9 @@ public class AppBlogDto {
     @ApiModelProperty(name = "标题")
     private String title;
 
+    @ApiModelProperty(name = "权限")
+    private String permissionType;
+
     public String getAuthorName() {
         return authorName;
     }
@@ -105,5 +108,13 @@ public class AppBlogDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getPermissionType() {
+        return permissionType;
+    }
+
+    public void setPermissionType(String permissionType) {
+        this.permissionType = permissionType;
     }
 }

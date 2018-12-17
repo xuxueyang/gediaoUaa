@@ -2,6 +2,7 @@ package uaa.web.rest.app.blog;
 
 import core.ReturnCode;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import uaa.service.app.blog.AppBlogService;
 import uaa.service.dto.app.blog.AppBlogCreateDto;
 import uaa.service.dto.app.blog.AppBlogDto;
 import uaa.service.dto.app.blog.AppBlogSaveDto;
+import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.util.CommonUtil;
@@ -61,10 +63,40 @@ public class AppBlogResource extends BaseResource {
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
         }
     }
+    @PostMapping("/blog/updatePermission")
+    @ApiOperation(value = "专门用于更新博客权限的接口",httpMethod = "POST",response = ResponseEntity.class,notes = "专门用于更新博客权限的接口")
+    public ResponseEntity updateBlogPermission(@RequestBody AppBlogUpdatePermissionDto dto){
+        try {
+            if(!Validators.fieldRangeValue(dto.getPermissionType(),
+                Constants.PERMISSION_TYPE.KeyCan.name(),
+                Constants.PERMISSION_TYPE.NoLimit.name(),
+                Constants.PERMISSION_TYPE.OnlyOne.name())){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_RANGE,null);
+            }
+            if(Constants.PERMISSION_TYPE.KeyCan.equals(dto.getPermissionType())&&Validators.fieldBlank(dto.getPermissionVerify())){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            }
+            UaaToken userByToken = uaaLoginService.getUserByToken(dto.getToken());
+            if(userByToken==null)
+                return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
+            AppBlogBlog blog = appBlogService.getBlogById(dto.getId());
+            if(blog==null){
+                return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
+            }
+            //判断是不是创建者
+            if(!blog.getCreateId().equals(userByToken.getCreatedid())){
+                return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
+            }
+            appBlogService.updateBlogPermission(blog,dto);
 
+            return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
+        }
+    }
     @PostMapping("/blog")
-    @ApiOperation(value = "保存博客", httpMethod = "POST",response = ResponseEntity.class,notes = "保存博客")
-    public ResponseEntity saveBlog(@RequestBody AppBlogSaveDto dto){
+    @ApiOperation(value = "更新博客", httpMethod = "POST",response = ResponseEntity.class,notes = "更新博客")
+    public ResponseEntity updateBlog(@RequestBody AppBlogSaveDto dto){
         try {
             //验证token权限和自断非空
             if(Validators.fieldBlank(dto.getId())||Validators.fieldBlank(dto.getTitle())||Validators.fieldBlank(dto.getToken())){
@@ -83,6 +115,15 @@ public class AppBlogResource extends BaseResource {
             }
             //更新
             //TODO 权限和标签的更新调整暂时没有添加
+            if(!Validators.fieldRangeValue(dto.getPermissionType(),
+                Constants.PERMISSION_TYPE.KeyCan.name(),
+                Constants.PERMISSION_TYPE.NoLimit.name(),
+                Constants.PERMISSION_TYPE.OnlyOne.name())){
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_RANGE,null);
+            }
+//            if(Constants.PERMISSION_TYPE.KeyCan.equals(dto.getPermissionType())&&Validators.fieldBlank(dto.getPermissionVerify())){
+//                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+//            }
             appBlogService.updateBlog(blog,dto);
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
@@ -92,10 +133,13 @@ public class AppBlogResource extends BaseResource {
     @GetMapping("/blog/{id}")
     @ApiOperation(value = "获取博客", httpMethod = "GET", response = ResponseEntity.class, notes = "获取博客")
     public ResponseEntity getBlog(@PathVariable("id") String id,
-                                  @RequestParam(value = "token",required = true) String token,
+                                  @RequestParam(value = "token",required = false) String token,
                                   @RequestParam(value = "verify",required = false) String verify){
         try {
-            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            UaaToken userByToken = null;
+            if(StringUtils.isNotBlank(token)){
+                userByToken = uaaLoginService.getUserByToken(token);
+            }
             AppBlogDto blog = appBlogService.getBlog(id,userByToken==null?null:userByToken.getCreatedid(),verify);
             //判断权限
             if(blog==null){
