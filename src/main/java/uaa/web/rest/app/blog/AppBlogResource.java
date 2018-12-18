@@ -4,6 +4,7 @@ import core.ReturnCode;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uaa.config.Constants;
@@ -161,10 +162,10 @@ public class AppBlogResource extends BaseResource {
     @ApiOperation(value = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记",
         httpMethod = "GET",response = ResponseEntity.class,
         notes = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记")
-    public ResponseEntity getAllBlogs(@RequestParam(value = "token",required = false) String token){
+    public ResponseEntity getAllBlogs(@RequestParam(value = "token",required = false) String token, Pageable pageable){
         try {
             UaaToken userByToken = uaaLoginService.getUserByToken(token);
-            List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid());
+            List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid(),pageable);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,allBlogs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);

@@ -1,5 +1,9 @@
 package uaa.service.dto.app.blog;
 
+import uaa.service.dto.app.log.AppLogTagDTO;
+
+import java.util.List;
+
 /**
  * Created by UKi_Hi on 2018/12/16.
  */
@@ -10,6 +14,7 @@ public class AppBlogSaveDto {
     private String content;
     private String token;
     private String permissionType;
+    private List<AppLogTagDTO> tagList;
     private String permissionVerify;
 
     public String getPermissionType() {
@@ -58,5 +63,13 @@ public class AppBlogSaveDto {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public List<AppLogTagDTO> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<AppLogTagDTO> tagList) {
+        this.tagList = tagList;
     }
 }

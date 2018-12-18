@@ -1,6 +1,7 @@
 package uaa.service.dto.app.blog;
 
 import io.swagger.annotations.ApiModelProperty;
+import uaa.service.dto.app.log.AppLogTagDTO;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -34,6 +35,9 @@ public class AppBlogDto {
 
     @ApiModelProperty(name = "标题")
     private String title;
+
+    @ApiModelProperty(name = "标签信息")
+    private List<AppLogTagDTO> tagList;
 
     @ApiModelProperty(name = "权限")
     private String permissionType;
@@ -116,5 +120,13 @@ public class AppBlogDto {
 
     public void setPermissionType(String permissionType) {
         this.permissionType = permissionType;
+    }
+
+    public List<AppLogTagDTO> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<AppLogTagDTO> tagList) {
+        this.tagList = tagList;
     }
 }

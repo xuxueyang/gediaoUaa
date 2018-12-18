@@ -2,23 +2,31 @@ package uaa.service.app.blog;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
 import uaa.config.Constants.PERMISSION_TYPE;
 import uaa.domain.app.blog.AppBlogBlog;
+import uaa.domain.app.blog.AppBlogTag;
+import uaa.domain.app.log.AppLogTag;
 import uaa.domain.uaa.UaaUser;
 import uaa.repository.app.blog.AppBlogBlogRepository;
+import uaa.repository.app.blog.AppBlogTagRepository;
+import uaa.repository.app.log.AppLogTagRepository;
 import uaa.service.UaaUserService;
 import uaa.service.dto.app.blog.AppBlogCreateDto;
 import uaa.service.dto.app.blog.AppBlogDto;
 import uaa.service.dto.app.blog.AppBlogSaveDto;
 import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
+import uaa.service.dto.app.log.AppLogTagDTO;
 import util.UUIDGenerator;
 import util.Validators;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +41,10 @@ public class AppBlogService {
 
     @Autowired
     private UaaUserService uaaUserService;
-
+    @Autowired
+    private AppLogTagRepository tagRepository;
+    @Autowired
+    private AppBlogTagRepository blogTagRepository;
 
     public String createAppBlogDTO(AppBlogCreateDto appBlogCreateDto,String userId){
         AppBlogBlog blog = new AppBlogBlog();
@@ -51,18 +62,22 @@ public class AppBlogService {
         blogRepository.save(blog);
         return blog.getId();
     }
-    public List<AppBlogDto> getAllBlogs(String userId){
+    //要加分页
+    @Transactional(readOnly = true)
+    public List<AppBlogDto> getAllBlogs(String userId, Pageable pageable){
         //如果userId为空，那么就搜索出，所以不是自己可见的
         //如果userId不为空，那么就搜索该用户下的全部
         List<AppBlogDto> returnList = new ArrayList<>();
-        List<AppBlogBlog> allByCreateIdAndStatus=null;
+        Page<AppBlogBlog> allByCreateIdAndStatus=null;
         if(StringUtils.isNotBlank(userId)){
-            allByCreateIdAndStatus = blogRepository.findAllByCreateIdAndStatus(userId, Constants.SAVE);
+            allByCreateIdAndStatus = blogRepository.findAllByCreateIdAndStatusOrderByCreatedDate(pageable,userId, Constants.SAVE);
         }else{
-            allByCreateIdAndStatus = blogRepository.findAllByStatusAndPermissionTypeIsNot(Constants.SAVE, "OnlyOne");
+            allByCreateIdAndStatus = blogRepository.findAllByStatusAndPermissionTypeIsNotOrderByCreatedDate(pageable,Constants.SAVE, "OnlyOne");
         }
-        if(allByCreateIdAndStatus!=null&&allByCreateIdAndStatus.size()>0){
-            for(AppBlogBlog one:allByCreateIdAndStatus){
+        if(allByCreateIdAndStatus!=null&&allByCreateIdAndStatus.hasContent()){
+            Iterator<AppBlogBlog> iterator = allByCreateIdAndStatus.iterator();
+            while (iterator.hasNext()){
+                AppBlogBlog one =  iterator.next();
                 AppBlogDto dto=new AppBlogDto();
                 dto.setContent(one.getContent());
                 dto.setId(one.getId());
@@ -75,6 +90,23 @@ public class AppBlogService {
                 UaaUser userById = uaaUserService.findUserById(createId);
                 dto.setAuthorId(userById==null?"":createId);
                 dto.setAuthorName(userById==null?"匿名":userById.getName());
+                //查看标签
+                List<AppBlogTag> allByBaseIdAndStatus = blogTagRepository.findAllByBaseIdAndStatus(one.getId(), Constants.SAVE);
+                List<AppLogTagDTO> tagDTOList = new ArrayList<>();
+                if(allByBaseIdAndStatus!=null&&allByBaseIdAndStatus.size()>0){
+                    for(AppBlogTag blogTag:allByBaseIdAndStatus){
+                        AppLogTag tag = tagRepository.findOne(blogTag.getTagId());
+                        if(tag!=null){
+                            AppLogTagDTO tagDTO = new AppLogTagDTO();
+                            tagDTO.setId(tag.getId());
+                            tagDTO.setName(tag.getName());
+                            tagDTO.setGroup(tag.getGroup());
+                            tagDTO.setType(tag.getType());
+                            tagDTOList.add(tagDTO);
+                        }
+                    }
+                }
+                dto.setTagList(tagDTOList);
                 returnList.add(dto);
             }
         }
@@ -106,6 +138,11 @@ public class AppBlogService {
                         return null;
                 }
             }
+            //设置阅读数目，如果userId为空或者不等于创建者
+            if(StringUtils.isBlank(userId)||!userId.equals(one.getCreateId())){
+                one.setReadCount(1+one.getReadCount());
+                blogRepository.save(one);
+            }
             dto=new AppBlogDto();
             dto.setContent(one.getContent());
             dto.setReadCount(one.getReadCount());
@@ -119,7 +156,24 @@ public class AppBlogService {
             dto.setAuthorId(userById==null?"":createId);
             dto.setAuthorName(userById==null?"匿名":userById.getName());
             //查询评论（构建为树的形式）
-            //设置阅读数目
+            //查看标签
+            List<AppBlogTag> allByBaseIdAndStatus = blogTagRepository.findAllByBaseIdAndStatus(one.getId(), Constants.SAVE);
+            List<AppLogTagDTO> tagDTOList = new ArrayList<>();
+            if(allByBaseIdAndStatus!=null&&allByBaseIdAndStatus.size()>0){
+                for(AppBlogTag blogTag:allByBaseIdAndStatus){
+                    AppLogTag tag = tagRepository.findOne(blogTag.getTagId());
+                    if(tag!=null){
+                        AppLogTagDTO tagDTO = new AppLogTagDTO();
+                        tagDTO.setId(tag.getId());
+                        tagDTO.setName(tag.getName());
+                        tagDTO.setGroup(tag.getGroup());
+                        tagDTO.setType(tag.getType());
+                        tagDTOList.add(tagDTO);
+                    }
+                }
+            }
+            dto.setTagList(tagDTOList);
+
         }
         return  dto;
     }
