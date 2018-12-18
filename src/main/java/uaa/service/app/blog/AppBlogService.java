@@ -3,7 +3,9 @@ package uaa.service.app.blog;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
@@ -63,10 +65,29 @@ public class AppBlogService {
         return blog.getId();
     }
     //要加分页
-    @Transactional(readOnly = true)
-    public List<AppBlogDto> getAllBlogs(String userId, Pageable pageable){
+//    Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, "id");
+//    Page<Book> bookPage = bookRepository.findAll(new Specification<Book>(){
+//        @Override
+//        public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+//            List<Predicate> list = new ArrayList<Predicate>();
+//            if(null!=bookQuery.getName()&&!"".equals(bookQuery.getName())){
+//                list.add(criteriaBuilder.equal(root.get("name").as(String.class), bookQuery.getName()));
+//            }
+//            if(null!=bookQuery.getIsbn()&&!"".equals(bookQuery.getIsbn())){
+//                list.add(criteriaBuilder.equal(root.get("isbn").as(String.class), bookQuery.getIsbn()));
+//            }
+//            if(null!=bookQuery.getAuthor()&&!"".equals(bookQuery.getAuthor())){
+//                list.add(criteriaBuilder.equal(root.get("author").as(String.class), bookQuery.getAuthor()));
+//            }
+//            Predicate[] p = new Predicate[list.size()];
+//            return criteriaBuilder.and(list.toArray(p));
+//        }
+
+        @Transactional(readOnly = true)
+    public List<AppBlogDto> getAllBlogs(String userId, int page,int size){
         //如果userId为空，那么就搜索出，所以不是自己可见的
         //如果userId不为空，那么就搜索该用户下的全部
+        Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, "createdDate");
         List<AppBlogDto> returnList = new ArrayList<>();
         Page<AppBlogBlog> allByCreateIdAndStatus=null;
         if(StringUtils.isNotBlank(userId)){

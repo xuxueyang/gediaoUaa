@@ -162,10 +162,12 @@ public class AppBlogResource extends BaseResource {
     @ApiOperation(value = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记",
         httpMethod = "GET",response = ResponseEntity.class,
         notes = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记")
-    public ResponseEntity getAllBlogs(@RequestParam(value = "token",required = false) String token, Pageable pageable){
+    public ResponseEntity getAllBlogs(@RequestParam(value = "token",required = false) String token,
+                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                      @RequestParam(value = "size", defaultValue = "10") Integer size){
         try {
             UaaToken userByToken = uaaLoginService.getUserByToken(token);
-            List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid(),pageable);
+            List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid(),page,size);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,allBlogs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
