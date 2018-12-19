@@ -46,7 +46,7 @@ public class AppBlogResource extends BaseResource {
 
     @PutMapping("/blog")
     @ApiOperation(value = "创建博客", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客")
-    public ResponseEntity createBlog(@Valid @RequestBody AppBlogCreateDto dto, BindingResult bindingResult){
+    public ResponseEntity createBlog( @RequestBody AppBlogCreateDto dto, BindingResult bindingResult){
         try{
             if(bindingResult.hasErrors()){
                 return prepareReturnResult(ReturnCode.HAS_ERROR,bindingResult.getAllErrors().get(0));
