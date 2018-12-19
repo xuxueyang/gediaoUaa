@@ -183,7 +183,22 @@
             <artifactId>pinyin4j</artifactId>
             <version>2.5.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+        <!--spring4.0 之后不在支持 jsr303 jar包了 导致出错-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.bval</groupId>-->
+            <!--<artifactId>bval-jsr303</artifactId>-->
+            <!--<version>0.5</version>-->
+        <!--</dependency>-->
+        <!--<dependency>  -->
+            <!--    <groupId>org.hibernate</groupId>  -->
+            <!--    <artifactId>hibernate-validator</artifactId>  -->
+            <!--    <version>5.2.4.Final</version>  -->
+        <!--</dependency>-->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>

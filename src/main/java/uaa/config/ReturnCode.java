@@ -1,7 +1,7 @@
 package core;
 
 public class ReturnCode {
-
+    public static final String HAS_ERROR = "9999"; //由代码返回错误消息
     //正常返回2XXX
     public static final String DEFAULT_SUCCESS = "2000"; //成功
     public static final String CREATE_SUCCESS = "2001"; //创建成功

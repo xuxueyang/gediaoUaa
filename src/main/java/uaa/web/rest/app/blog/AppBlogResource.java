@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import uaa.config.Constants;
 import uaa.domain.app.blog.AppBlogBlog;
@@ -18,8 +20,10 @@ import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.util.CommonUtil;
+import uaa.web.rest.util.valid.BlogCreateValid;
 import util.Validators;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +39,18 @@ public class AppBlogResource extends BaseResource {
     @Autowired
     private UaaLoginService uaaLoginService;
 
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(new BlogCreateValid());
+    }
+
     @PutMapping("/blog")
     @ApiOperation(value = "创建博客", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客")
-    public ResponseEntity createBlog(@RequestBody AppBlogCreateDto dto){
+    public ResponseEntity createBlog(@Valid @RequestBody AppBlogCreateDto dto, BindingResult bindingResult){
         try{
+            if(bindingResult.hasErrors()){
+                return prepareReturnResult(ReturnCode.HAS_ERROR,bindingResult.getAllErrors().get(0));
+            }
             if(Validators.fieldBlank(dto.getPermissionType())
                 ||Validators.fieldBlank(dto.getSourceType())||Validators.fieldBlank(dto.getTitle())||Validators.fieldBlank(dto.getToken())){
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
