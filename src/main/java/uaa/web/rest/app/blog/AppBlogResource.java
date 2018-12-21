@@ -39,10 +39,10 @@ public class AppBlogResource extends BaseResource {
     @Autowired
     private UaaLoginService uaaLoginService;
 
-    @InitBinder
-    public void initBinder(WebDataBinder webDataBinder){
-        webDataBinder.addValidators(new BlogCreateValid());
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder webDataBinder){
+//        webDataBinder.addValidators(new BlogCreateValid());
+//    }
 
     @PutMapping("/blog")
     @ApiOperation(value = "创建博客", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客")
