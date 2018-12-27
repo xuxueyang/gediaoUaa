@@ -1,9 +1,19 @@
 package uaa.service.app.chat.rebot;
 
+import org.checkerframework.checker.units.qual.A;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uaa.config.Constants;
+import uaa.domain.app.chat.AppChatContent;
+import uaa.domain.uaa.UaaVisitRecord;
+import uaa.repository.app.blog.AppChatContentRepository;
+import uaa.repository.uaa.UaaVisitCountRepository;
+import uaa.service.dto.app.chat.AppChatReplyDto;
+import util.UUIDGenerator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,11 +23,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.ZonedDateTime;
 import java.util.Scanner;
 
 @Service
 @Transactional
 public class AppChatTLRobotService  {
+    @Autowired
+    private AppChatContentRepository appChatContentRepository;
+    @Autowired
+    private UaaVisitCountRepository uaaVisitCountRepository;
+
     public static void main(String[] args) {
         //声明并实例化我们刚刚封装好的工具类
         AppChatTLRobotService util = new AppChatTLRobotService();
@@ -103,6 +119,56 @@ public class AppChatTLRobotService  {
             }
         }
         return buffer.toString();
+    }
+
+    /**
+     * 根据回复
+     * @param chatContent
+     * @return
+     */
+    public AppChatReplyDto getReply(String chatContent,String ipAddr,String userId) {
+        //保存这次的请求
+        AppChatContent currentContent = new AppChatContent();
+        String currentUUID = UUIDGenerator.getUUID();
+        currentContent.setId(currentUUID);
+        currentContent.setStatus(Constants.SAVE);
+        currentContent.setCreatedDate(ZonedDateTime.now());
+        currentContent.setUpdatedDate(ZonedDateTime.now());
+        String createdId = null;
+        if(userId==null){
+            UaaVisitRecord byIpOrderByCreatedDate = uaaVisitCountRepository.findByIpOrderByCreatedDate(ipAddr);
+            if(byIpOrderByCreatedDate!=null){
+                createdId=byIpOrderByCreatedDate.getId();
+            }
+        }
+        if(createdId==null){
+            createdId = ipAddr+"_"+UUIDGenerator.getUUID();
+        }
+        currentContent.setCreatedId(userId==null?createdId:userId);
+        currentContent.setUpdatedId(userId==null?createdId:userId);
+        currentContent.setContent(chatContent);
+        currentContent.setReplyId("");
+        currentContent.setReplyType(Constants.REPLY_Type.All.name());
+
+        String message = getMessage(chatContent);
+        AppChatReplyDto dto = new AppChatReplyDto();
+        AppChatContent appChatContent = new AppChatContent();
+        // 记录本次的聊天内容(聊天机械人的）和本次发送的消息
+        String uuid = UUIDGenerator.getUUID();
+        appChatContent.setId(uuid);
+        appChatContent.setStatus(Constants.SAVE);
+        appChatContent.setCreatedDate(ZonedDateTime.now());
+        appChatContent.setUpdatedDate(ZonedDateTime.now());
+        appChatContent.setCreatedId("reboot");
+        appChatContent.setUpdatedId("reboot");
+        appChatContent.setContent(message);
+        appChatContent.setReplyId(currentUUID);
+        appChatContent.setReplyType(Constants.REPLY_Type.All.name());
+        BeanUtils.copyProperties(appChatContent,dto);
+        //如果是未登录的，允许匿名（为以后匿名做铺垫，采用IP+UUID的形式，标识）
+//        appChatContent.setCreatedId(userId==null?ipAddr+"_"+UUIDGenerator.getUUID():userId);
+
+        return dto;
     }
 //---------------------
 //    作者：4everlynn

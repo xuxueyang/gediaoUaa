@@ -169,11 +169,12 @@ public class UaaLoginService {
 
     public int visitcount(HttpServletRequest request) {
         //保存，并计数
-        List<UaaVisitRecord> all = uaaVisitCountRepository.findAll();
+//        List<UaaVisitRecord> all = uaaVisitCountRepository.findAll();
+        List<UaaVisitRecord> all = uaaVisitCountRepository.findAllByCreatedDateAfter(Instant.now().minusSeconds(Constants.IP_RECORD_TIME));
         //判断IP
         String ip = getIpAddr(request);
         boolean needRecord = true;
-        if(all!=null&&all.size()>0){
+        if(all!=null&&all.size()>0&&ip!=null){
             for(UaaVisitRecord record:all){
                 if(ip.equals(record.getIp())){
                     //如果有在半小时里的登录记录，那么就不记录
@@ -185,7 +186,7 @@ public class UaaLoginService {
                 }
             }
         }
-        if(needRecord){
+        if(needRecord&&ip!=null){
             UaaVisitRecord record = new UaaVisitRecord();
             record.setId(UUIDGenerator.getUUID());
             record.setCreatedDate(Instant.now());
@@ -195,7 +196,7 @@ public class UaaLoginService {
         }
         return all.size();
     }
-    private String getIpAddr(HttpServletRequest request) {
+    public  String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader(" x-forwarded-for ");
         if (ip == null || ip.length() == 0 || " unknown ".equalsIgnoreCase(ip)) {
             ip = request.getHeader(" Proxy-Client-IP ");

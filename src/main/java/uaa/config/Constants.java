@@ -126,31 +126,36 @@ public final class Constants {
         Owner,//原创
         Transfer//转载
     }
-    private static  List<String> SourceType = null;
-    public static List<String> getSourceType() {
-        if(SourceType==null){
-            sourceType[] values = sourceType.values();
-            List<String> SourceTypes = new ArrayList<>();
-            for(int i=0;i<values.length;i++){
-                SourceTypes.add(values[i].name());
-            }
-            SourceType = SourceTypes;
-        }
-        return SourceType;
+    //回复的类型
+    public enum REPLY_Type{
+        All,//回复全部人
+        One//仅显示一个人
     }
-    private static  List<String> PermissionType = null;
-
-    public static List<String> getPermissionType() {
-        if(PermissionType==null){
-            PERMISSION_TYPE[] permission_values = PERMISSION_TYPE.values();
-            List<String> permission_types = new ArrayList<>();
-            for(int i=0;i<permission_values.length;i++){
-                permission_types.add(permission_values[i].name());
-            }
-            PermissionType = permission_types;
-        }
-        return PermissionType;
-    }
+//    private static  List<String> SourceType = null;
+//    public static List<String> getSourceType() {
+//        if(SourceType==null){
+//            sourceType[] values = sourceType.values();
+//            List<String> SourceTypes = new ArrayList<>();
+//            for(int i=0;i<values.length;i++){
+//                SourceTypes.add(values[i].name());
+//            }
+//            SourceType = SourceTypes;
+//        }
+//        return SourceType;
+//    }
+//    private static  List<String> PermissionType = null;
+//
+//    public static List<String> getPermissionType() {
+//        if(PermissionType==null){
+//            PERMISSION_TYPE[] permission_values = PERMISSION_TYPE.values();
+//            List<String> permission_types = new ArrayList<>();
+//            for(int i=0;i<permission_values.length;i++){
+//                permission_types.add(permission_values[i].name());
+//            }
+//            PermissionType = permission_types;
+//        }
+//        return PermissionType;
+//    }
 //    @Test
 //    public void testToArray(){
 //        getPermissionType();
