@@ -56,7 +56,7 @@ public class AppChatTLRobotService  {
      * @param msg 需要发送的消息
      * @return
      */
-    private String setParameter(String msg) {
+    private static String setParameter(String msg) {
         //在接口请求中 中文要用URLEncoder encode成UTF-8
         try {
             return API_URL + "?key=" + API_KEY + "&info=" + URLEncoder.encode(msg, "utf-8");
@@ -71,7 +71,7 @@ public class AppChatTLRobotService  {
      * @param json 请求接口得到的JSON
      * @return text的部分
      */
-    private String getString(String json){
+    private static String getString(String json){
         try {
             JSONObject object = new JSONObject(json);
             return object.getString("text");
@@ -86,12 +86,12 @@ public class AppChatTLRobotService  {
      * @param msg 传入你需要发送的信息
      * @return 机器人对你的回复
      */
-    public String getMessage(String msg){
+    public static String getMessage(String msg){
         return getString(getHTML(setParameter(msg)));
     }
 
 
-    private String getHTML(String url) {
+    private static  String getHTML(String url) {
         StringBuffer buffer = new StringBuffer();
         BufferedReader bufferedReader = null;
         try {
