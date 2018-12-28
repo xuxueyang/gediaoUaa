@@ -9,6 +9,9 @@ import uaa.repository.app.log.AppLogDetailRepository;
 import uaa.service.dto.app.log.AppLogDetailDTO;
 import util.UUIDGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by UKi_Hi on 2018/6/4.
  */
@@ -20,17 +23,29 @@ public class AppLogDetailService {
     private AppLogDetailRepository appLogDetailRepository;
 
     public AppLogDetailDTO getDetailInfoById(String id) {
-        AppLogDetail one = appLogDetailRepository.findOne(id);
+        AppLogDetail one = appLogDetailRepository.findOneByIdAndStatusNot(id,Constants.DELETE);
         if(one==null){
             return null;
         }
-        return prepareDetailEntityToDTO(one);
+        return prepareDetailEntityToDTO(one,true);
     }
-    public AppLogDetailDTO prepareDetailEntityToDTO(AppLogDetail appLogDetail){
+    public List<AppLogDetailDTO> getAllDetailInfoByEachId(String eachId){
+        List<AppLogDetail> oneByIdAndStatusNot = appLogDetailRepository.findAllByLogEachIdAndStatusNot(eachId, Constants.DELETE);
+        List<AppLogDetailDTO> one = new ArrayList<>();
+        if(oneByIdAndStatusNot!=null){
+            for(AppLogDetail detail:oneByIdAndStatusNot){
+                one.add(prepareDetailEntityToDTO(detail,false));
+            }
+        }
+        return one;
+    }
+    public AppLogDetailDTO prepareDetailEntityToDTO(AppLogDetail appLogDetail,boolean needInsertRemarks){
         AppLogDetailDTO appLogDetailDTO = new AppLogDetailDTO();
         appLogDetailDTO.setCreatedDate(appLogDetail.getCreatedDate());
         appLogDetailDTO.setUpdatedDate(appLogDetail.getUpdatedDate());
-        appLogDetailDTO.setRemarks(appLogDetail.getRemarks());
+        if (needInsertRemarks) {
+            appLogDetailDTO.setRemarks(appLogDetail.getRemarks());
+        }
         appLogDetailDTO.setId(appLogDetail.getId());
         return appLogDetailDTO;
     }
@@ -43,7 +58,7 @@ public class AppLogDetailService {
     }
 
     public void deleteDetail(AppLogDetail appLogDetail) {
-        appLogDetail.setStatus(Constants.APP_LOG_STATUS_N);
+        appLogDetail.setStatus(Constants.APP_LOG_STATUS_DELETE);
         appLogDetailRepository.save(appLogDetail);
     }
 
@@ -54,7 +69,7 @@ public class AppLogDetailService {
         appLogDetail.setRemarks(remarks);
         appLogDetail.setLogEachId(logEachId);
         appLogDetailRepository.save(appLogDetail);
-        return prepareDetailEntityToDTO(appLogDetail);
+        return prepareDetailEntityToDTO(appLogDetail,true);
     }
 
     public void updateDetail(AppLogDetail appLogDetail, String remarks,String updateId) {

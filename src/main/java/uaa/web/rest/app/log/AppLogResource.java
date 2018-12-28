@@ -296,6 +296,23 @@ public class AppLogResource extends BaseResource{
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }
     }
+    @GetMapping("/details")
+    @ApiOperation(value = "获取相应的detail信息", httpMethod = "GET", response = ResponseEntity.class, notes = "获取相应的detail信息")
+    public ResponseEntity getDetailInfoByeachId(@RequestParam(name="eachId",required=true) String eachId,
+                                        @RequestParam(name="token",required=true) String token){
+        try {
+
+            List<AppLogDetailDTO> allDetailInfoByEachId = appLogDetailService.getAllDetailInfoByEachId(eachId);
+            logApi("/api/app/log/details","获取details下的全部each",
+                Constants.HttpType.GET.name(),
+                eachId,
+                Constants.ProjectType.GEDIAO.name(),
+                CommonUtil.getTodayBelongDate(),null);
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,allDetailInfoByEachId);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
+        }
+    }
     @PostMapping("/detail")
     @ApiOperation(value = "更新相应的detail信息", httpMethod = "POST", response = ResponseEntity.class, notes = "更新相应的detail信息")
     public ResponseEntity updateDetailInfo(@RequestBody UpdateLogDetailDTO updateLogDetailDTO){

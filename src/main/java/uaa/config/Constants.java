@@ -37,8 +37,8 @@ public final class Constants {
     //LogEach状态
     public static final String APP_LOG_STATUS_SAVE = Constants.SAVE;///保存状态
     public static final String APP_LOG_STATUS_DELETE = Constants.DELETE;//删除
-    public static final String APP_LOG_STATUS_Y = "Y";//完成
-    public static final String APP_LOG_STATUS_N = "N";//未完成
+//    public static final String APP_LOG_STATUS_Y = "Y";//完成
+//    public static final String APP_LOG_STATUS_N = "N";//未完成
 
     //LogDay的状态
     public static final String APP_LOG_DAY_TYPE_TEL = "TEL";//技术文档积累

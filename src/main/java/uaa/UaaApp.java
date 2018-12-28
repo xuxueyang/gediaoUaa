@@ -1,5 +1,6 @@
 package uaa;
 
+import org.apache.log4j.PropertyConfigurator;
 import uaa.config.ApplicationProperties;
 import uaa.config.DefaultProfileUtil;
 
@@ -16,6 +17,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
+import uaa.domain.uaa.UaaTenantCode;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
@@ -36,6 +38,27 @@ public class UaaApp {
     public UaaApp(Environment env) {
         this.env = env;
     }
+
+//    static {
+//        try{
+//            // 初始化log4j
+//            String log4jPath = "";
+////            if(Constant.LOG_MODE == 1){
+////                // 配置线上地址
+////                log4jPath = App.class.getClassLoader().getResource("").getPath()+"pms-api-services/config/log4j.properties";
+////                logger.info("Log4j线上生产模式初始化。。。");
+////            }else{
+//                // 配置本地地址
+//                log4jPath = UaaApp.class.getClassLoader().getResource("").getPath()+"log4j.properties";
+//            log.info("Log4j线下开发模式初始化。。。");
+////            }
+//            log.info("初始化Log4j。。。。");
+//            log.info("path is "+ log4jPath);
+//            PropertyConfigurator.configure(log4jPath);
+//        }catch (Exception e){
+//            log.error(e.toString());
+//        }
+//    }
 
     /**
      * Initializes uaa.

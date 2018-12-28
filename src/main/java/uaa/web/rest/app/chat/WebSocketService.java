@@ -1,11 +1,14 @@
 package uaa.web.rest.app.chat;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,6 +18,8 @@ import static uaa.service.app.chat.rebot.AppChatTLRobotService.getMessage;
 @Component
 public class WebSocketService {
 
+    public static final Logger logger = LoggerFactory.getLogger(WebSocketService.class);
+
     //统计在线人数
     private static int onlineCount = 0;
 
@@ -23,6 +28,7 @@ public class WebSocketService {
 
     //保存所有连接上的session
     private static Map<String, Session> sessionMap = new ConcurrentHashMap<String, Session>();
+
 
     public static synchronized int getOnlineCount() {
         return onlineCount;
@@ -42,7 +48,9 @@ public class WebSocketService {
         sessions.set(session);
         addOnlineCount();
         sessionMap.put(session.getId(), session);
+//        logger.debug("[" + session.getId() + "】连接上服务器======当前在线人数[" + getOnlineCount() + "]");
         System.out.println("[" + session.getId() + "】连接上服务器======当前在线人数[" + getOnlineCount() + "]");
+
         //连接上后给客户端一个消息
         sendMsg(session, "连接服务器成功！");
     }
@@ -55,10 +63,12 @@ public class WebSocketService {
         System.out.println("[" + session.getId() + "]退出了连接======当前在线人数[" + getOnlineCount() + "]");
     }
 
+
     //接收消息   客户端发送过来的消息
     @OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("[" + session.getId() + "]客户端的发送消息======内容[" + message + "]");
+//        logger.debug( message);
         String[] split = message.split(",");
         String sessionId = split[0];
         Session ss = sessionMap.get(sessionId);
@@ -87,14 +97,96 @@ public class WebSocketService {
         throwable.printStackTrace();
     }
 
-
-
     //统一的发送消息方法
     public synchronized void sendMsg(Session session, String msg) {
         try {
             session.getBasicRemote().sendText(msg);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private class dataProtocol implements Serializable{
+        private String message;
+        private String token;
+        private String sessionId;
+        private String fromSessionId;
+        private String toSessionId;
+        private String messageType;
+        private String userId;
+        private String fromUserId;
+        private String toUserId;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getFromUserId() {
+            return fromUserId;
+        }
+
+        public void setFromUserId(String fromUserId) {
+            this.fromUserId = fromUserId;
+        }
+
+        public String getToUserId() {
+            return toUserId;
+        }
+
+        public void setToUserId(String toUserId) {
+            this.toUserId = toUserId;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getSessionId() {
+            return sessionId;
+        }
+
+        public void setSessionId(String sessionId) {
+            this.sessionId = sessionId;
+        }
+
+        public String getFromSessionId() {
+            return fromSessionId;
+        }
+
+        public void setFromSessionId(String fromSessionId) {
+            this.fromSessionId = fromSessionId;
+        }
+
+        public String getToSessionId() {
+            return toSessionId;
+        }
+
+        public void setToSessionId(String toSessionId) {
+            this.toSessionId = toSessionId;
+        }
+
+        public String getMessageType() {
+            return messageType;
+        }
+
+        public void setMessageType(String messageType) {
+            this.messageType = messageType;
         }
     }
 }

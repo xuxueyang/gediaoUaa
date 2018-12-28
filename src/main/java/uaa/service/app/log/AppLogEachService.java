@@ -61,7 +61,7 @@ public class AppLogEachService {
         //从关联表里找出数据，插入
         for(AppLogDetail appLogDetail:appLogEach.getDetails()){
             //遍历塞入数据
-            detailDTOList.add(appLogDetailService.prepareDetailEntityToDTO(appLogDetail));
+            detailDTOList.add(appLogDetailService.prepareDetailEntityToDTO(appLogDetail,false));
         }
         appLogEachDTO.setAppLogDetailDTOList(detailDTOList);
 
@@ -150,7 +150,7 @@ public class AppLogEachService {
         appLogEach.setMessage(createLogEachDTO.getMessage());
         appLogEach.setTitle(createLogEachDTO.getTitle());
         appLogEach.setBelongDate(createLogEachDTO.getBelongDate());
-        appLogEach.setStatus(Constants.APP_LOG_STATUS_N);
+        appLogEach.setStatus(Constants.APP_LOG_STATUS_SAVE);
         appLogEach.setId(UUIDGenerator.getUUID());
         appLogEachRepository.save(appLogEach);
         //插入到分类表中（传的是名字——id有详细的附加信息好处，但是名字可以在没有的时候添加，也不错)
