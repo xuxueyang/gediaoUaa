@@ -13,6 +13,7 @@ import uaa.domain.uaa.UaaVisitRecord;
 import uaa.repository.app.blog.AppChatContentRepository;
 import uaa.repository.uaa.UaaVisitCountRepository;
 import uaa.service.dto.app.chat.AppChatReplyDto;
+import uaa.web.rest.app.chat.base.Protocol;
 import util.UUIDGenerator;
 
 import java.io.BufferedReader;
@@ -121,55 +122,55 @@ public class AppChatTLRobotService  {
         return buffer.toString();
     }
 
-    /**
-     * 根据回复
-     * @param chatContent
-     * @return
-     */
-    public AppChatReplyDto getReply(String chatContent,String ipAddr,String userId) {
-        //保存这次的请求
-        AppChatContent currentContent = new AppChatContent();
-        String currentUUID = UUIDGenerator.getUUID();
-        currentContent.setId(currentUUID);
-        currentContent.setStatus(Constants.SAVE);
-        currentContent.setCreatedDate(ZonedDateTime.now());
-        currentContent.setUpdatedDate(ZonedDateTime.now());
-        String createdId = null;
-        if(userId==null){
-            UaaVisitRecord byIpOrderByCreatedDate = uaaVisitCountRepository.findByIpOrderByCreatedDate(ipAddr);
-            if(byIpOrderByCreatedDate!=null){
-                createdId=byIpOrderByCreatedDate.getId();
-            }
-        }
-        if(createdId==null){
-            createdId = ipAddr+"_"+UUIDGenerator.getUUID();
-        }
-        currentContent.setCreatedId(userId==null?createdId:userId);
-        currentContent.setUpdatedId(userId==null?createdId:userId);
-        currentContent.setContent(chatContent);
-        currentContent.setReplyId("");
-        currentContent.setReplyType(Constants.REPLY_Type.All.name());
-
-        String message = getMessage(chatContent);
-        AppChatReplyDto dto = new AppChatReplyDto();
-        AppChatContent appChatContent = new AppChatContent();
-        // 记录本次的聊天内容(聊天机械人的）和本次发送的消息
-        String uuid = UUIDGenerator.getUUID();
-        appChatContent.setId(uuid);
-        appChatContent.setStatus(Constants.SAVE);
-        appChatContent.setCreatedDate(ZonedDateTime.now());
-        appChatContent.setUpdatedDate(ZonedDateTime.now());
-        appChatContent.setCreatedId("reboot");
-        appChatContent.setUpdatedId("reboot");
-        appChatContent.setContent(message);
-        appChatContent.setReplyId(currentUUID);
-        appChatContent.setReplyType(Constants.REPLY_Type.All.name());
-        BeanUtils.copyProperties(appChatContent,dto);
-        //如果是未登录的，允许匿名（为以后匿名做铺垫，采用IP+UUID的形式，标识）
-//        appChatContent.setCreatedId(userId==null?ipAddr+"_"+UUIDGenerator.getUUID():userId);
-
-        return dto;
-    }
+//    /**
+//     * 根据回复
+//     * @param chatContent
+//     * @return
+//     */
+//    public AppChatReplyDto getReply(String chatContent,String ipAddr,String userId) {
+//        //保存这次的请求
+//        AppChatContent currentContent = new AppChatContent();
+//        String currentUUID = UUIDGenerator.getUUID();
+//        currentContent.setId(currentUUID);
+//        currentContent.setStatus(Constants.SAVE);
+//        currentContent.setCreatedDate(ZonedDateTime.now());
+//        currentContent.setUpdatedDate(ZonedDateTime.now());
+//        String createdId = null;
+//        if(userId==null){
+//            UaaVisitRecord byIpOrderByCreatedDate = uaaVisitCountRepository.findByIpOrderByCreatedDate(ipAddr);
+//            if(byIpOrderByCreatedDate!=null){
+//                createdId=byIpOrderByCreatedDate.getId();
+//            }
+//        }
+//        if(createdId==null){
+//            createdId = ipAddr+"_"+UUIDGenerator.getUUID();
+//        }
+//        currentContent.setFromUserId(userId==null?createdId:userId);
+//        currentContent.setUserId(userId==null?createdId:userId);
+//        currentContent.setMessage(chatContent);
+//        currentContent.setToUserId("");
+//        currentContent.setMessageType(Protocol.messageType.One.name());
+//
+//        String message = getMessage(chatContent);
+//        AppChatReplyDto dto = new AppChatReplyDto();
+//        AppChatContent appChatContent = new AppChatContent();
+//        // 记录本次的聊天内容(聊天机械人的）和本次发送的消息
+//        String uuid = UUIDGenerator.getUUID();
+//        appChatContent.setId(uuid);
+//        appChatContent.setStatus(Constants.SAVE);
+//        appChatContent.setCreatedDate(ZonedDateTime.now());
+//        appChatContent.setUpdatedDate(ZonedDateTime.now());
+//        appChatContent.setCreatedId("reboot");
+//        appChatContent.setUpdatedId("reboot");
+//        appChatContent.setContent(message);
+//        appChatContent.setReplyId(currentUUID);
+//        appChatContent.setReplyType(Constants.REPLY_Type.All.name());
+//        BeanUtils.copyProperties(appChatContent,dto);
+//        //如果是未登录的，允许匿名（为以后匿名做铺垫，采用IP+UUID的形式，标识）
+////        appChatContent.setCreatedId(userId==null?ipAddr+"_"+UUIDGenerator.getUUID():userId);
+//
+//        return dto;
+//    }
 //---------------------
 //    作者：4everlynn
 //    来源：CSDN

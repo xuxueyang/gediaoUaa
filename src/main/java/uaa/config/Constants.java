@@ -127,10 +127,10 @@ public final class Constants {
         Transfer//转载
     }
     //回复的类型
-    public enum REPLY_Type{
-        All,//回复全部人
-        One//仅显示一个人
-    }
+//    public enum REPLY_Type{
+//        All,//回复全部人
+//        One//仅显示一个人
+//    }
 //    private static  List<String> SourceType = null;
 //    public static List<String> getSourceType() {
 //        if(SourceType==null){

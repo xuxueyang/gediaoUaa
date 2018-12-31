@@ -1,10 +1,18 @@
 package uaa.web.rest.app.chat.base;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import uaa.domain.app.chat.AppChatContent;
+import uaa.repository.app.blog.AppChatContentRepository;
+import uaa.web.rest.app.chat.WebSocketService;
 import util.UUIDGenerator;
 
 import java.io.Serializable;
 
 public class DataProtocol implements Serializable {
+
+
     private String message;
     private String token;
     private String sessionId;
@@ -56,8 +64,9 @@ public class DataProtocol implements Serializable {
         DataProtocol protocol = new DataProtocol();
         protocol.setId(UUIDGenerator.getUUID());
         protocol.setProtocol(protocolCode);
-        protocol.setMessage("参数错误");
+        protocol.setMessage("");
         protocol.setMessageType(Protocol.messageType.One.name());
+
         return protocol;
     }
     private DataProtocol(){

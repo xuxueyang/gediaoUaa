@@ -16,6 +16,7 @@ public class Protocol {
     public final static String FirstProtocol_SYS = "1";
 
     public final static String OnCreated = "1_1";//创建完毕后服务端发送
+    
     public final static String OnCreatedSys = "1_1_1";//创建完毕后服务端发送
     public final static String CloseSession = "1_1_2";//关闭连接
 

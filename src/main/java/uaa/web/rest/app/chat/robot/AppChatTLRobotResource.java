@@ -39,8 +39,8 @@ public class AppChatTLRobotResource extends BaseResource{
         try {
             String ipAddr = uaaLoginService.getIpAddr(request);
             UaaToken userByToken = uaaLoginService.getUserByToken(token);
-            AppChatReplyDto dto = appChatTLRobotService.getReply(chatContent,ipAddr,userByToken==null?null:userByToken.getCreatedid());
-            return prepareReturnResult(ReturnCode.GET_SUCCESS,dto);
+//            AppChatReplyDto dto = appChatTLRobotService.getReply(chatContent,ipAddr,userByToken==null?null:userByToken.getCreatedid());
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }

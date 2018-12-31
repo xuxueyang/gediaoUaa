@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
@@ -13,7 +14,9 @@ import org.springframework.web.socket.server.standard.SpringConfigurator;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import uaa.domain.app.chat.AppChatContent;
 import uaa.domain.uaa.UaaToken;
+import uaa.repository.app.blog.AppChatContentRepository;
 import uaa.service.UaaUserService;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.app.chat.base.DataProtocol;
@@ -44,6 +47,9 @@ public class WebSocketService {
     private UaaLoginService uaaLoginService;
     @Autowired
     private UaaUserService uaaUserService;
+    @Autowired
+    private AppChatContentRepository appChatContentRepository;
+
 
     private HttpSession httpSession;
     public static final Logger logger = LoggerFactory.getLogger(WebSocketService.class);
@@ -55,22 +61,6 @@ public class WebSocketService {
     private static Map<String, Session> sessionMap = new ConcurrentHashMap<String, Session>();
     private static Map<String,String> userIdSessionIdMap = new ConcurrentHashMap<>();
     private static Map<String,String> sessionIdUserIdMap = new ConcurrentHashMap<>();
-
-//    public static String getSessionIdByUserId(String userId){
-//        return sessionIdUserIdMap.get(userId);
-//    }
-//    public static String getUserIdBySessionId(String sessionId){
-//        return userIdSessionIdMap.get(sessionId);
-//    }
-//
-//    public static String saveSessionIdToUserId(String sessionId,String userId){
-//        return sessionIdUserIdMap.put(sessionId,userId);
-//    }
-//    public static String saveUserIdToSessionId(String userId,String sessionId){
-//        return userIdSessionIdMap.put(userId,sessionId);
-//    }
-
-
 
 
     // 一级协议和下属的处理消息
@@ -94,7 +84,7 @@ public class WebSocketService {
     public void onOpen(Session session, EndpointConfig config) {
 //    public void onOpen(Session session) {
         //这里作为websocket的接口，不做修改
-        if(this.uaaLoginService==null||this.uaaUserService==null){
+        if(this.uaaLoginService==null||this.uaaUserService==null||this.appChatContentRepository==null){
             this.httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
             if(httpSession != null){
                 ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(httpSession.getServletContext());
@@ -103,6 +93,9 @@ public class WebSocketService {
                 }
                 if(this.uaaLoginService==null){
                     this.uaaLoginService = (UaaLoginService) ctx.getBean(UaaLoginService.class);
+                }
+                if(this.appChatContentRepository==null){
+                    this.appChatContentRepository = (AppChatContentRepository)ctx.getBean(AppChatContentRepository.class);
                 }
             }
         }
@@ -160,6 +153,15 @@ public class WebSocketService {
     @OnMessage
     public void onMessage(String message, Session session) {
         DataProtocol dataProtocol = JSON.parseObject(message, DataProtocol.class);
+        if(org.apache.commons.lang.StringUtils.isBlank(dataProtocol.getId())
+            && org.apache.commons.lang3.StringUtils.isNotBlank(dataProtocol.getProtocol())){
+            // 存储消息
+            AppChatContent chatContent = new AppChatContent();
+            BeanUtils.copyProperties(dataProtocol,chatContent);
+            chatContent.setId(UUIDGenerator.getUUID());
+            dataProtocol.setId(chatContent.getId());
+            appChatContentRepository.save(chatContent);
+        }
         try {
             System.out.println("[" + session.getId() + "]客户端的发送消息======内容[" + message + "]");
             // 基础验证
@@ -224,9 +226,13 @@ public class WebSocketService {
         }else if(Protocol.messageType.One.name().equals(messageType)){
             //单发
             DataProtocol dataByLast = getDataByLast(dataProtocol);
+            dataByLast.setProtocol(Protocol.sendChatMessage);
+            dataByLast.setMessageType(Protocol.messageType.One.name());
             dataByLast.setMessage("格调回复道:"+ getMessage(dataProtocol.getMessage()));
             if(StringUtils.isNotBlank(dataProtocol.getToUserId())
                 &&userIdSessionIdMap.containsKey(dataProtocol.getToUserId())){
+                dataByLast.setUserId("0");//系统发送
+                dataByLast.setToUserId(dataProtocol.getToUserId());
                 _sendMsg(sessionMap.get(userIdSessionIdMap.get(dataProtocol.getToUserId())),dataByLast);
             }
         }
@@ -234,6 +240,13 @@ public class WebSocketService {
     private synchronized void _sendMsg(Session session,DataProtocol dataProtocol){
         try {
             // TODO 存入所有的消息(在开始时候不创建）
+            AppChatContent chatContent = new AppChatContent();
+            BeanUtils.copyProperties(dataProtocol,chatContent);
+            if(StringUtils.isBlank(chatContent.getId())){
+                chatContent.setId(UUIDGenerator.getUUID());
+            }
+            appChatContentRepository.save(chatContent);
+
             session.getBasicRemote().sendText(JSON.toJSONString(dataProtocol));
         }catch (IOException e){
             e.printStackTrace();

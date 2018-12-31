@@ -19,62 +19,104 @@ public class AppChatContent extends BaseEntity implements Serializable {
     @Column(name = "ID")
     private String id;
 
-    @Column(name = "CREATED_ID")
-    private String createdId;
-
-    @Column(name = "UPDATED_ID")
-    private String updatedId;
-
-    @Column(name = "CONTENT")
-    private String content;
-
-    @Column(name = "REPLY_TYPE")
-    private String replyType;
-
-    @Column(name = "REPLY_ID")
-    private String replyId;
-
-    @Column(name = "STATUS" )
+    @Column(name = "STATUS")
     private String status;
 
-    public String getCreatedId() {
-        return createdId;
+    @Column(name = "FROM_USER_ID")
+    private String fromUserId;
+
+    @Column(name = "TO_USER_ID")
+    private String toUserId;
+
+    @Column(name = "MESSAGE")
+    private String message;
+
+    @Column(name = "SESSION_ID")
+    private String sessionId;
+
+    @Column(name = "MESSAGE_TYPE")
+    private String messageType;
+
+    @Column(name = "USER_ID" )
+    private String userId;
+
+    @Column(name = "PROTOCOL" )
+    private String protocol;
+
+    @Column(name = "PRV_ID" )
+    private String prvId;
+
+
+    public String getId() {
+        return id;
     }
 
-    public void setCreatedId(String createdId) {
-        this.createdId = createdId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUpdatedId() {
-        return updatedId;
+    public String getFromUserId() {
+        return fromUserId;
     }
 
-    public void setUpdatedId(String updatedId) {
-        this.updatedId = updatedId;
+    public void setFromUserId(String fromUserId) {
+        this.fromUserId = fromUserId;
     }
 
-    public String getContent() {
-        return content;
+    public String getToUserId() {
+        return toUserId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId;
     }
 
-    public String getReplyType() {
-        return replyType;
+    public String getMessage() {
+        return message;
     }
 
-    public void setReplyType(String replyType) {
-        this.replyType = replyType;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getReplyId() {
-        return replyId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setReplyId(String replyId) {
-        this.replyId = replyId;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public String getPrvId() {
+        return prvId;
+    }
+
+    public void setPrvId(String prvId) {
+        this.prvId = prvId;
     }
 
     public String getStatus() {
@@ -83,13 +125,5 @@ public class AppChatContent extends BaseEntity implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }
