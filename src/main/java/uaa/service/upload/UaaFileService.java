@@ -291,6 +291,7 @@ public class UaaFileService {
 
     }
 
+
     public UaaFile findUaaFileById(String id) {
         UaaFile one = fileRepository.findOne(id);
         if(Constants.FILE_STATUS_DELETE.equals(one))

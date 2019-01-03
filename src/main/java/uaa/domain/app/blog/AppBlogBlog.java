@@ -50,6 +50,9 @@ public class AppBlogBlog extends BaseEntity implements Serializable {
     @Column(name = "SOURCE_TYPE")
     private String sourceType;
 
+    @Column(name = "TITLE_IMAGE_FILE_ID")
+    private String titleImageFileId;
+
     public String getId() {
         return id;
     }
@@ -129,5 +132,13 @@ public class AppBlogBlog extends BaseEntity implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getTitleImageFileId() {
+        return titleImageFileId;
+    }
+
+    public void setTitleImageFileId(String titleImageFileId) {
+        this.titleImageFileId = titleImageFileId;
     }
 }

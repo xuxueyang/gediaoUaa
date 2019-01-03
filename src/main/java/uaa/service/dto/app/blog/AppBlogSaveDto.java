@@ -16,6 +16,7 @@ public class AppBlogSaveDto {
     private String permissionType;
     private List<AppLogTagDTO> tagList;
     private String permissionVerify;
+    private String imgUrl;
 
     public String getPermissionType() {
         return permissionType;
@@ -71,5 +72,13 @@ public class AppBlogSaveDto {
 
     public void setTagList(List<AppLogTagDTO> tagList) {
         this.tagList = tagList;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }
