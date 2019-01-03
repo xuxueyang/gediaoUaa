@@ -71,6 +71,7 @@ public class UaaLoginService {
     private final String GRAPH_TYPE_CODE = "code";
     private final String GRAPH_TYPE_NUM  = "num";
 
+
     //生成graph
     public Map<String,Object> createGraph() throws Exception{
         //生成验证码和相应的编码图片

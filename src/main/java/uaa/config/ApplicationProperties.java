@@ -97,6 +97,7 @@ public class ApplicationProperties {
         private String username;
         private String password;
         private String uploadServerFileRootPath;
+        private String uploadServerImageRootPath;
 
         public String getUploadServerFileRootPath() {
             return uploadServerFileRootPath;
@@ -129,6 +130,14 @@ public class ApplicationProperties {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public String getUploadServerImageRootPath() {
+            return uploadServerImageRootPath;
+        }
+
+        public void setUploadServerImageRootPath(String uploadServerImageRootPath) {
+            this.uploadServerImageRootPath = uploadServerImageRootPath;
         }
     }
 }

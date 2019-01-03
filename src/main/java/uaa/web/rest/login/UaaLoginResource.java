@@ -25,14 +25,22 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class UaaLoginResource extends BaseResource{
-    @GetMapping("/login/test-graph")
-    @ResponseBody
-    @ApiOperation(value = "测试登录", httpMethod = "GET", response = ResponseEntity.class, notes = "测试登录")
-    public ResponseEntity<?> downloadFile() {
-        //登录了
-        String token = UUIDGenerator.getUUID();
-        return prepareReturnResult(ReturnCode.GET_SUCCESS,"登录成功,token: "+token);
+
+//    @GetMapping("/login/test-graph")
+//    @ResponseBody
+//    @ApiOperation(value = "测试登录", httpMethod = "GET", response = ResponseEntity.class, notes = "测试登录")
+//    public ResponseEntity<?> downloadFile() {
+//        //登录了
+//        String token = UUIDGenerator.getUUID();
+//        return prepareReturnResult(ReturnCode.GET_SUCCESS,"登录成功,token: "+token);
+//    }
+
+    static {
+        // 防止二维码显示不了
+        System.setProperty("java.awt.headless","true");
     }
+
+
 
     @Autowired
     private UaaLoginService uaaLoginService;

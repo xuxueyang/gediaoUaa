@@ -1,5 +1,7 @@
 package uaa.web.rest.upload;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import uaa.web.rest.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
@@ -16,6 +18,7 @@ import uaa.service.upload.UaaFileService;
 import util.UUIDGenerator;
 import util.Validators;
 
+import javax.naming.SizeLimitExceededException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
@@ -74,6 +77,63 @@ public class UaaFileResource extends BaseResource {
     @Autowired
     private UaaFileService uaaFileService;
 
+    /**
+     * 图片上传
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/blog/img")
+    public ResponseEntity img(HttpServletRequest request,@PathVariable(name = "blogId" ,required = true) String blogId) {
+        String path = "image";
+        MultipartHttpServletRequest multipartHttpServletRequest = null;
+        MultipartFile file = null;
+        try {
+            MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
+            Iterator<String> iter = mRequest.getFileNames();
+            if (iter.hasNext()) {
+                file = mRequest.getFile(iter.next());
+            }
+//            multipartHttpServletRequest = UploadUtils
+//                .createMultipartHttpServletRequest(request);
+//            path = StringUtils.defaultIfBlank(multipartHttpServletRequest.getParameter("path"), path);
+        } catch (MaxUploadSizeExceededException e) {
+//            logger.error("上传附件大于20M",e);
+//            System.out.println();
+            return prepareReturnResult(ReturnCode.ERROR_INVALID_STATUS_CODE,"图片上传附件大于20M");
+        } catch (Exception e){
+//            logger.error("上传附件大于20M",e);
+//            return InvokeResult.failure("图片上传附件大于20M");
+            return prepareReturnResult(ReturnCode.ERROR_INVALID_STATUS_CODE,"上传附件大于20M");
+        }
+//        MultipartFile file = multipartHttpServletRequest.getFile("file");
+        if(file == null){
+//            return InvokeResult.failure("请先上传文件");
+            return prepareReturnResult(ReturnCode.ERROR_INVALID_STATUS_CODE,"请先上传文件");
+
+        }
+        try {
+//            JFile jfile = UploadUtils.tranFile(file,path);
+//            InvokeResult invokeResult = putWSO2("/Upload/img").putData(JFile.class, jfile).build().send();
+            UaaFile uaaFile = uaaFileService.uploadFile(file,file.getOriginalFilename(),UUIDGenerator.getUUID(),true);
+            List<UploadResultDTO> result = new ArrayList<UploadResultDTO>();;
+
+            if(uaaFile!=null){
+                UploadResultDTO uploadResult = new UploadResultDTO();
+                uploadResult.setId(uaaFile.getId());
+                uploadResult.setUploadFileName(file.getOriginalFilename());
+                uploadResult.setName(uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()));
+                result.add(uploadResult);
+            }
+            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,result);
+        } catch (Exception e) {
+//            logger.error("图片上传", e);
+//            return InvokeResult.failure("图片上传失败");
+            return prepareReturnResult(ReturnCode.ERROR_CREATE,"图片上传失败");
+
+        }
+    }
+
     //文件能穿过来即可，前期不必用fastddfs
     @PostMapping("/upload")
     @ResponseBody
@@ -118,7 +178,7 @@ public class UaaFileResource extends BaseResource {
                 //上传文件——不适用fdfs
                 //存ID和路径
                 try {
-                    UaaFile uaaFile = uaaFileService.uploadFile(file,fileName,UUIDGenerator.getUUID());
+                    UaaFile uaaFile = uaaFileService.uploadFile(file,fileName,UUIDGenerator.getUUID(),false);
                     if(uaaFile!=null){
                         UploadResultDTO uploadResult = new UploadResultDTO();
                         uploadResult.setId(uaaFile.getId());

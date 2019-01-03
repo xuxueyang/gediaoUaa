@@ -196,6 +196,8 @@ application:
             username: root
             password: Xuxueyang1
             upload-server-file-root-path: /usr/local/FILEUPLOAD
+            upload-server-image-root-path: /usr/local/tomcat/webapps/resource/images
+#            http://193.112.161.157:8080/resource/images/' + imageName
     version: 0.1
     client : qinglonghui
     project-type: QLH

@@ -24,8 +24,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.http.MediaType;
 
-import java.util.*;
 import javax.servlet.*;
+//import javax.servlet.ServletContext;
+import java.util.*;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.

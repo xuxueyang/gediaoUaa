@@ -47,6 +47,8 @@ public class UaaFileService {
     private  String password ;
     private  int port = 22;
     private  String uploadServerFileRootPath;
+    private  String uploadServerImageRootPath;
+
     private  boolean isLoadDate = false;
     private ChannelSftp channelSftp;
     private Session sshSession;
@@ -60,6 +62,8 @@ public class UaaFileService {
             this.username = applicationProperties.getConfig().getFileService().getUsername();
             this.password = applicationProperties.getConfig().getFileService().getPassword();
             this.uploadServerFileRootPath = applicationProperties.getConfig().getFileService().getUploadServerFileRootPath();
+            this.uploadServerImageRootPath = applicationProperties.getConfig().getFileService().getUploadServerImageRootPath();
+
 //            this.channelSftp  =  connect(ipAddr,22,username,password);
             try {
                 jsch = new JSch();
@@ -90,6 +94,7 @@ public class UaaFileService {
             this.username = applicationProperties.getConfig().getFileService().getUsername();
             this.password = applicationProperties.getConfig().getFileService().getPassword();
             this.uploadServerFileRootPath = applicationProperties.getConfig().getFileService().getUploadServerFileRootPath();
+            this.uploadServerImageRootPath = applicationProperties.getConfig().getFileService().getUploadServerImageRootPath();
             isLoadDate = true;
         }
         ChannelSftp sftp = null;
@@ -227,7 +232,7 @@ public class UaaFileService {
 //        return sftp.ls(directory);
 //    }
 
-    public UaaFile uploadFile(MultipartFile file, String fileName,String pathFilehName) {
+    public UaaFile uploadFile(MultipartFile file, String fileName,String pathFilehName,boolean isImage) {
         //判断MD5码
         String md5 = null;
         try {
@@ -244,8 +249,14 @@ public class UaaFileService {
         if(uaaFile==null){
             //上传到服务器
             boolean uploadResult;
+            String path = "";
             try {
-                uploadResult = upload(this.uploadServerFileRootPath,file.getInputStream(),pathFilehName);
+                if(isImage){
+                    path = this.uploadServerImageRootPath;
+                }else {
+                    path = this.uploadServerFileRootPath;
+                }
+                uploadResult = upload(path,file.getInputStream(),pathFilehName);
             } catch (IOException e) {
                 uploadResult =false;
                 e.printStackTrace();
@@ -259,7 +270,7 @@ public class UaaFileService {
                 uaaFile.setSize(""+file.getSize());
                 uaaFile.setName(fileName);
                 uaaFile.setServiceIp(this.ipAddr);
-                uaaFile.setRootFilePath(this.uploadServerFileRootPath);
+                uaaFile.setRootFilePath(path);
                 uaaFile.setRelFilePath("/"+pathFilehName);
                 uaaFile.setCreatedDate(ZonedDateTime.now());
                 uaaFile.setUpdatedDate(ZonedDateTime.now());
