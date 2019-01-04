@@ -30,11 +30,14 @@ import uaa.service.dto.upload.UploadResultDTO;
 import util.UUIDGenerator;
 import util.Validators;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by UKi_Hi on 2018/12/8.
@@ -72,6 +75,8 @@ public class AppBlogService {
         blogRepository.save(blog);
         return blog.getId();
     }
+
+
     //要加分页
 //    Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, "id");
 //    Page<Book> bookPage = bookRepository.findAll(new Specification<Book>(){
@@ -111,6 +116,7 @@ public class AppBlogService {
                 //获取全部的时候内容 提取
 //                dto.setContent(one.getContent());
                 dto.setPreviewContent(getPreviewContent(one.getContent()));
+//                dto.setPreviewContent(one.getContent());
                 dto.setId(one.getId());
                 dto.setReadCount(one.getReadCount());
                 dto.setCreatedDate(one.getCreatedDate());
@@ -122,15 +128,18 @@ public class AppBlogService {
                 dto.setAuthorId(userById==null?"":createId);
                 dto.setAuthorName(userById==null?"匿名":userById.getName());
                 //得到封面图片文件
-                UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
-                if(titleImage!=null){
-                    UploadResultDTO uploadResult = new UploadResultDTO();
-                    uploadResult.setId(titleImage.getId());
-                    uploadResult.setUploadFileName(titleImage.getName());
-                    uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
-                    uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
-                    dto.setTitleImg(uploadResult);
+                if(StringUtils.isNotBlank(one.getTitleImageFileId())){
+                    UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
+                    if(titleImage!=null){
+                        UploadResultDTO uploadResult = new UploadResultDTO();
+                        uploadResult.setId(titleImage.getId());
+                        uploadResult.setUploadFileName(titleImage.getName());
+                        uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+                        uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
+                        dto.setTitleImg(uploadResult);
+                    }
                 }
+
 
                 //查看标签
                 List<AppBlogTag> allByBaseIdAndStatus = blogTagRepository.findAllByBaseIdAndStatus(one.getId(), Constants.SAVE);
@@ -161,34 +170,36 @@ public class AppBlogService {
      * @return
      */
     private static String getPreviewContent(String content) {
-        StringBuffer returnStr = new StringBuffer();
-        String[] split = content.split("</h2>");
-        if(split[0].startsWith("<h2>")){
-            split[0] = split[0].substring("<h2>".length(), split[0].length() - 1);
-        }
-        if(split.length>1){
-            String[] splitP = split[1].split("</p>");
-            int k = splitP.length;
-            while (returnStr.length()<=Constants.PREVIEW_LENGTH||k>0){
-                String tmp = splitP[splitP.length-k];
-                if(tmp.startsWith("<p>")){
-                    tmp = tmp.substring("<p>".length(), tmp.length() - 1);
-                }
-                if(tmp.contains("<img")){
-                    String[] split1 = tmp.split("<img.*>");
-                    StringBuffer tmpS = new StringBuffer();
-                    for(int i=0;i<split1.length;i++){
-                        tmpS.append(split1[i]);
-                    }
-                    tmp = tmpS.toString();
-                }
-                returnStr.append("\n"+tmp);
-                k--;
-            }
-        }else{
-            returnStr.append(split[0]);
-        }
-        return returnStr.toString();
+
+//        StringBuffer returnStr = new StringBuffer();
+//        String[] split = content.split("</h2>");
+//        if(split[0].startsWith("<h2>")){
+//            split[0] = split[0].substring("<h2>".length(), split[0].length() - 1);
+//        }
+//        if(split.length>1){
+//            String[] splitP = split[1].split("</p>");
+//            int k = splitP.length;
+//            while (returnStr.length()<=Constants.PREVIEW_LENGTH||k>0){
+//                String tmp = splitP[splitP.length-k];
+//                if(tmp.startsWith("<p>")){
+//                    tmp = tmp.substring("<p>".length(), tmp.length() - 1);
+//                }
+//                if(tmp.contains("<img")){
+//                    String[] split1 = tmp.split("<img.*>");
+//                    StringBuffer tmpS = new StringBuffer();
+//                    for(int i=0;i<split1.length;i++){
+//                        tmpS.append(split1[i]);
+//                    }
+//                    tmp = tmpS.toString();
+//                }
+//                returnStr.append("\n"+tmp);
+//                k--;
+//            }
+//        }else{
+//            returnStr.append(split[0]);
+//        }
+//        return returnStr.toString();
+        return "";
     }
 
 //    public static void main(String[] args){
@@ -239,14 +250,16 @@ public class AppBlogService {
             dto.setAuthorId(userById==null?"":createId);
             dto.setAuthorName(userById==null?"匿名":userById.getName());
             //得到封面图片文件
-            UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
-            if(titleImage!=null){
-                UploadResultDTO uploadResult = new UploadResultDTO();
-                uploadResult.setId(titleImage.getId());
-                uploadResult.setUploadFileName(titleImage.getName());
-                uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
-                uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
-                dto.setTitleImg(uploadResult);
+            if(StringUtils.isNotBlank(one.getTitleImageFileId())){
+                UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
+                if(titleImage!=null){
+                    UploadResultDTO uploadResult = new UploadResultDTO();
+                    uploadResult.setId(titleImage.getId());
+                    uploadResult.setUploadFileName(titleImage.getName());
+                    uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+                    uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
+                    dto.setTitleImg(uploadResult);
+                }
             }
 
             //查询评论（构建为树的形式）
@@ -286,6 +299,43 @@ public class AppBlogService {
         }
         blog.setUpdatedDate(ZonedDateTime.now());
         blogRepository.save(blog);
+    }
+    private String changeContentImg(String content) {
+        // 提取其中的图片部分
+        Pattern pattern =Pattern.compile("<img.*>");//匹配的模式
+        Matcher matcher=pattern.matcher(content);
+        while(matcher.find()){
+            //TODO 提取base64的格式
+            String[] split = "".split("base64,");
+            String substring = split[1].substring(0, split[1].lastIndexOf("\""));
+            substring = substring.substring(0, substring.lastIndexOf("'"));
+            decryptByBase64(substring,"");
+
+            //base64转为文件图片。写入上传
+            boolean b = decryptByBase64(substring, "");
+            if(b){
+                //将提取的标签位置，删除，写入<p><firgure></firgure></p>的格式
+                // 存储uaafile
+            }else{
+
+            }
+
+
+        }
+        return content;
+    }
+
+    public boolean decryptByBase64(String base64, String filePath) {
+        if (base64 == null && filePath == null) {
+            return false;
+        }
+        try {
+            Files.write(Paths.get(filePath), Base64.getDecoder().decode(base64), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public void updateBlogPermission(AppBlogBlog blog, AppBlogUpdatePermissionDto dto) {

@@ -2,6 +2,10 @@ package uaa.web.rest.upload;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import uaa.domain.app.blog.AppBlogBlog;
+import uaa.domain.uaa.UaaToken;
+import uaa.service.app.blog.AppBlogService;
+import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
@@ -76,15 +80,30 @@ import java.util.List;
 public class UaaFileResource extends BaseResource {
     @Autowired
     private UaaFileService uaaFileService;
-
+    @Autowired
+    private UaaLoginService uaaLoginService;
+    @Autowired
+    private AppBlogService appBlogService;
     /**
      * 图片上传
      *
      * @return
      */
     @ResponseBody
-    @RequestMapping("/blog/img")
-    public ResponseEntity img(HttpServletRequest request,@PathVariable(name = "blogId" ,required = true) String blogId) {
+    @RequestMapping("/img")
+    public ResponseEntity img(HttpServletRequest request,
+                              @RequestParam(value = "token",required = true) String token,
+                              @RequestParam(value = "blogId",required = true) String blogId) {
+        UaaToken userByToken = uaaLoginService.getUserByToken(token);
+        if(userByToken==null){
+            return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,"");
+        }
+//        AppBlogBlog blogById = appBlogService.getBlogById(blogId);
+//        if(blogById==null){
+//            return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,"");
+//        }
+
+
         String path = "image";
         MultipartHttpServletRequest multipartHttpServletRequest = null;
         MultipartFile file = null;
