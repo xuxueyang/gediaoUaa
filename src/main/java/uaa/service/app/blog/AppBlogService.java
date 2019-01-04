@@ -13,16 +13,19 @@ import uaa.config.Constants.PERMISSION_TYPE;
 import uaa.domain.app.blog.AppBlogBlog;
 import uaa.domain.app.blog.AppBlogTag;
 import uaa.domain.app.log.AppLogTag;
+import uaa.domain.uaa.UaaFile;
 import uaa.domain.uaa.UaaUser;
 import uaa.repository.app.blog.AppBlogBlogRepository;
 import uaa.repository.app.blog.AppBlogTagRepository;
 import uaa.repository.app.log.AppLogTagRepository;
+import uaa.repository.uaa.UaaFileRepository;
 import uaa.service.UaaUserService;
 import uaa.service.dto.app.blog.AppBlogCreateDto;
 import uaa.service.dto.app.blog.AppBlogDto;
 import uaa.service.dto.app.blog.AppBlogSaveDto;
 import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
 import uaa.service.dto.app.log.AppLogTagDTO;
+import uaa.service.dto.upload.UploadResultDTO;
 import util.UUIDGenerator;
 import util.Validators;
 
@@ -38,6 +41,9 @@ import java.util.Map;
 @Service
 @Transactional
 public class AppBlogService {
+    @Autowired
+    private UaaFileRepository fileRepository;
+
     @Autowired
     private AppBlogBlogRepository blogRepository;
 
@@ -111,6 +117,16 @@ public class AppBlogService {
                 UaaUser userById = uaaUserService.findUserById(createId);
                 dto.setAuthorId(userById==null?"":createId);
                 dto.setAuthorName(userById==null?"匿名":userById.getName());
+                //得到封面图片文件
+                UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
+                if(titleImage!=null){
+                    UploadResultDTO uploadResult = new UploadResultDTO();
+                    uploadResult.setId(titleImage.getId());
+                    uploadResult.setUploadFileName(titleImage.getName());
+                    uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+                    dto.setTitleImg(uploadResult);
+                }
+
                 //查看标签
                 List<AppBlogTag> allByBaseIdAndStatus = blogTagRepository.findAllByBaseIdAndStatus(one.getId(), Constants.SAVE);
                 List<AppLogTagDTO> tagDTOList = new ArrayList<>();
@@ -176,6 +192,16 @@ public class AppBlogService {
             UaaUser userById = uaaUserService.findUserById(createId);
             dto.setAuthorId(userById==null?"":createId);
             dto.setAuthorName(userById==null?"匿名":userById.getName());
+            //得到封面图片文件
+            UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
+            if(titleImage!=null){
+                UploadResultDTO uploadResult = new UploadResultDTO();
+                uploadResult.setId(titleImage.getId());
+                uploadResult.setUploadFileName(titleImage.getName());
+                uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+                dto.setTitleImg(uploadResult);
+            }
+
             //查询评论（构建为树的形式）
             //查看标签
             List<AppBlogTag> allByBaseIdAndStatus = blogTagRepository.findAllByBaseIdAndStatus(one.getId(), Constants.SAVE);
@@ -206,6 +232,7 @@ public class AppBlogService {
     public void updateBlog(AppBlogBlog blog, AppBlogSaveDto dto) {
         blog.setTitle(dto.getTitle());
         blog.setContent(dto.getContent());
+        blog.setTitleImageFileId(dto.getImgUrl());
         blog.setPermissionType(dto.getPermissionType());
         if(PERMISSION_TYPE.KeyCan.name().equals(dto.getPermissionType())){
             dto.setPermissionVerify(dto.getPermissionVerify());

@@ -2,6 +2,7 @@ package uaa.service.dto.app.blog;
 
 import io.swagger.annotations.ApiModelProperty;
 import uaa.service.dto.app.log.AppLogTagDTO;
+import uaa.service.dto.upload.UploadResultDTO;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -41,6 +42,9 @@ public class AppBlogDto {
 
     @ApiModelProperty(name = "权限")
     private String permissionType;
+
+    @ApiModelProperty(name = "封面图片")
+    private UploadResultDTO titleImg;
 
     public String getAuthorName() {
         return authorName;
@@ -128,5 +132,13 @@ public class AppBlogDto {
 
     public void setTagList(List<AppLogTagDTO> tagList) {
         this.tagList = tagList;
+    }
+
+    public UploadResultDTO getTitleImg() {
+        return titleImg;
+    }
+
+    public void setTitleImg(UploadResultDTO titleImg) {
+        this.titleImg = titleImg;
     }
 }
