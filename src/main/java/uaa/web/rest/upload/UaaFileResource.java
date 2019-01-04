@@ -123,6 +123,7 @@ public class UaaFileResource extends BaseResource {
                 uploadResult.setId(uaaFile.getId());
                 uploadResult.setUploadFileName(file.getOriginalFilename());
                 uploadResult.setName(uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()));
+                uploadResult.setPath(uaaFile.getRootFilePath()+uaaFile.getRelFilePath());
                 result.add(uploadResult);
             }
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,result);

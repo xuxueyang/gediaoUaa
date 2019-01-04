@@ -62,6 +62,7 @@ public class AppBlogService {
         blog.setCreateId(userId);
         blog.setUpdateId(userId);
         blog.setCreatedDate(ZonedDateTime.now());
+        blog.setTitleImageFileId(appBlogCreateDto.getImgUrlId());
         blog.setUpdatedDate(ZonedDateTime.now());
         blog.setId(UUIDGenerator.getUUID());
         blog.setReadCount(0);
@@ -106,7 +107,9 @@ public class AppBlogService {
             while (iterator.hasNext()){
                 AppBlogBlog one =  iterator.next();
                 AppBlogDto dto=new AppBlogDto();
-                dto.setContent(one.getContent());
+                //获取全部的时候内容 提取
+//                dto.setContent(one.getContent());
+                dto.setPreviewContent(getPreviewContent(one.getContent()));
                 dto.setId(one.getId());
                 dto.setReadCount(one.getReadCount());
                 dto.setCreatedDate(one.getCreatedDate());
@@ -124,6 +127,7 @@ public class AppBlogService {
                     uploadResult.setId(titleImage.getId());
                     uploadResult.setUploadFileName(titleImage.getName());
                     uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+                    uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
                     dto.setTitleImg(uploadResult);
                 }
 
@@ -149,6 +153,16 @@ public class AppBlogService {
         }
         return returnList;
     }
+
+    /**
+     * 得到富文本的预览内容
+     * @param content
+     * @return
+     */
+    private String getPreviewContent(String content) {
+        return content;
+    }
+
     public AppBlogDto getBlog(String id,String userId,String verify){
         AppBlogDto dto = null;
         AppBlogBlog one = blogRepository.getOne(id);
@@ -199,6 +213,7 @@ public class AppBlogService {
                 uploadResult.setId(titleImage.getId());
                 uploadResult.setUploadFileName(titleImage.getName());
                 uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+                uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
                 dto.setTitleImg(uploadResult);
             }
 
@@ -232,7 +247,7 @@ public class AppBlogService {
     public void updateBlog(AppBlogBlog blog, AppBlogSaveDto dto) {
         blog.setTitle(dto.getTitle());
         blog.setContent(dto.getContent());
-        blog.setTitleImageFileId(dto.getImgUrl());
+        blog.setTitleImageFileId(dto.getImgUrlId());
         blog.setPermissionType(dto.getPermissionType());
         if(PERMISSION_TYPE.KeyCan.name().equals(dto.getPermissionType())){
             dto.setPermissionVerify(dto.getPermissionVerify());

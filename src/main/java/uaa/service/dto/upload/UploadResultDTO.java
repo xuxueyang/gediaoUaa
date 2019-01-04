@@ -5,6 +5,7 @@ public class UploadResultDTO {
     private String id;
     private String uploadFileName;
     private String name;
+    private String path;
     public String getId() {
         return id;
     }
@@ -27,5 +28,13 @@ public class UploadResultDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

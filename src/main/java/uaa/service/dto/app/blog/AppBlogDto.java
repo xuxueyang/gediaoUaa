@@ -46,6 +46,9 @@ public class AppBlogDto {
     @ApiModelProperty(name = "封面图片")
     private UploadResultDTO titleImg;
 
+    @ApiModelProperty(name="预览的内容")
+    private String previewContent;
+
     public String getAuthorName() {
         return authorName;
     }
@@ -140,5 +143,13 @@ public class AppBlogDto {
 
     public void setTitleImg(UploadResultDTO titleImg) {
         this.titleImg = titleImg;
+    }
+
+    public String getPreviewContent() {
+        return previewContent;
+    }
+
+    public void setPreviewContent(String previewContent) {
+        this.previewContent = previewContent;
     }
 }

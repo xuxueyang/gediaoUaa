@@ -15,6 +15,7 @@ public class AppBlogCreateDto {
 
     private String permissionType;
     private String permissionVerify;
+    private String imgUrlId;
 
     public String getTitle() {
         return title;
@@ -70,5 +71,13 @@ public class AppBlogCreateDto {
 
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getImgUrlId() {
+        return imgUrlId;
+    }
+
+    public void setImgUrlId(String imgUrlId) {
+        this.imgUrlId = imgUrlId;
     }
 }
