@@ -10,6 +10,9 @@ import java.util.List;
  * Application constants.
  */
 public final class Constants {
+    // 博客预览最多显示60个字符
+    public static final int PREVIEW_LENGTH = 60;
+
     public enum ProjectType{
         GEDIAO,QLH,NULL
     }

@@ -1,6 +1,7 @@
 package uaa.service.app.blog;
 
 import org.apache.commons.lang.StringUtils;
+import org.neo4j.unsafe.impl.batchimport.cache.idmapping.string.Radix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -159,10 +160,41 @@ public class AppBlogService {
      * @param content
      * @return
      */
-    private String getPreviewContent(String content) {
-        return content;
+    private static String getPreviewContent(String content) {
+        StringBuffer returnStr = new StringBuffer();
+        String[] split = content.split("</h2>");
+        if(split[0].startsWith("<h2>")){
+            split[0] = split[0].substring("<h2>".length(), split[0].length() - 1);
+        }
+        if(split.length>1){
+            String[] splitP = split[1].split("</p>");
+            int k = splitP.length;
+            while (returnStr.length()<=Constants.PREVIEW_LENGTH||k>0){
+                String tmp = splitP[splitP.length-k];
+                if(tmp.startsWith("<p>")){
+                    tmp = tmp.substring("<p>".length(), tmp.length() - 1);
+                }
+                if(tmp.contains("<img")){
+                    String[] split1 = tmp.split("<img.*>");
+                    StringBuffer tmpS = new StringBuffer();
+                    for(int i=0;i<split1.length;i++){
+                        tmpS.append(split1[i]);
+                    }
+                    tmp = tmpS.toString();
+                }
+                returnStr.append("\n"+tmp);
+                k--;
+            }
+        }else{
+            returnStr.append(split[0]);
+        }
+        return returnStr.toString();
     }
 
+//    public static void main(String[] args){
+//        String tmp = "<h2>这是博客的内容</h2><p>“为什么你要这样？”某处旅馆，一个人声音有点颤抖。</p><p>“...”另一个人背对着他，低头吸着烟，沉默不语。</p><p>“为什么你要这样？”</p>";
+//        getPreviewContent(tmp);
+//    }
     public AppBlogDto getBlog(String id,String userId,String verify){
         AppBlogDto dto = null;
         AppBlogBlog one = blogRepository.getOne(id);
