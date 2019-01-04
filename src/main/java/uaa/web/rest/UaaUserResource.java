@@ -37,16 +37,16 @@ public class UaaUserResource extends BaseResource {
                 return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,null);
             }
             if (Validators.fieldBlank(createUaaUserDTO.getPassword()) ||
-                Validators.fieldBlank(createUaaUserDTO.getGraphCaptchaCode())||
-                Validators.fieldBlank(createUaaUserDTO.getGraphCaptchaCodeId())||
+//                Validators.fieldBlank(createUaaUserDTO.getGraphCaptchaCode())||
+//                Validators.fieldBlank(createUaaUserDTO.getGraphCaptchaCodeId())||
                 Validators.fieldBlank(createUaaUserDTO.getLoginName())) {
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY, null);
             }
             //验证图形码
-            boolean b = uaaLoginService.verifyGraph(createUaaUserDTO.getGraphCaptchaCodeId(), createUaaUserDTO.getGraphCaptchaCode());
-            if(!b){
-                return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE, null);
-            }
+//            boolean b = uaaLoginService.verifyGraph(createUaaUserDTO.getGraphCaptchaCodeId(), createUaaUserDTO.getGraphCaptchaCode());
+//            if(!b){
+//                return prepareReturnResult(ReturnCode.ERROR_GRAPH_CODE, null);
+//            }
             //验证空间存不存在
 //            boolean tenantExist = verifyTenantExist(createUaaUserDTO.getTenantCode());
 //            if(!tenantExist){
