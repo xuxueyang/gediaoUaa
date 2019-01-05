@@ -142,6 +142,10 @@ public class UaaFileResource extends BaseResource {
                 uploadResult.setId(uaaFile.getId());
                 uploadResult.setUploadFileName(file.getOriginalFilename());
                 uploadResult.setName(uaaFile.getRelFilePath().substring(1,uaaFile.getRelFilePath().length()));
+                if(uaaFile.getRootFilePath().startsWith("/usr/local/tomcat/webapps")){
+                    uaaFile.setRootFilePath(uaaFile.getRootFilePath().substring("/usr/local/tomcat/webapps".length(),uaaFile.getRootFilePath().length())
+                        + uaaFile.getRelFilePath());
+                }
                 uploadResult.setPath(uaaFile.getRootFilePath()+uaaFile.getRelFilePath());
                 result.add(uploadResult);
             }
