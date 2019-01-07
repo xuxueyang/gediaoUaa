@@ -33,6 +33,8 @@ public final class Constants {
 
     //token超时时间
     public static final Long TOKEN_VALID_TIME = 30*30*60L;
+    //token超时时间
+    public static final Long REDIS_VAILD_TIME = TOKEN_VALID_TIME;
 
     public static final Long IP_RECORD_TIME = 30*60L;
 

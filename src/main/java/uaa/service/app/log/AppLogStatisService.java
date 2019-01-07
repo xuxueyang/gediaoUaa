@@ -8,6 +8,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchProperties;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +20,7 @@ import uaa.domain.app.log.*;
 import uaa.domain.uaa.UaaUser;
 import uaa.repository.app.log.AppLogEachRepository;
 import uaa.repository.app.log.AppLogLogRepository;
+import uaa.repository.es.ElasticsearchRepository;
 import uaa.service.UaaUserService;
 import uaa.service.dto.login.UserInfo;
 import uaa.service.resource.DictService;
@@ -59,7 +61,11 @@ public class AppLogStatisService {
 
     @Autowired
     private DictService dictService;
+//    @Autowired
+//    protected ElasticsearchRepository elasticsearchRepository;
 
+//    @Autowired
+//    protected ElasticsearchProperties elasticsearchProperties;
 
     @Autowired
     private UaaUserService uaaUserService;

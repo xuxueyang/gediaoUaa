@@ -1,10 +1,12 @@
 package uaa.web.rest.app.log;
 
+import com.alibaba.fastjson.JSON;
 import core.ReturnCode;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uaa.config.Constants;
 import uaa.domain.UaaError;
 import uaa.domain.app.log.AppLogDetail;
 import uaa.domain.uaa.UaaToken;
@@ -14,6 +16,7 @@ import uaa.service.app.log.AppLogStatisService;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.util.excel.vo.app.log.LogEachInVO;
+import uaa.web.rest.util.redis.Redis;
 import util.Validators;
 
 import javax.servlet.http.HttpServletResponse;
@@ -96,9 +99,15 @@ public class AppLogStatisResource extends BaseResource{
             if(userByToken==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
-            Map<String,AppLogStatisService.ShowDto> map = new HashMap<>();
-            map = appLogStatisService.getEachBieData(userByToken.getCreatedid());
-            return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
+            String data = Redis.getJedis().get(userByToken.getCreatedid() + "_each-bit-data");
+            if(data!=null){
+                return prepareReturnResult(ReturnCode.GET_SUCCESS,data);
+            }else{
+                Map<String,AppLogStatisService.ShowDto> map = new HashMap<>();
+                map = appLogStatisService.getEachBieData(userByToken.getCreatedid());
+                Redis.getJedis().setex(userByToken.getCreatedid()+"_each-bit-data", 3600, JSON.toJSONString(map));
+                return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
+            }
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }
@@ -119,6 +128,7 @@ public class AppLogStatisResource extends BaseResource{
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
             //按照时间顺序赛入值
+//            Redis.getJedis().setex(userByToken.getCreatedid()+belongDate,)
             List<Map<String, String>> eachDayOperatorData = appLogStatisService.getEachDayOperatorData(userByToken.getCreatedid(), belongDate);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachDayOperatorData);
         }catch (Exception e){

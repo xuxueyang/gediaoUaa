@@ -163,7 +163,16 @@ jhipster:
             host: localhost
             port: 5000
             queue-size: 512
-
+#    redis:
+#        database: 0
+#        host: 193.112.17.169
+#        password: Xuxueyang1
+#        port: 9200
+#        pool:
+#            max-idle: 8
+#            min-idle: 0
+#            max-active: 8
+#            max-wait: -1
 uaa:
     key-store:
         name: keystore.jks
@@ -201,8 +210,10 @@ application:
     version: 0.1
     client : qinglonghui
     project-type: QLH
+elasticsearch:
+    clusterName: local
+    clusterNodes: 193.112.17.169:9200
+    ssl: false
+    env: dev
 
-redis:
-    project-code: qinglonghui
-    env: test
 

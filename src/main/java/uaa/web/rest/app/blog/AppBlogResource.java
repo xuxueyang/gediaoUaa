@@ -1,5 +1,6 @@
 package uaa.web.rest.app.blog;
 
+import com.alibaba.fastjson.JSON;
 import core.ReturnCode;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,7 @@ import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.util.CommonUtil;
+import uaa.web.rest.util.redis.Redis;
 import uaa.web.rest.util.valid.BlogCreateValid;
 import util.Validators;
 
@@ -138,6 +140,8 @@ public class AppBlogResource extends BaseResource {
 //                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
 //            }
             appBlogService.updateBlog(blog,dto);
+            //TODO 删除redis缓存
+//            Redis.getJedis().del("blog_"+dto.getId());
             return prepareReturnResult(ReturnCode.UPDATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_UPDATE,null);
@@ -178,12 +182,16 @@ public class AppBlogResource extends BaseResource {
                                       @RequestParam(value = "page", defaultValue = "0") Integer page,
                                       @RequestParam(value = "size", defaultValue = "10") Integer size){
         try {
+//            String s = Redis.getJedis().get(""+token + "_blogs");
+//            if(s!=null){
+//                return  prepareReturnResult(ReturnCode.GET_SUCCESS,s );
+//            }
             UaaToken userByToken = uaaLoginService.getUserByToken(token);
             List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid(),page,size);
+//            Redis.getJedis().set(token + "_blogs", JSON.toJSONString(allBlogs));
             return prepareReturnResult(ReturnCode.GET_SUCCESS,allBlogs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }
     }
-
 }
