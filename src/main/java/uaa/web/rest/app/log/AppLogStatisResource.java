@@ -99,15 +99,19 @@ public class AppLogStatisResource extends BaseResource{
             if(userByToken==null){
                 return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
             }
-            String data = Redis.getJedis().get(userByToken.getCreatedid() + "_each-bit-data");
-            if(data!=null){
-                return prepareReturnResult(ReturnCode.GET_SUCCESS,data);
-            }else{
-                Map<String,AppLogStatisService.ShowDto> map = new HashMap<>();
-                map = appLogStatisService.getEachBieData(userByToken.getCreatedid());
-                Redis.getJedis().setex(userByToken.getCreatedid()+"_each-bit-data", 3600, JSON.toJSONString(map));
-                return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
-            }
+            Map<String,AppLogStatisService.ShowDto> map = new HashMap<>();
+            map = appLogStatisService.getEachBieData(userByToken.getCreatedid());
+//            Redis.getJedis().setex(userByToken.getCreatedid()+"_each-bit-data", 3600, JSON.toJSONString(map));
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
+//            String data = Redis.getJedis().get(userByToken.getCreatedid() + "_each-bit-data");
+//            if(data!=null){
+//                return prepareReturnResult(ReturnCode.GET_SUCCESS,data);
+//            }else{
+//                Map<String,AppLogStatisService.ShowDto> map = new HashMap<>();
+//                map = appLogStatisService.getEachBieData(userByToken.getCreatedid());
+//                Redis.getJedis().setex(userByToken.getCreatedid()+"_each-bit-data", 3600, JSON.toJSONString(map));
+//                return prepareReturnResult(ReturnCode.GET_SUCCESS,map);
+//            }
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);
         }

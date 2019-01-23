@@ -25,6 +25,7 @@ import uaa.service.app.log.AppLogSingleService;
 import uaa.service.dto.app.log.*;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.util.CommonUtil;
+import uaa.web.rest.util.redis.Redis;
 import util.Validators;
 
 import javax.websocket.server.PathParam;
@@ -444,6 +445,7 @@ public class AppLogResource extends BaseResource{
                 endDate = startDate;
             }
             //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
+
             Map eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId,pageable);
 //            logApi("/api/app/log/eachs","获取了所有的标签",
 //                Constants.HttpType.GET.name(),

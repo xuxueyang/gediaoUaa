@@ -66,6 +66,17 @@ spring:
             enabled: false
     thymeleaf:
         mode: XHTML
+    redis:
+#        database: 0
+#        host: 193.112.17.169
+#        password:
+##        password: Xuxueyang1
+#        port: 9200
+#        pool:
+#            max-idle: 8
+#            min-idle: 0
+#            max-active: 8
+#            max-wait: -1
 security:
     basic:
         enabled: false
