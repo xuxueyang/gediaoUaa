@@ -12,19 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
 import uaa.config.Constants.PERMISSION_TYPE;
 import uaa.domain.app.blog.AppBlogBlog;
+import uaa.domain.app.blog.AppBlogCategory;
 import uaa.domain.app.blog.AppBlogTag;
 import uaa.domain.app.log.AppLogTag;
 import uaa.domain.uaa.UaaFile;
 import uaa.domain.uaa.UaaUser;
 import uaa.repository.app.blog.AppBlogBlogRepository;
+import uaa.repository.app.blog.AppBlogCategoryRepository;
 import uaa.repository.app.blog.AppBlogTagRepository;
 import uaa.repository.app.log.AppLogTagRepository;
 import uaa.repository.uaa.UaaFileRepository;
 import uaa.service.UaaUserService;
-import uaa.service.dto.app.blog.AppBlogCreateDto;
-import uaa.service.dto.app.blog.AppBlogDto;
-import uaa.service.dto.app.blog.AppBlogSaveDto;
-import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
+import uaa.service.dto.app.blog.*;
 import uaa.service.dto.app.log.AppLogTagDTO;
 import uaa.service.dto.upload.UploadResultDTO;
 import util.UUIDGenerator;
@@ -52,11 +51,20 @@ public class AppBlogService {
     private AppBlogBlogRepository blogRepository;
 
     @Autowired
+    private AppBlogCategoryRepository appBlogCategoryRepository;
+
+    @Autowired
     private UaaUserService uaaUserService;
     @Autowired
     private AppLogTagRepository tagRepository;
     @Autowired
     private AppBlogTagRepository blogTagRepository;
+
+
+    public AppBlogCategory findCategoryByName(String name){
+        AppBlogCategory category = appBlogCategoryRepository.findOneByName(name);
+        return category;
+    }
 
     public String createAppBlogDTO(AppBlogCreateDto appBlogCreateDto,String userId){
         AppBlogBlog blog = new AppBlogBlog();
@@ -346,4 +354,17 @@ public class AppBlogService {
         blog.setUpdatedDate(ZonedDateTime.now());
         blogRepository.save(blog);
     }
+
+    public void createCategory(AppBlogCategoryDto dto) {
+        AppBlogCategory category = new AppBlogCategory();
+        category.setId(UUIDGenerator.getUUID());
+        category.setName(dto.getName());
+        category.setCreatedNickName("创建者昵称");
+        category.setCreatedDate(ZonedDateTime.now());
+        category.setUpdatedDate(ZonedDateTime.now());
+        category.setStatus(Constants.SAVE);
+        appBlogCategoryRepository.save(category);
+
+    }
+    //TODO 1。找出全部分类 2。按分类找博客 3。博客设置分类
 }

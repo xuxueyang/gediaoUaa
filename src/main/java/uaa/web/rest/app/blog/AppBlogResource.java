@@ -12,12 +12,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import uaa.config.Constants;
 import uaa.domain.app.blog.AppBlogBlog;
+import uaa.domain.app.blog.AppBlogCategory;
 import uaa.domain.uaa.UaaToken;
 import uaa.service.app.blog.AppBlogService;
-import uaa.service.dto.app.blog.AppBlogCreateDto;
-import uaa.service.dto.app.blog.AppBlogDto;
-import uaa.service.dto.app.blog.AppBlogSaveDto;
-import uaa.service.dto.app.blog.AppBlogUpdatePermissionDto;
+import uaa.service.dto.app.blog.*;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.util.CommonUtil;
@@ -45,7 +43,21 @@ public class AppBlogResource extends BaseResource {
 //    public void initBinder(WebDataBinder webDataBinder){
 //        webDataBinder.addValidators(new BlogCreateValid());
 //    }
-
+    @PutMapping("/category")
+    public ResponseEntity createBlogCategory(@RequestBody AppBlogCategoryDto dto){
+        try{
+            //博客的名字不允许重复！
+            if(StringUtils.isBlank(dto.getName()))
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            AppBlogCategory categoryByName = appBlogService.findCategoryByName(dto.getName());
+            if(categoryByName!=null)
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EXIST_CODE,null);
+            appBlogService.createCategory(dto);
+            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
+        }
+    }
     @PutMapping("/blog")
     @ApiOperation(value = "创建博客", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客")
     public ResponseEntity createBlog( @RequestBody AppBlogCreateDto dto, BindingResult bindingResult){

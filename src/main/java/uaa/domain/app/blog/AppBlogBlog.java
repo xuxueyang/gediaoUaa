@@ -53,6 +53,19 @@ public class AppBlogBlog extends BaseEntity implements Serializable {
     @Column(name = "TITLE_IMAGE_FILE_ID")
     private String titleImageFileId;
 
+
+    @Column(name = "CATEGORY_ID")
+    private String categoryId;//分类ID
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+
     public String getId() {
         return id;
     }
