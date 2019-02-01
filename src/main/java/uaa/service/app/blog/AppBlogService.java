@@ -357,7 +357,7 @@ public class AppBlogService {
 
     public void createCategory(AppBlogCategoryDto dto) {
         AppBlogCategory category = new AppBlogCategory();
-        category.setId(UUIDGenerator.getUUID());
+//        category.setId(UUIDGenerator.getUUID());
         category.setName(dto.getName());
         category.setCreatedNickName("创建者昵称");
         category.setCreatedDate(ZonedDateTime.now());

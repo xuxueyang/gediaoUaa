@@ -4,10 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uaa.domain.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 
@@ -18,8 +15,8 @@ public class AppBlogCategory extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "ID")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
 
     @Column(name = "NAME")
@@ -51,13 +48,7 @@ public class AppBlogCategory extends BaseEntity implements Serializable {
     @Column(name = "COMMENT_COUNT")
     private int commentCount;
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -129,5 +120,13 @@ public class AppBlogCategory extends BaseEntity implements Serializable {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
