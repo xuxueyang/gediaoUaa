@@ -58,6 +58,14 @@ public class AppBlogResource extends BaseResource {
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
         }
     }
+    @GetMapping("/categorys")
+    public ResponseEntity getBlogCategory(){
+        try{
+            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,appBlogService.findAllBlogCategorys());
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
+        }
+    }
     @PutMapping("/blog")
     @ApiOperation(value = "创建博客", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客")
     public ResponseEntity createBlog( @RequestBody AppBlogCreateDto dto, BindingResult bindingResult){
@@ -191,6 +199,7 @@ public class AppBlogResource extends BaseResource {
         httpMethod = "GET",response = ResponseEntity.class,
         notes = "获取到全部的博客如果传token就获取到token下的，如果没有，那么就获取到所有可以看到的列表(包含密码验证的，但是密码验证的需要加个锁标记")
     public ResponseEntity getAllBlogs(@RequestParam(value = "token",required = false) String token,
+                                      @RequestParam(value = "categoryName",required = false) String categoryName,
                                       @RequestParam(value = "page", defaultValue = "0") Integer page,
                                       @RequestParam(value = "size", defaultValue = "10") Integer size){
         try {
@@ -199,7 +208,7 @@ public class AppBlogResource extends BaseResource {
 //                return  prepareReturnResult(ReturnCode.GET_SUCCESS,s );
 //            }
             UaaToken userByToken = uaaLoginService.getUserByToken(token);
-            List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid(),page,size);
+            List<AppBlogDto> allBlogs = appBlogService.getAllBlogs(userByToken==null?"":userByToken.getCreatedid(),page,size,categoryName);
 //            Redis.getJedis().set(token + "_blogs", JSON.toJSONString(allBlogs));
             return prepareReturnResult(ReturnCode.GET_SUCCESS,allBlogs);
         }catch (Exception e){

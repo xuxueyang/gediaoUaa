@@ -9,38 +9,38 @@ import uaa.domain.app.log.AppLogEach;
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
+//@Service
 public class RedisService {
 
 //    @Autowired
 //    private RedisTemplate<String, Object> redisTemplate;
 
-    private Set<AppLogEach> users = new HashSet<AppLogEach>();
-
-
-    @CachePut(value = "user", key = "'User:'+#user.id")
-    public AppLogEach addUser(AppLogEach user) {
-        users.add(user);
-        return user;
-    }
-
-    @Cacheable(value = "user", key = "'User:'+#id")
-    public AppLogEach addUser(String id, String name, int age) {
-        AppLogEach user = new AppLogEach();
-        users.add(user);
-        return user;
-    }
-
-    @Cacheable(value = "user", key = "'User:'+#id")
-    public AppLogEach getStudent(String id) {
-        System.out.println("not in redis cache");
-        for (AppLogEach user : users) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        }
-        return null;
-    }
+//    private Set<AppLogEach> users = new HashSet<AppLogEach>();
+//
+//
+//    @CachePut(value = "user", key = "'User:'+#user.id")
+//    public AppLogEach addUser(AppLogEach user) {
+//        users.add(user);
+//        return user;
+//    }
+//
+//    @Cacheable(value = "user", key = "'User:'+#id")
+//    public AppLogEach addUser(String id, String name, int age) {
+//        AppLogEach user = new AppLogEach();
+//        users.add(user);
+//        return user;
+//    }
+//
+//    @Cacheable(value = "user", key = "'User:'+#id")
+//    public AppLogEach getStudent(String id) {
+//        System.out.println("not in redis cache");
+//        for (AppLogEach user : users) {
+//            if (user.getId().equals(id)) {
+//                return user;
+//            }
+//        }
+//        return null;
+//    }
 
 //    @CachePut(value = "city", key = "'City:'+#city.id")
 //    public City addCity(City city) {

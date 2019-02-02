@@ -61,6 +61,19 @@ public class AppBlogService {
     private AppBlogTagRepository blogTagRepository;
 
 
+    public List<AppBlogCategory> findAllBlogCategorys(){
+        List<AppBlogCategory> all = appBlogCategoryRepository.findAll();
+        //状态为delete的不返回
+        List<AppBlogCategory> categories = new ArrayList<>();
+        if(all!=null){
+            for ( AppBlogCategory category:all ) {
+                if(Constants.SAVE.equals(category.getStatus())){
+                    categories.add(category);
+                }
+            }
+        }
+        return categories;
+    }
     public AppBlogCategory findCategoryByName(String name){
         AppBlogCategory category = appBlogCategoryRepository.findOneByName(name);
         return category;
@@ -105,12 +118,13 @@ public class AppBlogService {
 //        }
 
         @Transactional(readOnly = true)
-    public List<AppBlogDto> getAllBlogs(String userId, int page,int size){
+    public List<AppBlogDto> getAllBlogs(String userId, int page,int size,String categoryName){
         //如果userId为空，那么就搜索出，所以不是自己可见的
         //如果userId不为空，那么就搜索该用户下的全部
         Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, "createdDate");
         List<AppBlogDto> returnList = new ArrayList<>();
         Page<AppBlogBlog> allByCreateIdAndStatus=null;
+        //TODO categoryName获取到分类的ID，从分类ID，删选blog集
         if(StringUtils.isNotBlank(userId)){
             allByCreateIdAndStatus = blogRepository.findAllByCreateIdAndStatusOrderByCreatedDate(pageable,userId, Constants.SAVE);
         }else{

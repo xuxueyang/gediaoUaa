@@ -17,15 +17,15 @@ public class SpringBootRedisApplicationTests {
 
     @Autowired
     private RedisService service;
-
-    @Test
-    public void contextLoads() {
-        AppLogEach user=new AppLogEach();
-        user.setId(UUIDGenerator.getUUID());
-        service.addUser(user);
-
-        System.out.println("RedisTest执行完成，return {}"+service.getStudent(user.getId()).getId());
-    }
+//
+//    @Test
+//    public void contextLoads() {
+//        AppLogEach user=new AppLogEach();
+//        user.setId(UUIDGenerator.getUUID());
+//        service.addUser(user);
+//
+//        System.out.println("RedisTest执行完成，return {}"+service.getStudent(user.getId()).getId());
+//    }
 
 }
 //---------------------

@@ -192,10 +192,10 @@ application:
     version: 0.1
     client : qinglonghui
     project-type: QLH
-elasticsearch:
-    clusterName: local
-    clusterNodes: 193.112.17.169:9200
-    ssl: false
-    env: dev
-
-
+#elasticsearch:
+#    clusterName: local
+#    clusterNodes: 193.112.17.169:9200
+#    ssl: false
+#    env: dev
+#
+#

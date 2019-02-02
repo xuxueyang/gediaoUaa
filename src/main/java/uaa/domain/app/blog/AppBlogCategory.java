@@ -27,6 +27,10 @@ public class AppBlogCategory extends BaseEntity implements Serializable {
     private String imgUrl;
 
 
+    @Column(name = "INTRODUCE")
+    private String introduce;
+
+
     @Column(name = "STATUS")
     private String status;
 
@@ -128,5 +132,13 @@ public class AppBlogCategory extends BaseEntity implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 }

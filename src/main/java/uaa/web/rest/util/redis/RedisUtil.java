@@ -42,12 +42,12 @@ public class RedisUtil {
 
 		try {
 
-			JedisPoolConfig config = new JedisPoolConfig();
-			config.setMaxTotal(MAX_ACTIVE);
-			config.setMaxIdle(MAX_IDLE);
-			config.setMaxWaitMillis(MAX_WAIT);
-			config.setTestOnBorrow(TEST_ON_BORROW);
-			jedisPool = new JedisPool(config, ADDR, PORT, TIMEOUT, AUTH);
+//			JedisPoolConfig config = new JedisPoolConfig();
+//			config.setMaxTotal(MAX_ACTIVE);
+//			config.setMaxIdle(MAX_IDLE);
+//			config.setMaxWaitMillis(MAX_WAIT);
+//			config.setTestOnBorrow(TEST_ON_BORROW);
+//			jedisPool = new JedisPool(config, ADDR, PORT, TIMEOUT, AUTH);
 
 		} catch (Exception e) {
 
@@ -60,7 +60,7 @@ public class RedisUtil {
 	 * 获取Jedis实例
 	 */
 
-	public synchronized static Jedis getJedis() {
+	private synchronized static Jedis getJedis() {
 
 		try {
 

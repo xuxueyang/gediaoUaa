@@ -18,7 +18,7 @@ import java.util.Properties;
 /**
  * @author yuren
  */
-@Component
+//@Component
 public class Sender {
     private static final String CHARSET = "UTF-8";
 
