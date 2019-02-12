@@ -14,9 +14,9 @@ import util.UUIDGenerator;
 //@SpringBootTest
 public class SpringBootRedisApplicationTests {
 //    private Logger logger= LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private RedisService service;
+//
+//    @Autowired
+//    private RedisService service;
 //
 //    @Test
 //    public void contextLoads() {

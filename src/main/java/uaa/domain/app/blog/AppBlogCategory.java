@@ -52,7 +52,8 @@ public class AppBlogCategory extends BaseEntity implements Serializable {
     @Column(name = "COMMENT_COUNT")
     private int commentCount;
 
-
+    @Column(name = "CREATED_ID")
+    private String createdId;
 
     public String getName() {
         return name;
@@ -140,5 +141,13 @@ public class AppBlogCategory extends BaseEntity implements Serializable {
 
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
+    }
+
+    public String getCreatedId() {
+        return createdId;
+    }
+
+    public void setCreatedId(String createdId) {
+        this.createdId = createdId;
     }
 }

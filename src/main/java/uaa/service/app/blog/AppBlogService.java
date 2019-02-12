@@ -2,6 +2,7 @@ package uaa.service.app.blog;
 
 import org.apache.commons.lang.StringUtils;
 import org.neo4j.unsafe.impl.batchimport.cache.idmapping.string.Radix;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,14 +62,16 @@ public class AppBlogService {
     private AppBlogTagRepository blogTagRepository;
 
 
-    public List<AppBlogCategory> findAllBlogCategorys(){
+    public List<AppBlogCategoryDto> findAllBlogCategorys(){
         List<AppBlogCategory> all = appBlogCategoryRepository.findAll();
         //状态为delete的不返回
-        List<AppBlogCategory> categories = new ArrayList<>();
+        List<AppBlogCategoryDto> categories = new ArrayList<>();
         if(all!=null){
             for ( AppBlogCategory category:all ) {
                 if(Constants.SAVE.equals(category.getStatus())){
-                    categories.add(category);
+                    AppBlogCategoryDto target = new AppBlogCategoryDto();
+                    BeanUtils.copyProperties(category, target);
+                    categories.add(target);
                 }
             }
         }
@@ -369,7 +372,7 @@ public class AppBlogService {
         blogRepository.save(blog);
     }
 
-    public void createCategory(AppBlogCategoryDto dto) {
+    public void createCategory(AppBlogCategoryDto dto,String userId) {
         AppBlogCategory category = new AppBlogCategory();
 //        category.setId(UUIDGenerator.getUUID());
         category.setName(dto.getName());
@@ -377,8 +380,26 @@ public class AppBlogService {
         category.setCreatedDate(ZonedDateTime.now());
         category.setUpdatedDate(ZonedDateTime.now());
         category.setStatus(Constants.SAVE);
+        category.setCreatedId(userId);
+        String nickName = uaaUserService.findUserById(userId).getNickName();
+        if(nickName==null)
+            nickName = uaaUserService.findUserById(userId).getName();
+        category.setCreatedNickName(nickName);
         appBlogCategoryRepository.save(category);
 
+    }
+
+    public AppBlogCategory getCategory(String id) {
+        AppBlogCategory one = appBlogCategoryRepository.findOne(id);
+        if(one!=null&&Constants.SAVE.equals(one.getStatus()))
+            return one;
+        return null;
+    }
+
+    public void deleteCategory(AppBlogCategory category) {
+//        appBlogCategoryRepository.delete(category);
+        category.setStatus(Constants.DELETE);
+        appBlogCategoryRepository.save(category);
     }
     //TODO 1。找出全部分类 2。按分类找博客 3。博客设置分类
 }

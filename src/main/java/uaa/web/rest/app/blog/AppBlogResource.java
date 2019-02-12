@@ -44,21 +44,32 @@ public class AppBlogResource extends BaseResource {
 //        webDataBinder.addValidators(new BlogCreateValid());
 //    }
     @PutMapping("/category")
+    @ApiOperation(value = "创建博客分类", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客分类")
     public ResponseEntity createBlogCategory(@RequestBody AppBlogCategoryDto dto){
         try{
             //博客的名字不允许重复！
             if(StringUtils.isBlank(dto.getName()))
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            if(StringUtils.isBlank(dto.getToken()))
+                return prepareReturnResult(ReturnCode.ERROR_FIELD_EMPTY,null);
+            UaaToken userByToken = null;
+            if(StringUtils.isNotBlank(dto.getToken())){
+                userByToken = uaaLoginService.getUserByToken(dto.getToken());
+            }
+            if(userByToken==null)
+                return prepareReturnResult(ReturnCode.ERROR_USER_HAS_LOGOUT,null);
+
             AppBlogCategory categoryByName = appBlogService.findCategoryByName(dto.getName());
             if(categoryByName!=null)
                 return prepareReturnResult(ReturnCode.ERROR_FIELD_EXIST_CODE,null);
-            appBlogService.createCategory(dto);
+            appBlogService.createCategory(dto,userByToken.getCreatedid());
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
         }
     }
     @GetMapping("/categorys")
+    @ApiOperation(value = "获取博客分类", httpMethod = "GET", response = ResponseEntity.class, notes = "获取博客分类")
     public ResponseEntity getBlogCategory(){
         try{
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,appBlogService.findAllBlogCategorys());
@@ -66,6 +77,30 @@ public class AppBlogResource extends BaseResource {
             return prepareReturnResult(ReturnCode.ERROR_CREATE,null);
         }
     }
+    @DeleteMapping("/category/{id}")
+    @ApiOperation(value = "删除分类", httpMethod = "DELETE", response = ResponseEntity.class, notes = "删除分类")
+    public ResponseEntity deleteCategory(@PathVariable("id") String id,
+                                         @RequestParam(value = "token",required = false) String token){
+        try {
+            UaaToken userByToken = null;
+            if(StringUtils.isNotBlank(token)){
+                userByToken = uaaLoginService.getUserByToken(token);
+            }
+            //必须要创建者才能删除
+            AppBlogCategory category =  appBlogService.getCategory(id);
+            if(category.getCreatedId()!=null){
+                if(userByToken.getCreatedid().equals(category.getCreatedId())){
+                    //才能删除
+                    appBlogService.deleteCategory(category);
+                    return prepareReturnResult(ReturnCode.DELETE_SUCCESS,null);
+                }
+            }
+            return prepareReturnResult(ReturnCode.ERROR_HAVE_NO_PERMISSION_OPERATION,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_DELETE,null);
+        }
+    }
+
     @PutMapping("/blog")
     @ApiOperation(value = "创建博客", httpMethod = "PUT", response = ResponseEntity.class, notes = "创建博客")
     public ResponseEntity createBlog( @RequestBody AppBlogCreateDto dto, BindingResult bindingResult){
