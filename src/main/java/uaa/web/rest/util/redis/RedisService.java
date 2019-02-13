@@ -2,7 +2,7 @@ package uaa.web.rest.util.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import uaa.domain.app.log.AppLogEach;
 

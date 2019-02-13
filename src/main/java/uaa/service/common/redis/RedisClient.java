@@ -2,7 +2,7 @@ package uaa.service.common.redis;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.*;
+//import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import uaa.service.common.redis.dto.*;
 import com.alibaba.fastjson.JSON;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@Component
+//@Component
 public class RedisClient {
 //    @Autowired
 //    private HashOperations<String, String, String> hashOperations;

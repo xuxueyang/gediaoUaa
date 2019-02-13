@@ -1,6 +1,6 @@
 package uaa.web.rest.util.redis;
 
-import redis.clients.jedis.Jedis;
+//import redis.clients.jedis.Jedis;
 
 public class Redis {
 //    public static void main(String[] args){
