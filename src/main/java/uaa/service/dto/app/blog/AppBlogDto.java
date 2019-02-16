@@ -49,6 +49,9 @@ public class AppBlogDto {
     @ApiModelProperty(name="预览的内容")
     private String previewContent;
 
+    @ApiModelProperty(name="分类ID")
+    private String categoryId;
+
     public String getAuthorName() {
         return authorName;
     }
@@ -151,5 +154,13 @@ public class AppBlogDto {
 
     public void setPreviewContent(String previewContent) {
         this.previewContent = previewContent;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 }

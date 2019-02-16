@@ -8,6 +8,8 @@ import java.time.ZonedDateTime;
  * Created by xuxy on 2019/1/31.
  */
 public class AppBlogCategoryDto {
+
+    @ApiModelProperty(name = "ID")
     private String id;
     @ApiModelProperty(name = "分类名")
     private String name;
@@ -29,6 +31,7 @@ public class AppBlogCategoryDto {
     private int collectCount;
     private int commentCount;
     private String token;
+    private String introduce;
 
     public String getCreatedNickName() {
         return createdNickName;
@@ -126,5 +129,13 @@ public class AppBlogCategoryDto {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 }

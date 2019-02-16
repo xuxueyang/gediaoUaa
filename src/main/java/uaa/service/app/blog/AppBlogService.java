@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
@@ -30,6 +31,10 @@ import uaa.service.dto.upload.UploadResultDTO;
 import util.UUIDGenerator;
 import util.Validators;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -71,6 +76,7 @@ public class AppBlogService {
                 if(Constants.SAVE.equals(category.getStatus())){
                     AppBlogCategoryDto target = new AppBlogCategoryDto();
                     BeanUtils.copyProperties(category, target);
+                    target.setId(""+category.getId());
                     categories.add(target);
                 }
             }
@@ -120,19 +126,45 @@ public class AppBlogService {
 //            return criteriaBuilder.and(list.toArray(p));
 //        }
 
-        @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<AppBlogDto> getAllBlogs(String userId, int page,int size,String categoryName){
         //如果userId为空，那么就搜索出，所以不是自己可见的
         //如果userId不为空，那么就搜索该用户下的全部
         Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, "createdDate");
         List<AppBlogDto> returnList = new ArrayList<>();
         Page<AppBlogBlog> allByCreateIdAndStatus=null;
-        //TODO categoryName获取到分类的ID，从分类ID，删选blog集
-        if(StringUtils.isNotBlank(userId)){
-            allByCreateIdAndStatus = blogRepository.findAllByCreateIdAndStatusOrderByCreatedDate(pageable,userId, Constants.SAVE);
-        }else{
-            allByCreateIdAndStatus = blogRepository.findAllByStatusAndPermissionTypeIsNotOrderByCreatedDate(pageable,Constants.SAVE, "OnlyOne");
+        // categoryName获取到分类的ID，从分类ID，删选blog集
+        String categoryId= "";
+        if(StringUtils.isNotBlank(categoryName)&&!"默认".equals(categoryName)){
+            AppBlogCategory category = appBlogCategoryRepository.findOneByName(categoryName);
+            if(category!=null){
+                categoryId = ""+category.getId();
+            }
         }
+        String finalCategoryId = categoryId;
+        allByCreateIdAndStatus = blogRepository.findAll(new Specification<AppBlogBlog>() {
+            @Override
+            public Predicate toPredicate(Root<AppBlogBlog> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(criteriaBuilder.equal(root.get("status").as(String.class), Constants.SAVE));
+                if(StringUtils.isNotBlank(finalCategoryId)){
+                    predicates.add(criteriaBuilder.equal(root.get("categoryId").as(String.class), finalCategoryId));
+
+                }
+                if(StringUtils.isBlank(userId)){
+                    predicates.add(criteriaBuilder.notEqual(root.get("permissionType").as(String.class), PERMISSION_TYPE.OnlyOne.name()));
+
+                }
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        },pageable);
+
+//        if(StringUtils.isNotBlank(userId)){
+//            allByCreateIdAndStatus = blogRepository.findAllByCreateIdAndStatusOrderByCreatedDate(pageable,userId, Constants.SAVE);
+//        }else{
+//            allByCreateIdAndStatus = blogRepository.findAllByStatusAndPermissionTypeIsNotOrderByCreatedDate(pageable,Constants.SAVE, PERMISSION_TYPE.OnlyOne.name());
+//        }
         if(allByCreateIdAndStatus!=null&&allByCreateIdAndStatus.hasContent()){
             Iterator<AppBlogBlog> iterator = allByCreateIdAndStatus.iterator();
             while (iterator.hasNext()){
@@ -148,6 +180,7 @@ public class AppBlogService {
                 dto.setTitle(one.getTitle());
                 dto.setPermissionType(one.getPermissionType());
                 dto.setUpdatedDate(one.getUpdatedDate());
+                dto.setCategoryId(one.getCategoryId());
                 String createId = one.getCreateId();
                 UaaUser userById = uaaUserService.findUserById(createId);
                 dto.setAuthorId(userById==null?"":createId);
@@ -273,6 +306,7 @@ public class AppBlogService {
             String createId = one.getCreateId();
             UaaUser userById = uaaUserService.findUserById(createId);
             dto.setAuthorId(userById==null?"":createId);
+            dto.setCategoryId(one.getCategoryId());
             dto.setAuthorName(userById==null?"匿名":userById.getName());
             //得到封面图片文件
             if(StringUtils.isNotBlank(one.getTitleImageFileId())){
@@ -323,6 +357,7 @@ public class AppBlogService {
             dto.setPermissionVerify(dto.getPermissionVerify());
         }
         blog.setUpdatedDate(ZonedDateTime.now());
+        blog.setCategoryId(dto.getCategoryId());
         blogRepository.save(blog);
     }
     private String changeContentImg(String content) {
@@ -361,6 +396,12 @@ public class AppBlogService {
             return false;
         }
         return true;
+    }
+
+    public void updateBlogCategory(AppBlogBlog blog, AppBlogUpdateCategoryDto dto) {
+        blog.setCategoryId(dto.getCategoryId());
+        blog.setUpdatedDate(ZonedDateTime.now());
+        blogRepository.save(blog);
     }
 
     public void updateBlogPermission(AppBlogBlog blog, AppBlogUpdatePermissionDto dto) {
