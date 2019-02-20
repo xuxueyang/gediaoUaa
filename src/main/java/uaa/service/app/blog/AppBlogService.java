@@ -153,7 +153,9 @@ public class AppBlogService {
                 }
                 if(StringUtils.isBlank(userId)){
                     predicates.add(criteriaBuilder.notEqual(root.get("permissionType").as(String.class), PERMISSION_TYPE.OnlyOne.name()));
-
+                }else{
+                    // 只会查询创建者为userId的
+                    predicates.add(criteriaBuilder.notEqual(root.get("createId").as(String.class), userId));
                 }
 
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
