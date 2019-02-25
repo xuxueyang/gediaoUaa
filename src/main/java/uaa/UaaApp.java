@@ -1,6 +1,7 @@
 package uaa;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.springframework.cache.annotation.EnableCaching;
 import uaa.config.ApplicationProperties;
 import uaa.config.DefaultProfileUtil;
 
@@ -25,6 +26,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 
+//@EnableCaching
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
