@@ -166,4 +166,11 @@ public final class Constants {
 //        getPermissionType();
 //    }
 
+    //格调参数
+    public static String gediaoAppid="wx4c875cdcb7b1e65b";
+    public static String gediaoSecret="0d76944feaf90c442b60cf1568f9fb9c";
+
+    public static final String wechatUrl="https://api.weixin.qq.com/sns/jscode2session?";
+
+
 }
