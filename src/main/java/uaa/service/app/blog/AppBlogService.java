@@ -187,37 +187,37 @@ public class AppBlogService {
                 UaaUser userById = uaaUserService.findUserById(createId);
                 dto.setAuthorId(userById==null?"":createId);
                 dto.setAuthorName(userById==null?"匿名":userById.getName());
-                //得到封面图片文件
-                if(StringUtils.isNotBlank(one.getTitleImageFileId())){
-                    UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
-                    if(titleImage!=null){
-                        UploadResultDTO uploadResult = new UploadResultDTO();
-                        uploadResult.setId(titleImage.getId());
-                        uploadResult.setUploadFileName(titleImage.getName());
-                        uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
-                        uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
-                        dto.setTitleImg(uploadResult);
-                    }
-                }
+                //得到封面图片文件 TODO 为了优化速度，忽视
+//                if(StringUtils.isNotBlank(one.getTitleImageFileId())){
+//                    UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
+//                    if(titleImage!=null){
+//                        UploadResultDTO uploadResult = new UploadResultDTO();
+//                        uploadResult.setId(titleImage.getId());
+//                        uploadResult.setUploadFileName(titleImage.getName());
+//                        uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+//                        uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
+//                        dto.setTitleImg(uploadResult);
+//                    }
+//                }
 
 
-                //查看标签
-                List<AppBlogTag> allByBaseIdAndStatus = blogTagRepository.findAllByBaseIdAndStatus(one.getId(), Constants.SAVE);
-                List<AppLogTagDTO> tagDTOList = new ArrayList<>();
-                if(allByBaseIdAndStatus!=null&&allByBaseIdAndStatus.size()>0){
-                    for(AppBlogTag blogTag:allByBaseIdAndStatus){
-                        AppLogTag tag = tagRepository.findOne(blogTag.getTagId());
-                        if(tag!=null){
-                            AppLogTagDTO tagDTO = new AppLogTagDTO();
-                            tagDTO.setId(tag.getId());
-                            tagDTO.setName(tag.getName());
-                            tagDTO.setGroup(tag.getGroup());
-                            tagDTO.setType(tag.getType());
-                            tagDTOList.add(tagDTO);
-                        }
-                    }
-                }
-                dto.setTagList(tagDTOList);
+                //查看标签 TODO 为了优化速度，忽视
+//                List<AppBlogTag> allByBaseIdAndStatus = blogTagRepository.findAllByBaseIdAndStatus(one.getId(), Constants.SAVE);
+//                List<AppLogTagDTO> tagDTOList = new ArrayList<>();
+//                if(allByBaseIdAndStatus!=null&&allByBaseIdAndStatus.size()>0){
+//                    for(AppBlogTag blogTag:allByBaseIdAndStatus){
+//                        AppLogTag tag = tagRepository.findOne(blogTag.getTagId());
+//                        if(tag!=null){
+//                            AppLogTagDTO tagDTO = new AppLogTagDTO();
+//                            tagDTO.setId(tag.getId());
+//                            tagDTO.setName(tag.getName());
+//                            tagDTO.setGroup(tag.getGroup());
+//                            tagDTO.setType(tag.getType());
+//                            tagDTOList.add(tagDTO);
+//                        }
+//                    }
+//                }
+//                dto.setTagList(tagDTOList);
                 returnList.add(dto);
             }
         }
