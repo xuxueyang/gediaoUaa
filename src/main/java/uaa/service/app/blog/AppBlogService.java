@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
@@ -50,6 +51,11 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 public class AppBlogService {
+
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private UaaFileRepository fileRepository;
 
@@ -132,7 +138,9 @@ public class AppBlogService {
         //如果userId不为空，那么就搜索该用户下的全部
         Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, "createdDate");
         List<AppBlogDto> returnList = new ArrayList<>();
-        Page<AppBlogBlog> allByCreateIdAndStatus=null;
+//        Page<AppBlogBlog> allByCreateIdAndStatus=null;
+//        List<AppBlogBlog> allByCreateIdAndStatus=null;
+
         // categoryName获取到分类的ID，从分类ID，删选blog集
         String categoryId= "";
         if(StringUtils.isNotBlank(categoryName)&&!"默认".equals(categoryName)){
@@ -142,63 +150,82 @@ public class AppBlogService {
             }
         }
         String finalCategoryId = categoryId;
-        allByCreateIdAndStatus = blogRepository.findAll(new Specification<AppBlogBlog>() {
-            @Override
-            public Predicate toPredicate(Root<AppBlogBlog> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> predicates = new ArrayList<>();
-                predicates.add(criteriaBuilder.equal(root.get("status").as(String.class), Constants.SAVE));
-                if(StringUtils.isNotBlank(finalCategoryId)){
-                    predicates.add(criteriaBuilder.equal(root.get("categoryId").as(String.class), finalCategoryId));
+//        allByCreateIdAndStatus = blogRepository.findAll(new Specification<AppBlogBlog>() {
+//            @Override
+//            public Predicate toPredicate(Root<AppBlogBlog> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+//                List<Predicate> predicates = new ArrayList<>();
+//                predicates.add(criteriaBuilder.equal(root.get("status").as(String.class), Constants.SAVE));
+//                if(StringUtils.isNotBlank(finalCategoryId)){
+//                    predicates.add(criteriaBuilder.equal(root.get("categoryId").as(String.class), finalCategoryId));
+//
+//                }
+//                if(StringUtils.isBlank(userId)){
+//                    predicates.add(criteriaBuilder.notEqual(root.get("permissionType").as(String.class), PERMISSION_TYPE.OnlyOne.name()));
+//                }else{
+//                    // 只会查询创建者为userId的
+//                    predicates.add(criteriaBuilder.equal(root.get("createId").as(String.class), userId));
+//                }
+//
+//                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+//            }
+//        },pageable);
 
-                }
-                if(StringUtils.isBlank(userId)){
-                    predicates.add(criteriaBuilder.notEqual(root.get("permissionType").as(String.class), PERMISSION_TYPE.OnlyOne.name()));
-                }else{
-                    // 只会查询创建者为userId的
-                    predicates.add(criteriaBuilder.equal(root.get("createId").as(String.class), userId));
-                }
+//        blogRepository.findAllByCreateIdAndStatusOrderByCreatedDate(pageable,userId,Constants.SAVE)
 
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-            }
-        },pageable);
+        StringBuilder sql = new StringBuilder("select y.id, y.CATEGORY_ID,y.CREATED_DATE,y.CREATE_ID,y.PERMISSION_TYPE,y.PERMISSION_VERIFY,"
+            +"y.READ_COUNT,y.SOURCE_TYPE,y.`STATUS`,y.TITLE,y.TITLE_IMAGE_FILE_ID,y.UPDATED_DATE from app_blog_blog y "
+            + "where y.`STATUS` = '"+Constants.SAVE+"' ");
+        if(StringUtils.isNotBlank(finalCategoryId)) {
+            sql.append(" and y.CATEGORY_ID='" + finalCategoryId+ "' ");
+        }
+        if(StringUtils.isBlank(userId)) {
+            sql.append(" and y.PERMISSION_TYPE!='" + PERMISSION_TYPE.OnlyOne.name()+ "' ");
+        }else {
+            sql.append(" and y.CREATE_ID!='" + userId+ "' ");
+        }
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sql.toString());
 
-//        if(StringUtils.isNotBlank(userId)){
-//            allByCreateIdAndStatus = blogRepository.findAllByCreateIdAndStatusOrderByCreatedDate(pageable,userId, Constants.SAVE);
-//        }else{
-//            allByCreateIdAndStatus = blogRepository.findAllByStatusAndPermissionTypeIsNotOrderByCreatedDate(pageable,Constants.SAVE, PERMISSION_TYPE.OnlyOne.name());
-//        }
-        if(allByCreateIdAndStatus!=null&&allByCreateIdAndStatus.hasContent()){
-            Iterator<AppBlogBlog> iterator = allByCreateIdAndStatus.iterator();
-            while (iterator.hasNext()){
-                AppBlogBlog one =  iterator.next();
+
+//        if(allByCreateIdAndStatus!=null&&allByCreateIdAndStatus.hasContent()){
+//                Iterator<AppBlogBlog> iterator = allByCreateIdAndStatus.iterator();
+        if(result!=null&&result.size()>0)
+            for(Map<String,Object> one: result){
+//            while (iterator.hasNext()){
+//                AppBlogBlog one =  iterator.next();
                 AppBlogDto dto=new AppBlogDto();
                 //获取全部的时候内容 提取
 //                dto.setContent(one.getContent());
-                dto.setPreviewContent(getPreviewContent(one.getContent()));
+//                dto.setPreviewContent(getPreviewContent(one.getContent()));
 //                dto.setPreviewContent(one.getContent());
-                dto.setId(one.getId());
-                dto.setReadCount(one.getReadCount());
-                dto.setCreatedDate(one.getCreatedDate());
-                dto.setTitle(one.getTitle());
-                dto.setPermissionType(one.getPermissionType());
-                dto.setUpdatedDate(one.getUpdatedDate());
-                dto.setCategoryId(one.getCategoryId());
-                String createId = one.getCreateId();
-                UaaUser userById = uaaUserService.findUserById(createId);
-                dto.setAuthorId(userById==null?"":createId);
-                dto.setAuthorName(userById==null?"匿名":userById.getName());
+                dto.setId(one.get("id").toString());
+                dto.setReadCount(one.get("readCount")==null?0:Integer.parseInt(one.get("readCount").toString()));
+                dto.setCreatedDate(one.get("createdDate")==null?null:(ZonedDateTime)(one.get("createdDate")));
+                dto.setTitle(one.get("title")==null?"默认标题":(one.get("title").toString()));
+                dto.setPermissionType(one.get("permissionType")==null?"默认权限":(one.get("permissionType").toString()));
+                dto.setUpdatedDate(one.get("updatedDate")==null?null:(ZonedDateTime)(one.get("updatedDate")));
+
+                dto.setCategoryId(one.get("categoryId")==null?"":one.get("categoryId").toString());
+
+//                TODO 为了优化速度，忽视
+                if(one.get("createId")!=null) {
+                    String createId = one.get("createId").toString();
+                    UaaUser userById = uaaUserService.findUserById(createId);
+                    dto.setAuthorId(userById==null?"":createId);
+                    dto.setAuthorName(userById==null?"匿名":userById.getName());
+                }
+
                 //得到封面图片文件 TODO 为了优化速度，忽视
-//                if(StringUtils.isNotBlank(one.getTitleImageFileId())){
-//                    UaaFile titleImage = fileRepository.findOne(one.getTitleImageFileId());
-//                    if(titleImage!=null){
-//                        UploadResultDTO uploadResult = new UploadResultDTO();
-//                        uploadResult.setId(titleImage.getId());
-//                        uploadResult.setUploadFileName(titleImage.getName());
-//                        uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
-//                        uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
-//                        dto.setTitleImg(uploadResult);
-//                    }
-//                }
+                if(one.get("titleImageFileId")!=null&&StringUtils.isNotBlank(one.get("titleImageFileId").toString())){
+                    UaaFile titleImage = fileRepository.findOne(one.get("titleImageFileId").toString());
+                    if(titleImage!=null){
+                        UploadResultDTO uploadResult = new UploadResultDTO();
+                        uploadResult.setId(titleImage.getId());
+                        uploadResult.setUploadFileName(titleImage.getName());
+                        uploadResult.setName(titleImage.getRelFilePath().substring(1,titleImage.getRelFilePath().length()));
+                        uploadResult.setPath(titleImage.getRootFilePath()+titleImage.getRelFilePath());
+                        dto.setTitleImg(uploadResult);
+                    }
+                }
 
 
                 //查看标签 TODO 为了优化速度，忽视
@@ -219,7 +246,7 @@ public class AppBlogService {
 //                }
 //                dto.setTagList(tagDTOList);
                 returnList.add(dto);
-            }
+//            }
         }
         return returnList;
     }
@@ -231,42 +258,42 @@ public class AppBlogService {
      */
     private static String getPreviewContent(String content) {
 
-//        StringBuffer returnStr = new StringBuffer();
-//        String[] split = content.split("</h2>");
-//        if(split[0].startsWith("<h2>")){
-//            split[0] = split[0].substring("<h2>".length(), split[0].length() - 1);
-//        }
-//        if(split.length>1){
-//            String[] splitP = split[1].split("</p>");
-//            int k = splitP.length;
-//            while (returnStr.length()<=Constants.PREVIEW_LENGTH||k>0){
-//                String tmp = splitP[splitP.length-k];
-//                if(tmp.startsWith("<p>")){
-//                    tmp = tmp.substring("<p>".length(), tmp.length() - 1);
-//                }
-//                if(tmp.contains("<img")){
-//                    String[] split1 = tmp.split("<img.*>");
-//                    StringBuffer tmpS = new StringBuffer();
-//                    for(int i=0;i<split1.length;i++){
-//                        tmpS.append(split1[i]);
-//                    }
-//                    tmp = tmpS.toString();
-//                }
-//                returnStr.append("\n"+tmp);
-//                k--;
-//            }
-//        }else{
-//            returnStr.append(split[0]);
-//        }
-//        return returnStr.toString();
-        return "";
+        StringBuffer returnStr = new StringBuffer();
+        String[] split = content.split("</h2>");
+        if(split[0].startsWith("<h2>")){
+            split[0] = split[0].substring("<h2>".length(), split[0].length() - 1);
+        }
+        if(split.length>1){
+            String[] splitP = split[1].split("</p>");
+            int k = splitP.length;
+            while (returnStr.length()<=Constants.PREVIEW_LENGTH||k>0){
+                String tmp = splitP[splitP.length-k];
+                if(tmp.startsWith("<p>")){
+                    tmp = tmp.substring("<p>".length(), tmp.length() - 1);
+                }
+                if(tmp.contains("<img")){
+                    String[] split1 = tmp.split("<img.*>");
+                    StringBuffer tmpS = new StringBuffer();
+                    for(int i=0;i<split1.length;i++){
+                        tmpS.append(split1[i]);
+                    }
+                    tmp = tmpS.toString();
+                }
+                returnStr.append("\n"+tmp);
+                k--;
+            }
+        }else{
+            returnStr.append(split[0]);
+        }
+        return returnStr.toString();
+//        return "";
     }
 
 //    public static void main(String[] args){
 //        String tmp = "<h2>这是博客的内容</h2><p>“为什么你要这样？”某处旅馆，一个人声音有点颤抖。</p><p>“...”另一个人背对着他，低头吸着烟，沉默不语。</p><p>“为什么你要这样？”</p>";
 //        getPreviewContent(tmp);
 //    }
-    public AppBlogDto getBlog(String id,String userId,String verify){
+    public AppBlogDto getBlog(String id,String userId,String verify,String source){
         AppBlogDto dto = null;
         AppBlogBlog one = blogRepository.getOne(id);
         if(one!=null){
@@ -298,7 +325,17 @@ public class AppBlogService {
                 blogRepository.save(one);
             }
             dto=new AppBlogDto();
-            dto.setContent(one.getContent());
+            if("WX".equals(source)){
+                // TODO 如果是wx的，那么去掉图片的（做正则替换)
+                // <img src=
+                // >
+                String regex = "<img src=[^>]*>";
+                String content = one.getContent();
+                dto.setContent(content.replaceAll(regex,"<div><b>***很抱歉,这张图片在微信无法显示!***</b></div>"));
+
+            }else{
+                dto.setContent(one.getContent());
+            }
             dto.setReadCount(one.getReadCount());
             dto.setTitle(one.getTitle());
             dto.setId(one.getId());

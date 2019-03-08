@@ -236,13 +236,14 @@ public class AppBlogResource extends BaseResource {
     @ApiOperation(value = "获取博客", httpMethod = "GET", response = ResponseEntity.class, notes = "获取博客")
     public ResponseEntity getBlog(@PathVariable("id") String id,
                                   @RequestParam(value = "token",required = false) String token,
+                                  @RequestParam(value = "source",required = false) String source,
                                   @RequestParam(value = "verify",required = false) String verify){
         try {
             UaaToken userByToken = null;
             if(StringUtils.isNotBlank(token)){
                 userByToken = uaaLoginService.getUserByToken(token);
             }
-            AppBlogDto blog = appBlogService.getBlog(id,userByToken==null?null:userByToken.getCreatedid(),verify);
+            AppBlogDto blog = appBlogService.getBlog(id,userByToken==null?null:userByToken.getCreatedid(),verify,source);
             //判断权限
             if(blog==null){
                 return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,null);
