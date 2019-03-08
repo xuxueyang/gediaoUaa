@@ -181,7 +181,7 @@ public class AppBlogService {
         if(StringUtils.isBlank(userId)) {
             sql.append(" and y.PERMISSION_TYPE!='" + PERMISSION_TYPE.OnlyOne.name()+ "' ");
         }else {
-            sql.append(" and y.CREATE_ID!='" + userId+ "' ");
+            sql.append(" and y.CREATE_ID='" + userId+ "' ");
         }
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql.toString());
 
