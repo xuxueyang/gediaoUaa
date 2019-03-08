@@ -197,6 +197,7 @@ public class AppBlogService {
 //                dto.setContent(one.getContent());
 //                dto.setPreviewContent(getPreviewContent(one.getContent()));
 //                dto.setPreviewContent(one.getContent());
+                dto.setPreviewContent("");
                 dto.setId(one.get("id").toString());
                 dto.setReadCount(one.get("readCount")==null?0:Integer.parseInt(one.get("readCount").toString()));
                 dto.setCreatedDate(one.get("createdDate")==null?null:(ZonedDateTime)(one.get("createdDate")));
