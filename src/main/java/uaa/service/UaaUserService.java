@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
+import uaa.domain.uaa.UaaAdvice;
 import uaa.domain.uaa.UaaUser;
+import uaa.repository.uaa.UaaAdviceRepository;
 import uaa.repository.uaa.UaaUserRepository;
+import uaa.service.dto.CreateAdviceDTO;
 import uaa.service.dto.CreateUaaUserDTO;
 import uaa.service.dto.login.UserInfo;
 import uaa.service.login.UaaLoginService;
@@ -19,10 +22,19 @@ import java.util.List;
 public class UaaUserService {
 
     @Autowired
+    private UaaAdviceRepository adviceRepository;
+    @Autowired
     private UaaUserRepository uaaUserRepository;
     @Autowired
     private UaaLoginService uaaLoginService;
 
+    public void createAdvice(CreateAdviceDTO createAdviceDTO){
+        UaaAdvice advice = new UaaAdvice();
+        advice.setContent(createAdviceDTO.getContent());
+        advice.setContract(createAdviceDTO.getContract());
+        advice.setId(UUIDGenerator.getUUID());
+        adviceRepository.save(advice);
+    }
     public UaaUser findUserByName(String name){
         UaaUser oneByName = uaaUserRepository.findOneByName(name);
         if(oneByName==null||Constants.USER_STATUS_DELETE.equals(oneByName.getStatus()))

@@ -2,6 +2,7 @@ package uaa.web.rest.login;
 
 import uaa.config.Constants;
 import uaa.domain.uaa.UaaTenantCode;
+import uaa.service.dto.CreateAdviceDTO;
 import uaa.web.rest.BaseResource;
 import core.ReturnCode;
 import io.swagger.annotations.Api;
@@ -47,6 +48,17 @@ public class UaaLoginResource extends BaseResource{
 
     @Autowired
     private UaaUserService uaaUserService;
+
+    @PostMapping("/advice")
+    @ApiOperation(value = "用户建议",httpMethod = "POST",response = ResponseEntity.class,notes = "用户建议")
+    public ResponseEntity createAdvice(@RequestBody CreateAdviceDTO createAdviceDTO) {
+        try {
+            uaaUserService.createAdvice(createAdviceDTO);
+            return prepareReturnResult(ReturnCode.CREATE_SUCCESS, null);
+        } catch (Exception e) {
+            return prepareReturnResult(ReturnCode.ERROR_CREATE, null);
+        }
+    }
 
     @GetMapping("/login/graph")
     @ApiOperation(value = "获取验证码", httpMethod = "GET", response = ResponseEntity.class, notes = "获取验证码")

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.UaaUserService;
+import uaa.service.dto.CreateAdviceDTO;
 import uaa.service.dto.CreateUaaUserDTO;
 import uaa.service.dto.login.UserInfo;
 import uaa.service.login.UaaLoginService;
@@ -27,6 +28,7 @@ public class UaaUserResource extends BaseResource {
 
     @Autowired
     private UaaLoginService uaaLoginService;
+
 
 
     @PostMapping("/user/reg")
