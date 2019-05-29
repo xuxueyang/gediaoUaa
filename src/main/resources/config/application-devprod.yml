@@ -188,9 +188,9 @@ application:
             subject:
                 create: 创建了用户
         file-service:
-            ip-addr: 193.112.161.157
+            ip-addr: 118.25.103.215
             username: root
-            password: Xuxueyang1
+            password: xxy520520xxy
             upload-server-file-root-path: /usr/local/FILEUPLOAD
             upload-server-image-root-path: /usr/local/tomcat/webapps/resource/images
 #            http://193.112.161.157:8080/resource/images/' + imageName

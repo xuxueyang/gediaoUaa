@@ -242,7 +242,7 @@ public class UaaFileService {
         }
         UaaFile uaaFile = null;
         if(md5!=null){
-            List<UaaFile> list = fileRepository.findAllByMd5(md5);
+            List<UaaFile> list = fileRepository.findAllByMd5AndStatusNot(md5,"D");
             if(list!=null&list.size()>0)
                 uaaFile =list.get(0);
         }
@@ -382,7 +382,7 @@ public class UaaFileService {
             fileRepository.save(uaaFile);
         }else{
             //找出一样的MD5的
-            List<UaaFile> allByMd5 = fileRepository.findAllByMd5(uaaFile.getMd5());
+            List<UaaFile> allByMd5 = fileRepository.findAllByMd5AndStatusNot(uaaFile.getMd5(),"D");
             for(UaaFile file:allByMd5){
                 if(file.getDownNum()==null)
                     file.setDownNum("0");

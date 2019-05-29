@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public interface UaaFileRepository extends JpaRepository<UaaFile, String>,JpaSpecificationExecutor<UaaFile> {
-    List<UaaFile> findAllByMd5(String md5);
+    List<UaaFile> findAllByMd5AndStatusNot(String md5,String status);
 //    List<UaaFile> findAllByName(String name);
     List<UaaFile> findAllByStatusNotAndNameLike(String status,String name);
 }

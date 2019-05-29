@@ -43,12 +43,13 @@ spring:
 #        url: jdbc:mysql://193.112.161.157:3306/qlh-uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
 #        url: jdbc:mysql://193.112.17.169:3306/gediao?useUnicode=true&characterEncoding=utf8&useSSL=false
 #        url: jdbc:mysql://193.112.17.169:3306/gediao?useUnicode=true&characterEncoding=utf8&useSSL=false
+#        url: jdbc:mysql://118.25.103.215:3306/gediao?useUnicode=true&characterEncoding=utf8&useSSL=true
         url: jdbc:mysql://localhost:3306/gediao?useUnicode=true&characterEncoding=utf8&useSSL=false
 
 #        username: root
         username: root
 #        password: Xxy@tx.2018!
-#        password: XXY@tx.2018!
+#        password: xxy520520xxy
         password:
         hikari:
             data-source-properties:
@@ -189,9 +190,9 @@ application:
             subject:
                 create: 创建了用户
         file-service:
-            ip-addr: 193.112.161.157
+            ip-addr: 118.25.103.215
             username: root
-            password: Xuxueyang1
+            password: xxy520520xxy
             upload-server-file-root-path: /usr/local/FILEUPLOAD
             upload-server-image-root-path: /usr/local/tomcat/webapps/resource/images
 #            http://193.112.161.157:8080/resource/images/' + imageName

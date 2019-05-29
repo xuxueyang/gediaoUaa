@@ -31,45 +31,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-//import uaa.web.rest.BaseResource;
-//import core.ReturnCode;
-//import fastdfs.ClientGlobal;
-//import fastdfs.client.UploadFile;
-//import fastdfs.client.UploadManager;
-//import io.swagger.annotations.Api;
-//import io.swagger.annotations.ApiOperation;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.ResponseBody;
-//import org.springframework.web.bind.annotation.RestController;
-//import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.multipart.MultipartHttpServletRequest;
-//
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import java.util.ArrayList;
-//import java.util.Iterator;
-//import java.util.List;
-//
-//import io.swagger.annotations.Api;
-//import io.swagger.annotations.ApiOperation;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.ResponseBody;
-//import org.springframework.web.bind.annotation.RestController;
-//import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.multipart.MultipartHttpServletRequest;
-//import uaa.security.SecurityUtils;
-//import uaa.service.dto.upload.UploadResultDTO;
-//import util.Validators;
-//
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import java.util.ArrayList;
-//import java.util.Iterator;
-//import java.util.List;
 //
 ///**
 // * @author yuren
@@ -91,13 +52,20 @@ public class UaaFileResource extends BaseResource {
      */
     @ResponseBody
     @RequestMapping("/img")
+//    public ResponseEntity img(HttpServletRequest request,
+//                              @RequestParam(value = "token",required = true) String token,
+//                              @RequestParam(value = "blogId",required = true) String blogId) {
     public ResponseEntity img(HttpServletRequest request,
-                              @RequestParam(value = "token",required = true) String token,
-                              @RequestParam(value = "blogId",required = true) String blogId) {
-        UaaToken userByToken = uaaLoginService.getUserByToken(token);
-        if(userByToken==null){
-            return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,"");
+                              HttpServletResponse response,
+                              @RequestParam(value = "token",required = false) String token) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        if(StringUtils.isNotEmpty(token)){
+            UaaToken userByToken = uaaLoginService.getUserByToken(token);
+            if(userByToken==null){
+                return prepareReturnResult(ReturnCode.ERROR_NO_PERMISSIONS_UPDATE,"");
+            }
         }
+
 //        AppBlogBlog blogById = appBlogService.getBlogById(blogId);
 //        if(blogById==null){
 //            return prepareReturnResult(ReturnCode.ERROR_RESOURCE_NOT_EXIST_CODE,"");
