@@ -3,12 +3,9 @@ package uaa.web.rest.game.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class MapEditorCreateDTO {
-    private List<List<MapEditorBaseDTO>> data;
-
+public class MapEditorBaseDTO {
     @ApiModelProperty(value = "名称，用来表示这是什么")
     private String title;
 
@@ -17,6 +14,12 @@ public class MapEditorCreateDTO {
 
     @ApiModelProperty(value = "图片")
     private String imagePath;
+
+    @ApiModelProperty(value = "row")
+    private String row;
+
+    @ApiModelProperty(value = "col")
+    private String col;
 
 
     @ApiModelProperty(value = "序列化特殊属性")
@@ -64,12 +67,20 @@ public class MapEditorCreateDTO {
     public void setMapTypeId(String mapTypeId) {
         this.mapTypeId = mapTypeId;
     }
-
-    public List<List<MapEditorBaseDTO>> getData() {
-        return data;
+    public String getRow() {
+        return row;
     }
 
-    public void setData(List<List<MapEditorBaseDTO>> data) {
-        this.data = data;
+    public void setRow(String row) {
+        this.row = row;
     }
+
+    public String getCol() {
+        return col;
+    }
+
+    public void setCol(String col) {
+        this.col = col;
+    }
+
 }

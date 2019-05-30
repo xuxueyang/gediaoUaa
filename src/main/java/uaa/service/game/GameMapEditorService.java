@@ -1,18 +1,19 @@
 package uaa.service.game;
 
-import com.alibaba.fastjson.JSONObject;
 import org.mortbay.util.ajax.JSON;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uaa.config.Constants;
 import uaa.domain.GameMapEditor.MapEachBase;
+import uaa.domain.GameMapEditor.MapEditor;
 import uaa.domain.GameMapEditor.MapEditorBase;
 import uaa.domain.GameMapEditor.MapType;
 import uaa.repository.game.MapEachBaseRepository;
-import uaa.repository.game.MapEditoryBaseRepository;
+import uaa.repository.game.MapEditorBaseRepository;
+import uaa.repository.game.MapEditorRepository;
 import uaa.web.rest.game.dto.MapBaseCreateDTO;
+import uaa.web.rest.game.dto.MapEditorBaseDTO;
 import uaa.web.rest.game.dto.MapEditorCreateDTO;
 import util.UUIDGenerator;
 
@@ -26,7 +27,11 @@ public class GameMapEditorService {
     private MapEachBaseRepository mapEachBaseRepository;
 
     @Autowired
-    private MapEditoryBaseRepository editoryBaseRepository;
+    private MapEditorBaseRepository editoryBaseRepository;
+
+    @Autowired
+    private MapEditorRepository editoryRepository;
+
 
 
     public List<MapType.Type> getAllMapTypes() {
@@ -36,9 +41,13 @@ public class GameMapEditorService {
     public List<MapEachBase> getAllMapBases() {
         return mapEachBaseRepository.findAllByStatusNot(Constants.DELETE);
     }
-    public List<MapEditorBase> getAllMapEditors (String id) {
+    public List<MapEditor> getAllMapEditors() {
+        return editoryRepository.findAllByStatusNot(Constants.DELETE);
+    }
+    public List<MapEditorBase> getMapEditor (String id) {
         return editoryBaseRepository.findAllByStatusNotAndMapEditorId(Constants.DELETE,id);
     }
+
     @Transactional
     public void saveMapBase(MapBaseCreateDTO dto) {
         String string = JSON.toString(dto.getObject());
@@ -57,10 +66,12 @@ public class GameMapEditorService {
     }
 
     @Transactional
-    public void saveMapEditor(List<List<MapEditorCreateDTO>> dtos) {
+    public void saveMapEditor(MapEditorCreateDTO dtos) {
         String uuid = UUIDGenerator.getUUID();
-        for(List<MapEditorCreateDTO> dtoList: dtos){
-            for(MapEditorCreateDTO dto:dtoList){
+        //保存编辑器
+
+        for(List<MapEditorBaseDTO> dtoList: dtos.getData()){
+            for(MapEditorBaseDTO dto:dtoList){
                 String string = JSON.toString(dto.getObject());
                 MapEditorBase base = new MapEditorBase();
                 base.setId(UUIDGenerator.getUUID());
@@ -81,7 +92,21 @@ public class GameMapEditorService {
                 editoryBaseRepository.save(base);
             }
         }
+        MapEditor editor = new MapEditor();
+        editor.setId(uuid);
 
+        editor.setStatus(Constants.SAVE);
+        editor.setCreatedDate(ZonedDateTime.now());
+        editor.setUpdatedDate(ZonedDateTime.now());
+
+        String string = JSON.toString(dtos.getObject());
+        editor.setTitle(dtos.getTitle());
+        editor.setDescription(dtos.getDescription());
+        editor.setImagePath(dtos.getImagePath());
+        editor.setObject(string);
+
+
+        editoryRepository.save(editor);
 
     }
 }

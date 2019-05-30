@@ -5,6 +5,6 @@ import uaa.domain.GameMapEditor.MapEditorBase;
 
 import java.util.List;
 
-public interface MapEditoryBaseRepository extends JpaRepository<MapEditorBase,String> {
+public interface MapEditorBaseRepository extends JpaRepository<MapEditorBase,String> {
     List<MapEditorBase> findAllByStatusNotAndMapEditorId(String status,String mapEditorId);
 }
