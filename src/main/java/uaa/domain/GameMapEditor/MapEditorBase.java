@@ -12,9 +12,20 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "game_map_editor_map_each_base")
+@Table(name = "game_map_editor_map_editor_base")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class MapEachBase extends AbstractMapEachBase {
+public class MapEditorBase extends AbstractMapEachBase {
+    //标记自己是属于那张地图的
+    @Column(name = "MAP_EDITOR_ID")
+    private String mapEditorId;
+
+    @Column(name = "ROW")
+    private String row;
+
+    @Column(name = "COL")
+    private String col;
+
+
     // 地图资源点
     @Column(name = "STATUS")
     private String status;
@@ -113,6 +124,21 @@ public class MapEachBase extends AbstractMapEachBase {
     }
 
 
+    public String getRow() {
+        return row;
+    }
+
+    public void setRow(String row) {
+        this.row = row;
+    }
+
+    public String getCol() {
+        return col;
+    }
+
+    public void setCol(String col) {
+        this.col = col;
+    }
 
 
     public String getMapTypeId() {
@@ -129,5 +155,13 @@ public class MapEachBase extends AbstractMapEachBase {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public String getMapEditorId() {
+        return mapEditorId;
+    }
+
+    public void setMapEditorId(String mapEditorId) {
+        this.mapEditorId = mapEditorId;
     }
 }

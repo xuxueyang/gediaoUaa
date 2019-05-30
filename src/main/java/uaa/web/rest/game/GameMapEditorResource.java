@@ -11,6 +11,9 @@ import uaa.service.dto.upload.UploadResultDTO;
 import uaa.service.game.GameMapEditorService;
 import uaa.web.rest.BaseResource;
 import uaa.web.rest.game.dto.MapBaseCreateDTO;
+import uaa.web.rest.game.dto.MapEditorCreateDTO;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/game/map/editor")
@@ -40,6 +43,16 @@ public class GameMapEditorResource extends BaseResource {
             return prepareReturnResult(ReturnCode.ERROR_QUERY,e.getMessage());
         }
     }
+    @ResponseBody
+    @GetMapping("/getAllMapEditors")
+    @ApiOperation(value = "获取所有上传的地图图片", httpMethod = "GET", response = ResponseEntity.class, notes = "获取所有上传的地图图片")
+    public ResponseEntity<?> getAllMapBases(@RequestParam(name = "id") String id){
+        try {
+            return prepareReturnResult(ReturnCode.GET_SUCCESS,gameMapEditorService.getAllMapEditors(id));
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,e.getMessage());
+        }
+    }
 
     @ResponseBody
     @PostMapping("/saveMapBase")
@@ -47,6 +60,18 @@ public class GameMapEditorResource extends BaseResource {
     public ResponseEntity<?> saveMapBase(@RequestBody MapBaseCreateDTO dto){
         try {
             gameMapEditorService.saveMapBase(dto);
+            return prepareReturnResult(ReturnCode.CREATE_SUCCESS,null);
+        }catch (Exception e){
+            return prepareReturnResult(ReturnCode.ERROR_QUERY,e.getMessage());
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/saveMapEditor")
+    @ApiOperation(value = "保存图片编辑器", httpMethod = "GET", response = ResponseEntity.class, notes = "保存图片编辑器")
+    public ResponseEntity<?> saveMapBase(@RequestBody List<List<MapEditorCreateDTO>> dto){
+        try {
+            gameMapEditorService.saveMapEditor(dto);
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,null);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,e.getMessage());

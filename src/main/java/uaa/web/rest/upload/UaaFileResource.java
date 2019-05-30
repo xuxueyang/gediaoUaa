@@ -51,7 +51,7 @@ public class UaaFileResource extends BaseResource {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/img")
+    @PostMapping("/img")
 //    public ResponseEntity img(HttpServletRequest request,
 //                              @RequestParam(value = "token",required = true) String token,
 //                              @RequestParam(value = "blogId",required = true) String blogId) {
@@ -114,7 +114,7 @@ public class UaaFileResource extends BaseResource {
                     uaaFile.setRootFilePath(uaaFile.getRootFilePath().substring("/usr/local/tomcat/webapps".length(),uaaFile.getRootFilePath().length())
                         + uaaFile.getRelFilePath());
                 }
-                uploadResult.setPath(uaaFile.getRootFilePath()+uaaFile.getRelFilePath());
+                uploadResult.setPath(uaaFile.getRootFilePath());
                 result.add(uploadResult);
             }
             return prepareReturnResult(ReturnCode.CREATE_SUCCESS,result);
