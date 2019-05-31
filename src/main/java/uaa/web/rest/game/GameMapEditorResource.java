@@ -59,7 +59,7 @@ public class GameMapEditorResource extends BaseResource {
     @ResponseBody
     @GetMapping("/getMapEditor/{id}")
     @ApiOperation(value = "获取所有上传的地图图片", httpMethod = "GET", response = ResponseEntity.class, notes = "获取所有上传的地图图片")
-    public ResponseEntity<?> getMapEditor(@PathParam(value = "id") String id){
+    public ResponseEntity<?> getMapEditor(@PathVariable(value = "id") String id){
         try {
             return prepareReturnResult(ReturnCode.GET_SUCCESS,gameMapEditorService.getMapEditor(id));
         }catch (Exception e){

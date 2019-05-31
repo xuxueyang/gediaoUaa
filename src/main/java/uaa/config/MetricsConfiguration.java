@@ -1,11 +1,8 @@
 package uaa.config;
 
+import com.codahale.metrics.*;
 import io.github.jhipster.config.JHipsterProperties;
 
-import com.codahale.metrics.JmxReporter;
-import com.codahale.metrics.JvmAttributeGaugeSet;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Slf4jReporter;
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.jvm.*;
 import com.ryantenney.metrics.spring.config.annotation.EnableMetrics;
@@ -63,6 +60,15 @@ public class MetricsConfiguration extends MetricsConfigurerAdapter {
     public HealthCheckRegistry getHealthCheckRegistry() {
         return healthCheckRegistry;
     }
+
+    @Bean
+    public ConsoleReporter consoleReporter(MetricRegistry metrics) {
+        return ConsoleReporter.forRegistry(metrics)
+            .convertRatesTo(TimeUnit.SECONDS)
+            .convertDurationsTo(TimeUnit.MILLISECONDS)
+            .build();
+    }
+
 
     @PostConstruct
     public void init() {
