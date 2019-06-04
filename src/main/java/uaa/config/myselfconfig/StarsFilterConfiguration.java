@@ -28,4 +28,21 @@ public class StarsFilterConfiguration {
         }
     }
 
+    @Configuration
+    public static class TestFilterConfigure{
+        @Bean
+        public FilterRegistrationBean testFilterConfigure(){
+            FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+            final Filter testFiler = testFilter();
+            registrationBean.setFilter(testFiler);
+            registrationBean.addUrlPatterns("/*");
+            registrationBean.setName("testFilter");
+            registrationBean.setOrder(-103);
+            return registrationBean;
+        }
+        @Bean()
+        public Filter testFilter() {
+            return new TestFilter();
+        }
+    }
 }
