@@ -8,7 +8,23 @@ public class ReturnCode {
     public static final String UPDATE_SUCCESS = "2002"; //修改成功
     public static final String DELETE_SUCCESS = "2003"; //删除成功
     public static final String GET_SUCCESS = "2004"; //获取成功
-
+//
+//    public static int a=1;
+//    public static void main(String[] args){
+//        System.out.println(a);
+//        System.out.println(ab());
+//        System.out.println(a);
+//    }
+//    public static int  ab(){
+//        try {
+//            return a;
+//        }finally {
+//            a++;
+//        }
+//    }
+//    1
+//        1
+//        2
     //权限验证错误 3XXX
 
     public static final String ERROR_AOTHEN_MISS_USERNAME = "3000"; //账号不存在

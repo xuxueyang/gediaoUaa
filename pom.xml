@@ -136,6 +136,26 @@
     </dependencyManagement>
 
     <dependencies>
+        <!--修改http.conf-->
+        <!--# vim /etc/fdfs/http.conf-->
+
+        <!--设置为true表示开启token验证-->
+        <!--http.anti_steal.check_token=true-->
+
+        <!--设置token失效的时间单位为秒(s)-->
+        <!--http.anti_steal.token_ttl=1800-->
+
+        <!--密钥，跟客户端配置文件的fastdfs.http_secret_key保持一致-->
+        <!--http.anti_steal.secret_key=FASTDFS1234567890-->
+
+        <!--如果token检查失败，返回的页面-->
+        <!--http.anti_steal.token_check_fail=/ljzsg/fastdfs/page/403.html-->
+        <!--文件服务器-->
+        <dependency>
+            <groupId>net.oschina.zcx7878</groupId>
+            <artifactId>fastdfs-client-java</artifactId>
+            <version>1.27.0.0</version>
+        </dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
