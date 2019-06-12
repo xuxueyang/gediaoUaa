@@ -24,7 +24,7 @@ public class Test1 {
 //    }
 //
 //    public static void main(String[] args) throws Exception{
-//        Test1 test1 = new Test1();
+//        LamdaDemo test1 = new LamdaDemo();
 ////        test1.admin = new HBaseAdmin(configuration);
 //
 //
@@ -48,7 +48,7 @@ public class Test1 {
 //        }
 //        return tables;
 //    }
-//    public Test1() throws Exception {
+//    public LamdaDemo() throws Exception {
 //        // 对connection进行初始化、
 //        // 当然也可以手动加载配置文件，手动加载配置文件时要调用configuration的addResource方法
 //         configuration.addResource("hbase-site.xml");
