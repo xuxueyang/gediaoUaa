@@ -2,6 +2,10 @@ package uaa.web.rest.demo.java8;
 
 import org.junit.Test;
 
+import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,6 +66,33 @@ public class LamdaDemo {
     @Test
     public void min(){
         Arrays.stream(arr).min().ifPresent(System.out::println);
+    }
+
+    public class UtilDemo {
+
+        int[] data = {4,12,1,3,5,7,9};
+
+        @Test
+        public void parallelSort(){
+            Arrays.parallelSort(data);
+            System.out.println(Arrays.toString(data));
+        }
+
+        @Test
+        public void testCollectPrallel() {
+            //[4, 16, 17, 20, 25, 32, 41]
+            Arrays.parallelPrefix(data, Integer::sum);
+            System.out.println(Arrays.toString(data));
+        }
+        @Test
+        public void list() throws IOException {
+            Files.list(Paths.get(".")).filter(Files::isDirectory).forEach(System.out::println);
+        }
+
+        @Test
+        public void walk() throws IOException {
+            Files.walk(Paths.get("."), FileVisitOption.FOLLOW_LINKS).forEach(System.out::println);
+        }
     }
 
 }
