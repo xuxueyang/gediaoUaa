@@ -136,6 +136,16 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+        <!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+        <!--作者：Aaron_80726-->
+        <!--来源：CSDN-->
+        <!--原文：https://blog.csdn.net/Aaron_80726/article/details/81077664-->
+        <!--版权声明：本文为博主原创文章，转载请附上博文链接！-->
         <!--修改http.conf-->
         <!--# vim /etc/fdfs/http.conf-->
 
