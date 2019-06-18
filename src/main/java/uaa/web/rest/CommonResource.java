@@ -1,15 +1,18 @@
 package uaa.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import core.ReturnCode;
 import core.ReturnResultDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import util.CaptchaGenerator;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 /**
@@ -52,4 +55,27 @@ public class CommonResource extends BaseResource {
 //            e.printStackTrace();
 //        }
 //    }
+    @Timed
+    @GetMapping("/sys/wx/message")
+    @ApiOperation(value = "微信开发者接入",httpMethod = "GET",response = ReturnResultDTO.class)
+    @ApiResponses({@io.swagger.annotations.ApiResponse(code = 200,message = "成功")})
+    public void sysWxMessage(@RequestParam("signature")String signature,
+                             @RequestParam("timestamp")String timestamp,
+                             @RequestParam("nonce")String nonce,
+                             @RequestParam("echostr") String echostr,HttpServletResponse response){
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败
+    //        if (SignUtil.checkSignature(signature, timestamp, nonce)) {
+    //            out.print(echostr);
+    //        }
+        out.close();
+        out = null;
+    //        return prepareReturnResult(ReturnCode.GET_SUCCESS,echostr);
+    }
 }
