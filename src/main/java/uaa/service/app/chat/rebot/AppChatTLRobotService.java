@@ -1,6 +1,5 @@
 package uaa.service.app.chat.rebot;
 
-import org.checkerframework.checker.units.qual.A;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
