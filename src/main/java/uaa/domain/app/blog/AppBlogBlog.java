@@ -1,7 +1,6 @@
 package uaa.domain.app.blog;
 
 
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uaa.domain.BaseEntity;
