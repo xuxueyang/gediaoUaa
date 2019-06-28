@@ -137,6 +137,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec</artifactId>
+            <version>0.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec-javase</artifactId>
+            <version>0.2.3</version>
+        </dependency>
+        <!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+        <!--作者：sunknew-->
+        <!--来源：CSDN-->
+        <!--原文：https://blog.csdn.net/sunknew/article/details/83784447-->
+        <!--版权声明：本文为博主原创文章，转载请附上博文链接！-->
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>18.0</version>
