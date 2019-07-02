@@ -35,16 +35,20 @@ public final class VideoUtils {
     }
     public static  void main(String[] args){
 //        File file = FileSelect.selectFilesAndDir();
-        File file = new File("C:\\Users\\Administrator\\Desktop\\123.mp4");
+        File file = new File("C:\\Users\\Administrator\\Desktop\\rrrr.mp4");
         try {
 //            BufferedImage frame = getFrame(file, 10);
 //            File outputfile  = new File("D:\\gediaosave.jpg");
 //            ImageIO.write(frame,"jpg",outputfile);
-            ByteArrayOutputStream thumbnail = getThumbnail(file);
-            File outputfile  = new File("D:\\gediao\\save.jpg");
-            InputStream is = new ByteArrayInputStream(thumbnail.toByteArray());
-            BufferedImage image = ImageIO.read(is);
-            ImageUtils.addVideoPlayMark(image);
+
+//            ByteArrayOutputStream thumbnail = getThumbnail(file);
+//            InputStream is = new ByteArrayInputStream(thumbnail.toByteArray());
+//            BufferedImage image = ImageIO.read(is);
+            BufferedImage image = VideoUtils.getFrame(file, 10);
+
+            File outputfile  = new File("C:\\Users\\Administrator\\Desktop\\save.jpg");
+
+//            ImageUtils.addVideoPlayMark(image);
 
             ImageIO.write(image,"jpg",outputfile);
         } catch (IOException e) {
