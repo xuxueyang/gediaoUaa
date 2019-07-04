@@ -45,12 +45,14 @@ public final class VideoUtils {
 //            InputStream is = new ByteArrayInputStream(thumbnail.toByteArray());
 //            BufferedImage image = ImageIO.read(is);
             BufferedImage image = VideoUtils.getFrame(file, 10);
+            BufferedImage resizeImage = ImageUtils.getResizeImage(image);
 
+            ImageUtils.addVideoPlayMark(resizeImage);
             File outputfile  = new File("C:\\Users\\Administrator\\Desktop\\save.jpg");
 
 //            ImageUtils.addVideoPlayMark(image);
 
-            ImageIO.write(image,"jpg",outputfile);
+            ImageIO.write(resizeImage,"jpg",outputfile);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JCodecException e) {

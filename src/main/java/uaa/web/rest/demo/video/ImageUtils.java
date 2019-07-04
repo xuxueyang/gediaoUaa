@@ -25,12 +25,44 @@ public final class ImageUtils {
     public static BufferedImage scaleByWh(BufferedImage source, int width, int height) {
         return getBufferedImageLocal(source.getScaledInstance(width, height, Image.SCALE_SMOOTH));
     }
+    public static BufferedImage getResizeImage(BufferedImage prevImage){
+//        double width = prevImage.getWidth();
+//        double height = prevImage.getHeight();
+//        娇虎:
+//        220*140
+//
+//        娇虎:
+//        宽*高
+//
+//        娇虎:
+//        px
+//        boolean widthMax = width/220>height/140;
+//        int newWidth = 0;
+//        int newHeight = 0;
+//        if(widthMax){
+//            //放大高度
+//            newHeight=140;
+//            newWidth = ;
+//
+//        }else{
+//            //放大宽度
+//        }
+
+
+//        double percent = size/width;
+
+        BufferedImage image = new BufferedImage(220, 140, BufferedImage.TYPE_INT_BGR);
+        Graphics graphics = image.createGraphics();
+        graphics.drawImage(prevImage, 0, 0, 220,140, null);
+        return image;
+    }
+
     public static void addVideoPlayMark(BufferedImage image){
         // 1、得到画笔对象
         Graphics2D g = image.createGraphics();
         int width = image.getWidth();
         int height = image.getHeight();
-        int num = 5;
+        int num = 4;
         int r = width > height ? height/num:width/num;
         float c = 0.1f;
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);

@@ -136,6 +136,12 @@
     </dependencyManagement>
 
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>net.coobird</groupId>-->
+            <!--<artifactId>thumbnailator</artifactId>-->
+            <!--<version>0.4.8</version>-->
+        <!--</dependency>-->
+        <!--https://blog.csdn.net/meism5/article/details/88525252-->
         <dependency>
             <groupId>org.jcodec</groupId>
             <artifactId>jcodec</artifactId>
