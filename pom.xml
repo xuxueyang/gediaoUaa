@@ -136,6 +136,32 @@
     </dependencyManagement>
 
     <dependencies>
+        <!--https://zhuanlan.zhihu.com/p/33155755-->
+        <!--https://blog.csdn.net/ljq_966966/article/details/81773676-->
+        <!--配置servlet-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <!--配置jsp jstl的支持-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <!--添加对tomcat的支持-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--对jsp的支持-->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>net.coobird</groupId>-->
             <!--<artifactId>thumbnailator</artifactId>-->
@@ -850,6 +876,13 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>config/*.yml</include>
+                                        <!--加载配置文件-->
+                                        <include>**/*.xml</include>
+                                        <include>**/*.properties</include>
+                                        <!--加载模板文件-->
+                                        <include>**/*.html</include>
+                                        <!--加载静态文件-->
+                                        <include>/static/</include>
                                     </includes>
                                 </resource>
                                 <resource>

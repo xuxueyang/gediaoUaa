@@ -36,17 +36,6 @@ public final class ImageUtils {
 //
 //        娇虎:
 //        px
-//        boolean widthMax = width/220>height/140;
-//        int newWidth = 0;
-//        int newHeight = 0;
-//        if(widthMax){
-//            //放大高度
-//            newHeight=140;
-//            newWidth = ;
-//
-//        }else{
-//            //放大宽度
-//        }
 
 
 //        double percent = size/width;
