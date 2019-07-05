@@ -136,6 +136,13 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- 热部署依赖包-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+            <scope>true</scope>
+        </dependency>
         <!--https://zhuanlan.zhihu.com/p/33155755-->
         <!--https://blog.csdn.net/ljq_966966/article/details/81773676-->
         <!--配置servlet-->
@@ -797,6 +804,15 @@
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.springframework.boot</groupId>-->
+                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--&lt;!&ndash;热部署开启属性&ndash;&gt;-->
+                    <!--<fork>true</fork>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--https://zhuanlan.zhihu.com/p/32419115-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
