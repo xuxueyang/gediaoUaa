@@ -8,6 +8,7 @@ import org.jcodec.api.JCodecException;
 import org.jcodec.common.model.Picture;
 import org.jcodec.scale.AWTUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
@@ -30,32 +31,32 @@ public final class VideoUtils {
             return file;
         }
     }
-//    public static  void main(String[] args){
-////        File file = FileSelect.selectFilesAndDir();
-//        File file = new File("C:\\Users\\Administrator\\Desktop\\rrrr.mp4");
-//        try {
-////            BufferedImage frame = getFrame(file, 10);
-////            File outputfile  = new File("D:\\gediaosave.jpg");
-////            ImageIO.write(frame,"jpg",outputfile);
-//
-////            ByteArrayOutputStream thumbnail = getThumbnail(file);
-////            InputStream is = new ByteArrayInputStream(thumbnail.toByteArray());
-////            BufferedImage image = ImageIO.read(is);
-//            BufferedImage image = VideoUtils.getFrame(file, 10);
-//            BufferedImage resizeImage = ImageUtils.getResizeImage(image);
-//
-//            ImageUtils.addVideoPlayMark(resizeImage);
-//            File outputfile  = new File("C:\\Users\\Administrator\\Desktop\\save.jpg");
-//
-////            ImageUtils.addVideoPlayMark(image);
-//
-//            ImageIO.write(resizeImage,"jpg",outputfile);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (JCodecException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public static  void main(String[] args){
+//        File file = FileSelect.selectFilesAndDir();
+        File file = new File("C:\\Users\\Administrator\\Desktop\\rrrr.mp4");
+        try {
+//            BufferedImage frame = getFrame(file, 10);
+//            File outputfile  = new File("D:\\gediaosave.jpg");
+//            ImageIO.write(frame,"jpg",outputfile);
+
+//            ByteArrayOutputStream thumbnail = getThumbnail(file);
+//            InputStream is = new ByteArrayInputStream(thumbnail.toByteArray());
+//            BufferedImage image = ImageIO.read(is);
+            BufferedImage image = VideoUtils.getFrame(file, 10);
+            BufferedImage resizeImage = ImageUtils.getResizeImage(image);
+
+            ImageUtils.addVideoPlayMark(resizeImage);
+            File outputfile  = new File("C:\\Users\\Administrator\\Desktop\\save.jpg");
+
+//            ImageUtils.addVideoPlayMark(image);
+
+            ImageIO.write(resizeImage,"jpg",outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JCodecException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

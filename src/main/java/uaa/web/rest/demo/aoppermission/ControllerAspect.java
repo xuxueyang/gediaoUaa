@@ -41,8 +41,8 @@ public class ControllerAspect {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method targetMethod = methodSignature.getMethod();
         //得到方法的访问权限
-//        Permission annotation = targetMethod.getAnnotation(Permission.class);
-//        Annotation[] annotations = targetMethod.getAnnotations();
+        Permission annotation = targetMethod.getAnnotation(Permission.class);
+        Annotation[] annotations = targetMethod.getAnnotations();
 //        if(annotations[0].getClass() instanceof  Permission){
 //
 //        }

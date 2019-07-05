@@ -40,9 +40,9 @@ public final class ImageUtils {
 
 //        double percent = size/width;
 
-        BufferedImage image = new BufferedImage(220, 140, BufferedImage.TYPE_INT_BGR);
+        BufferedImage image = new BufferedImage(990, 630, BufferedImage.TYPE_INT_BGR);
         Graphics graphics = image.createGraphics();
-        graphics.drawImage(prevImage, 0, 0, 220,140, null);
+        graphics.drawImage(prevImage, 0, 0, 990,630, null);
         return image;
     }
 
