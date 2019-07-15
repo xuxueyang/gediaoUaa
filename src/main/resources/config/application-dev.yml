@@ -41,6 +41,16 @@ spring:
             enabled: false # we use gulp + BrowserSync for livereload
     jackson:
         serialization.indent_output: true
+    application:
+        name: gediao-uaa
+#    zuul:
+#        routes:
+#            api-a:
+#                path: /api-a/**
+#                serviceId: service-ribbon
+#            api-b:
+#                path: /api-b/**
+#                serviceId: service-feign
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
 #        url: jdbc:mysql://193.112.17.169:3306/qlh-uaa?useUnicode=true&characterEncoding=utf8&useSSL=false

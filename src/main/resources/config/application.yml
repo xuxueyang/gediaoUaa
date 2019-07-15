@@ -66,6 +66,18 @@ spring:
             enabled: false
     thymeleaf:
         mode: XHTML
+#        # kafka
+#        spring.kafka.bootstrap-servers=localhost:9092
+#        spring.kafka.consumer.group-id=myGroup
+#        spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+#        spring.kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+#        spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+#        spring.kafka.producer.value-serializer=org.apache.kafka.common.serialization.StringSerializer
+#        ---------------------
+#        作者：流水不腐小夏
+#        来源：CSDN
+#        原文：https://blog.csdn.net/guijiaoba/article/details/78637375
+#        版权声明：本文为博主原创文章，转载请附上博文链接！
 #    redis:
 #        database: 0
 #        host: 193.112.17.169

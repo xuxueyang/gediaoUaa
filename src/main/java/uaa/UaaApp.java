@@ -2,6 +2,7 @@ package uaa;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import uaa.config.ApplicationProperties;
 import uaa.config.DefaultProfileUtil;
 
@@ -27,10 +28,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 //@EnableCaching
+//@EnableConfigServer
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 //@EnableDiscoveryClient
+//@EnableZuulProxy
 public class UaaApp {
 
     private static final Logger log = LoggerFactory.getLogger(UaaApp.class);
