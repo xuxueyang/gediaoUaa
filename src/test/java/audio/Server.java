@@ -53,9 +53,9 @@ public class Server {
             // 保持通讯
             in = socket.getInputStream();
 
-            TargetDataLine targetDataLine = AudioUtils.getTargetDataLine();
+//            TargetDataLine targetDataLine = AudioUtils.getTargetDataLine();
 
-            SourceDataLine sourceDataLine = AudioUtils.getSourceDataLine();
+//            SourceDataLine sourceDataLine = AudioUtils.getSourceDataLine();
             while (true) {
                 System.out.println("server:");
 
@@ -64,12 +64,12 @@ public class Server {
                  */
 
                 //获取音频流
-                int writeLen = targetDataLine.read(bos,0,bos.length);
+//                int writeLen = targetDataLine.read(bos,0,bos.length);
                 //发
                 if (bos != null) {
                     //向对方发送拾音器获取到的音频
                     System.out.println("rerver 发");
-                    out.write(bos,0,writeLen);
+//                    out.write(bos,0,writeLen);
                 }
 
                 //收
@@ -77,7 +77,7 @@ public class Server {
                 if (bis != null) {
                     //播放对方发送来的音频
                     System.out.println("rerver 收");
-                    sourceDataLine.write(bis, 0, readLen);
+//                    sourceDataLine.write(bis, 0, readLen);
                 }
             }
 

@@ -39,7 +39,7 @@ public class Client {
     private void startClient() {
         try {
             //这里需要根据自己的ip修改
-            socket = new Socket("localhost", 9000);
+            socket = new Socket("localhost", 9101);
 
             out = socket.getOutputStream();
             System.out.println("客户端:连接成功");
@@ -61,12 +61,12 @@ public class Client {
                     out.write(bos,0,writeLen);
                 }
                 //收
-                int readLen = in.read(bis);
-                if (bis != null) {
-                    //播放对方发送来的音频
-                    System.out.println("Client 收");
-                    sourceDataLine.write(bis, 0, readLen);
-                }
+//                int readLen = in.read(bis);
+//                if (bis != null) {
+//                    //播放对方发送来的音频
+//                    System.out.println("Client 收");
+//                    sourceDataLine.write(bis, 0, readLen);
+//                }
 
             }
 
