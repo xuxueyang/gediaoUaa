@@ -67,7 +67,7 @@ spring:
 #        username: root
 #        password: Xxy@tx.2018!
 #        password: xxy520520xxy
-        password:
+        password: 123456
         hikari:
             data-source-properties:
                 cachePrepStmts: true
