@@ -1,6 +1,6 @@
 package uaa.web.rest.demo;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -33,14 +33,14 @@ public class MessageDigestDemo extends Thread {
         return strBuffer.toString();
     }
 //    在这里我们将对计算生成的md5使用 sun.misc.BASE64Encoder进行简单的加密。
-
-    public String md5sumWithEncoder(String text) throws NoSuchAlgorithmException,
-        UnsupportedEncodingException{
-        /*确定计算方法*/
-        MessageDigest md5=MessageDigest.getInstance("MD5");
-        BASE64Encoder base64en = new BASE64Encoder();
-        /*加密后的散列码字符串*/
-        String strMd5=base64en.encode(md5.digest(text.getBytes("utf-8")));
-        return strMd5;
-    }
+//
+//    public String md5sumWithEncoder(String text) throws NoSuchAlgorithmException,
+//        UnsupportedEncodingException{
+//        /*确定计算方法*/
+//        MessageDigest md5=MessageDigest.getInstance("MD5");
+//        BASE64Encoder base64en = new BASE64Encoder();
+//        /*加密后的散列码字符串*/
+//        String strMd5=base64en.encode(md5.digest(text.getBytes("utf-8")));
+//        return strMd5;
+//    }
 }

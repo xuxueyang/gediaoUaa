@@ -1,6 +1,5 @@
 package uaa.service.resource;
 
-import org.neo4j.cypher.internal.frontend.v2_3.ast.functions.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

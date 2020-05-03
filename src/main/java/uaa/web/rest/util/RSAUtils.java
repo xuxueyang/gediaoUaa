@@ -1,6 +1,6 @@
 package uaa.web.rest.util;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
 
 import java.io.ByteArrayOutputStream;
 import java.security.Key;
@@ -329,27 +329,27 @@ public class RSAUtils {
         "cTd16amKcbAb18ZbDQPLa2vH9Vj/h+JitNwPGTk6rpBMgiYUZgoGrgue5iebwLJK" +
         "II/J9zuRIaAXXLWlErtrcTAZ42L8xvtSdR9nLwNhwwYj0gVmxHBrGSU6JyflBTCs" +
         "kiuUcRywvsitkdoKHwIDAQAB";
-
-    public static void main(String[] args) throws Exception {
-        String source = "你好";
-        String s = encodeBase64(source);
-        System.out.println(s);
-
-        String s1 = decodeBase64(s);
-        System.out.println(s1);
-    }
-    /** */
-
-    public static String encodeBase64(String source)throws Exception{
-        byte[] data = source.getBytes();
-        byte[] encodedData = RSAUtils.encryptByPrivateKey(data, privateKey);
-        return new BASE64Encoder().encode(encodedData);
-    }
-    public static String decodeBase64(String encode) throws Exception{
-//        byte[] data = encode.getBytes();
-//        byte[] decodedData = RSAUtils.decryptByPrivateKey(data,privateKey);
-//        return new Base64Util().
-        return RSAUtil.decode(encode);
-
-    }
+//
+//    public static void main(String[] args) throws Exception {
+//        String source = "你好";
+//        String s = encodeBase64(source);
+//        System.out.println(s);
+//
+//        String s1 = decodeBase64(s);
+//        System.out.println(s1);
+//    }
+//    /** */
+//
+//    public static String encodeBase64(String source)throws Exception{
+//        byte[] data = source.getBytes();
+//        byte[] encodedData = RSAUtils.encryptByPrivateKey(data, privateKey);
+//        return new BASE64Encoder().encode(encodedData);
+//    }
+//    public static String decodeBase64(String encode) throws Exception{
+////        byte[] data = encode.getBytes();
+////        byte[] decodedData = RSAUtils.decryptByPrivateKey(data,privateKey);
+////        return new Base64Util().
+//        return RSAUtil.decode(encode);
+//
+//    }
 }

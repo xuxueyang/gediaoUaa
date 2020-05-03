@@ -7,46 +7,46 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Uaa</name>
-    <repositories>
-        <repository>
-            <id>neo4j</id>
-            <url>http://m2.neo4j.org/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>xxyTX</id>
-            <name>xxt TX Server private maven</name>
-            <url>http://193.112.161.157:8080/nexus/service/local/repositories/public/content</url>
-        </repository>
-        <repository>
-            <id>xxy-snapshots</id>
-            <url>http://193.112.161.157:8080/nexus/service/local/repositories/snapshots/content/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>xxyTX</id>
-            <name>xxt TX Server private maven</name>
-            <url>http://193.112.161.157:8080/nexus/service/local/repositories/public/content</url>
-        </pluginRepository>
-    </pluginRepositories>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>xxy-snapshots</id>
-            <url>http://193.112.161.157:8080/nexus/service/local/repositories/snapshots/content/</url>
-        </snapshotRepository>
-        <repository>
-            <id>xxy-thirdparty</id>
-            <url>http://193.112.161.157:8080/nexus/content/repositories/thirdparty/</url>
-        </repository>
-    </distributionManagement>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>neo4j</id>-->
+<!--            <url>http://m2.neo4j.org/content/repositories/releases/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>xxyTX</id>-->
+<!--            <name>xxt TX Server private maven</name>-->
+<!--            <url>http://193.112.161.157:8080/nexus/service/local/repositories/public/content</url>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>xxy-snapshots</id>-->
+<!--            <url>http://193.112.161.157:8080/nexus/service/local/repositories/snapshots/content/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
+<!--    <pluginRepositories>-->
+<!--        <pluginRepository>-->
+<!--            <id>xxyTX</id>-->
+<!--            <name>xxt TX Server private maven</name>-->
+<!--            <url>http://193.112.161.157:8080/nexus/service/local/repositories/public/content</url>-->
+<!--        </pluginRepository>-->
+<!--    </pluginRepositories>-->
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>xxy-snapshots</id>-->
+<!--            <url>http://193.112.161.157:8080/nexus/service/local/repositories/snapshots/content/</url>-->
+<!--        </snapshotRepository>-->
+<!--        <repository>-->
+<!--            <id>xxy-thirdparty</id>-->
+<!--            <url>http://193.112.161.157:8080/nexus/content/repositories/thirdparty/</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
     <properties>
         <start-class>uaa.UaaApp</start-class>
         <!-- Build properties -->
         <com.xxy.base.version>1.0</com.xxy.base.version>
-        <docker.image.prefix>gediao</docker.image.prefix>
+<!--        <docker.image.prefix>gediao</docker.image.prefix>-->
         <maven.version>3.0.0</maven.version>
         <java.version>1.8</java.version>
         <scala.version>2.12.1</scala.version>
@@ -91,10 +91,10 @@
         <maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
         <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
-        <dockerfile-maven-plugin.version>1.3.4</dockerfile-maven-plugin.version>
+<!--        <dockerfile-maven-plugin.version>1.3.4</dockerfile-maven-plugin.version>-->
         <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
         <scala-maven-plugin.version>3.2.2</scala-maven-plugin.version>
-        <sonar-maven-plugin.version>3.2</sonar-maven-plugin.version>
+<!--        <sonar-maven-plugin.version>3.2</sonar-maven-plugin.version>-->
 
         <!-- Sonar properties -->
         <sonar.exclusions>src/main/webapp/content/**/*.*, src/main/webapp/i18n/*.js, target/www/**/*.*</sonar.exclusions>
@@ -487,17 +487,17 @@
             <scope>provided</scope>
         </dependency>
         <!-- 服务器开发需要的jar包 -->
-        <dependency>
-        <groupId>org.neo4j.driver</groupId>
-            <artifactId>neo4j-java-driver</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-        <dependency>
-            <!-- 嵌入式开发需要的jar包 -->
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j</artifactId>
-            <version>3.3.4</version>
-        </dependency>
+<!--        <dependency>-->
+<!--        <groupId>org.neo4j.driver</groupId>-->
+<!--            <artifactId>neo4j-java-driver</artifactId>-->
+<!--            <version>1.5.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            &lt;!&ndash; 嵌入式开发需要的jar包 &ndash;&gt;-->
+<!--            <groupId>org.neo4j</groupId>-->
+<!--            <artifactId>neo4j</artifactId>-->
+<!--            <version>3.3.4</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -931,32 +931,32 @@
                     <downloadJavadocs>true</downloadJavadocs>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <rules>
-                        <requireMavenVersion>
-                            <message>You are running an older version of Maven. JHipster requires at least Maven ${maven.version}</message>
-                            <version>[${maven.version},)</version>
-                        </requireMavenVersion>
-                        <requireJavaVersion>
-                            <!-- Until JHipster supports JDK 9 -->
-                            <message>You are running an incompatible version of Java. JHipster requires JDK ${java.version}</message>
-                            <version>[1.8,1.9)</version>
-                        </requireJavaVersion>
-                    </rules>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-enforcer-plugin</artifactId>-->
+<!--                <version>${maven-enforcer-plugin.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>enforce-versions</id>-->
+<!--                        <goals>-->
+<!--                            <goal>enforce</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <rules>-->
+<!--                        <requireMavenVersion>-->
+<!--                            <message>You are running an older version of Maven. JHipster requires at least Maven ${maven.version}</message>-->
+<!--                            <version>[${maven.version},)</version>-->
+<!--                        </requireMavenVersion>-->
+<!--                        <requireJavaVersion>-->
+<!--                            &lt;!&ndash; Until JHipster supports JDK 9 &ndash;&gt;-->
+<!--                            <message>You are running an incompatible version of Java. JHipster requires JDK ${java.version}</message>-->
+<!--                            <version>[1.8,1.9)</version>-->
+<!--                        </requireJavaVersion>-->
+<!--                    </rules>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -999,25 +999,25 @@
                             </resources>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>docker-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>target/</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/docker/</directory>
-                                    <filtering>false</filtering>
-                                    <excludes>
-                                        <exclude>**/*.yml</exclude>
-                                    </excludes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>docker-resources</id>-->
+<!--                        <phase>validate</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy-resources</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <outputDirectory>target/</outputDirectory>-->
+<!--                            <resources>-->
+<!--                                <resource>-->
+<!--                                    <directory>src/main/docker/</directory>-->
+<!--                                    <filtering>false</filtering>-->
+<!--                                    <excludes>-->
+<!--                                        <exclude>**/*.yml</exclude>-->
+<!--                                    </excludes>-->
+<!--                                </resource>-->
+<!--                            </resources>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -1058,50 +1058,50 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar-maven-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>${liquibase.version}</version>
-                <configuration>
-                    <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
-                    <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
-                    <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://193.112.161.157:3306/gediao-uaa</url>
-                    <defaultSchemaName>gediao-uaa</defaultSchemaName>
-                    <username>root</username>
-                    <password>XXY@tx.2018!</password>
-                    <referenceUrl>hibernate:spring:uaa.domain?dialect=org.hibernate.dialect.MySQL5InnoDBDialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
-                    <verbose>true</verbose>
-                    <logging>debug</logging>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.javassist</groupId>
-                        <artifactId>javassist</artifactId>
-                        <version>${javassist.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.liquibase.ext</groupId>
-                        <artifactId>liquibase-hibernate5</artifactId>
-                        <version>${liquibase-hibernate5.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-data-jpa</artifactId>
-                        <version>${spring-boot.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>javax.validation</groupId>
-                        <artifactId>validation-api</artifactId>
-                        <version>${validation-api.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.sonarsource.scanner.maven</groupId>-->
+<!--                <artifactId>sonar-maven-plugin</artifactId>-->
+<!--                <version>${sonar-maven-plugin.version}</version>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.liquibase</groupId>-->
+<!--                <artifactId>liquibase-maven-plugin</artifactId>-->
+<!--                <version>${liquibase.version}</version>-->
+<!--                <configuration>-->
+<!--                    <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>-->
+<!--                    <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>-->
+<!--                    <driver>com.mysql.jdbc.Driver</driver>-->
+<!--                    <url>jdbc:mysql://193.112.161.157:3306/gediao-uaa</url>-->
+<!--                    <defaultSchemaName>gediao-uaa</defaultSchemaName>-->
+<!--                    <username>root</username>-->
+<!--                    <password>XXY@tx.2018!</password>-->
+<!--                    <referenceUrl>hibernate:spring:uaa.domain?dialect=org.hibernate.dialect.MySQL5InnoDBDialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>-->
+<!--                    <verbose>true</verbose>-->
+<!--                    <logging>debug</logging>-->
+<!--                </configuration>-->
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.javassist</groupId>-->
+<!--                        <artifactId>javassist</artifactId>-->
+<!--                        <version>${javassist.version}</version>-->
+<!--                    </dependency>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.liquibase.ext</groupId>-->
+<!--                        <artifactId>liquibase-hibernate5</artifactId>-->
+<!--                        <version>${liquibase-hibernate5.version}</version>-->
+<!--                    </dependency>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.springframework.boot</groupId>-->
+<!--                        <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--                        <version>${spring-boot.version}</version>-->
+<!--                    </dependency>-->
+<!--                    <dependency>-->
+<!--                        <groupId>javax.validation</groupId>-->
+<!--                        <artifactId>validation-api</artifactId>-->
+<!--                        <version>${validation-api.version}</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -1123,31 +1123,31 @@
                     -->
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>${dockerfile-maven-plugin.version}</version>
-                <!--
-                Uncomment the section below to build the docker image with mvn package and and push it with mvn deploy
-                <executions>
-                    <execution>
-                    <id>default</id>
-                    <goals>
-                        <goal>build</goal>
-                        <goal>push</goal>
-                    </goals>
-                    </execution>
-                </executions>
-                -->
-                <configuration>
-                    <!--<repository>qlh-uaa</repository>-->
-                    <tag>latest</tag>
-                    <repository>${docker.image.prefix}/${project.artifactId}</repository>
-                    <buildArgs>
-                        <JAR_FILE>target/${project.build.finalName}.war</JAR_FILE>
-                    </buildArgs>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>com.spotify</groupId>-->
+<!--                <artifactId>dockerfile-maven-plugin</artifactId>-->
+<!--                <version>${dockerfile-maven-plugin.version}</version>-->
+<!--                &lt;!&ndash;-->
+<!--                Uncomment the section below to build the docker image with mvn package and and push it with mvn deploy-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                    <id>default</id>-->
+<!--                    <goals>-->
+<!--                        <goal>build</goal>-->
+<!--                        <goal>push</goal>-->
+<!--                    </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                &ndash;&gt;-->
+<!--                <configuration>-->
+<!--                    &lt;!&ndash;<repository>qlh-uaa</repository>&ndash;&gt;-->
+<!--                    <tag>latest</tag>-->
+<!--                    <repository>${docker.image.prefix}/${project.artifactId}</repository>-->
+<!--                    <buildArgs>-->
+<!--                        <JAR_FILE>target/${project.build.finalName}.war</JAR_FILE>-->
+<!--                    </buildArgs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <!-- jhipster-needle-maven-add-plugin -->
         </plugins>
         <pluginManagement>

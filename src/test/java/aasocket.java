@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Iterator;
 
-public class socket {
+public class aasocket {
     public static void main(String[] args) throws IOException
     {
         testServer();
