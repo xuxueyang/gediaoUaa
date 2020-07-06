@@ -114,7 +114,11 @@ public class UaaLoginService {
         List<UaaToken> allByCreatedid = uaaTokenRepository.findAllByCreatedid(uaaUser.getId());
         if(allByCreatedid!=null||allByCreatedid.size()>0){
             for(UaaToken token: allByCreatedid){
-                uaaTokenRepository.delete(token);
+                ZonedDateTime toTime = token.getCreatedDate().plusSeconds(token.getValidtime());
+                if(!toTime.isAfter(ZonedDateTime.now())){
+                    //删除token
+                    uaaTokenRepository.delete(token);
+                }
             }
         }
         //登录，创建token
