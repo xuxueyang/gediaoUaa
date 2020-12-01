@@ -1,6 +1,7 @@
 package uaa.service.app.log;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -108,6 +109,8 @@ public class AppLogEachService {
         appLogEach.setBelongDate(updateLogEachDTO.getBelongDate());
         appLogEach.setTitle(updateLogEachDTO.getTitle());
         appLogEach.setUpdatedID(updateId);
+        if(StringUtils.isNotBlank(updateLogEachDTO.getTomatoType()))
+            appLogEach.setTomatoType(updateLogEachDTO.getTomatoType());
         appLogEach.setType(updateLogEachDTO.getStatus());
         appLogEach.setMessage(updateLogEachDTO.getMessage());
         appLogEach.setUpdatedDate(ZonedDateTime.now());
@@ -150,6 +153,7 @@ public class AppLogEachService {
         appLogEach.setMessage(createLogEachDTO.getMessage());
         appLogEach.setTitle(createLogEachDTO.getTitle());
         appLogEach.setBelongDate(createLogEachDTO.getBelongDate());
+        appLogEach.setTomatoType(createLogEachDTO.getTomatoType());
         appLogEach.setStatus(Constants.APP_LOG_STATUS_SAVE);
         appLogEach.setId(UUIDGenerator.getUUID());
         appLogEachRepository.save(appLogEach);
@@ -214,7 +218,7 @@ public class AppLogEachService {
 
     public Map<String,Object> getAllEach(String userId, String startDate,
                                           String endDate, String searchContext, String type, String tagId,
-                                          Pageable pageable) {
+                                          Pageable pageable,String tomatoType) {
 
         Specification<AppLogEach> specification = new Specification<AppLogEach>() {
             @Override
@@ -223,6 +227,9 @@ public class AppLogEachService {
                 predicates.add(criteriaBuilder.notEqual(root.get("status").as(String.class), Constants.APP_LOG_STATUS_DELETE));
                 predicates.add(criteriaBuilder.equal(root.get("createdId").as(String.class), userId));
 
+                if(StringUtils.isNotBlank(tomatoType)){
+                    predicates.add(criteriaBuilder.equal(root.get("tomatoType").as(String.class), tomatoType));
+                }
 
                 if (Validators.fieldNotBlank(searchContext)) {
                     //模糊查找

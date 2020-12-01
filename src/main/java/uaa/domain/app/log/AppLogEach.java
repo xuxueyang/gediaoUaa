@@ -20,6 +20,9 @@ public class AppLogEach extends BaseEntity implements Serializable {
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
+    @Column(name = "TOMATO_TYPE")
+    private String tomatoType;
+
     @Column(name = "CREATED_ID")
     private String createdId;
 
@@ -48,7 +51,7 @@ public class AppLogEach extends BaseEntity implements Serializable {
     @JoinColumn(name = "BASE_ID", referencedColumnName = "ID", insertable = false, updatable = false)
     @org.hibernate.annotations.OrderBy(clause = "UPDATED_DATE")
     private Set<AppLogDetail> details = new HashSet<>();
-//
+    //
 //    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 //    @JoinColumn(name = "CREATED_ID", referencedColumnName = "ID", insertable = false, updatable = false)
 //    private UaaUser uaaUser;
@@ -63,6 +66,14 @@ public class AppLogEach extends BaseEntity implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTomatoType() {
+        return tomatoType;
+    }
+
+    public void setTomatoType(String tomatoType) {
+        this.tomatoType = tomatoType;
     }
 
     public String getCreatedId() {

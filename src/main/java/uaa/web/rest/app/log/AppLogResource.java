@@ -414,6 +414,7 @@ public class AppLogResource extends BaseResource{
                                       @RequestParam(name="endDate",required=false) String endDate,
                                       @RequestParam(name="type",required=false) String type,
                                       @RequestParam(name="tagId",required=false) String tagId,
+                                         @RequestParam(name="tomatoType",required=false) String tomatoType,
                                       @RequestParam(name = "searchContext",required = false) String searchContext,
                                       @RequestParam(name="size",required=true) int size,
                                       @RequestParam(name="page",required=true) int page
@@ -446,7 +447,7 @@ public class AppLogResource extends BaseResource{
             }
             //TODO 标签前端删选，状态，因为可能比较多，后端删选（前端也可以获取全部，自己删选）
 
-            Map eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId,pageable);
+            Map eachs = appLogEachService.getAllEach(userId,startDate,endDate,searchContext,type,tagId,pageable,tomatoType);
 //            logApi("/api/app/log/eachs","获取了所有的标签",
 //                Constants.HttpType.GET.name(),
 //                null,
