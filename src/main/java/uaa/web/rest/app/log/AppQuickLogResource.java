@@ -41,7 +41,8 @@ public class AppQuickLogResource extends BaseResource {
     public ResponseEntity getAllEachInfo(@RequestParam(name="token",required=true) String token,
                                          @RequestParam(name="userId",required=true) String userId,
                                          @RequestParam(name="startDate",required=false) String startDate,
-                                         @RequestParam(name="endDate",required=false) String endDate
+                                         @RequestParam(name="endDate",required=false) String endDate,
+                                         @RequestParam(name="tomatoType",required = false) String tomatoType
     ){
         try {
             //默认15个，。根据时间逆序
@@ -62,7 +63,7 @@ public class AppQuickLogResource extends BaseResource {
                 startDate = CommonUtil.getTodayBelongDate();
                 endDate = startDate;
             }
-            Map eachs = appLogEachService.getAllEach(userId,startDate,endDate,"", Constants.LogEach_Type.JOURNAL,"",new PageRequest(0,100));
+            Map eachs = appLogEachService.getAllEach(userId,startDate,endDate,"", Constants.LogEach_Type.JOURNAL,"",new PageRequest(0,100),tomatoType);
             return prepareReturnResult(ReturnCode.GET_SUCCESS,eachs);
         }catch (Exception e){
             return prepareReturnResult(ReturnCode.ERROR_QUERY,null);

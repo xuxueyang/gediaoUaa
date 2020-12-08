@@ -1,4 +1,4 @@
-package core;
+package uaa.config;
 
 public class ReturnCode {
     public static final String HAS_ERROR = "9999"; //由代码返回错误消息
