@@ -1,12 +1,13 @@
 package uaa.web.rest;
 
-import core.ReturnCode;
+//import uaa.config.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uaa.config.Constants;
+import uaa.config.ReturnCode;
 import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaLogMessage;
 import uaa.domain.uaa.UaaToken;

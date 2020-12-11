@@ -1,7 +1,7 @@
 package uaa.web.rest;
 
 
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import fastdfs.ClientGlobal;
 import fastdfs.DTO.UploadFileResultDTO;
 import fastdfs.client.UploadFile;

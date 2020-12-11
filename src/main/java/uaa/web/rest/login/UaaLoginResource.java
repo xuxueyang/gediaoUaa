@@ -4,7 +4,7 @@ import uaa.config.Constants;
 import uaa.domain.uaa.UaaTenantCode;
 import uaa.service.dto.CreateAdviceDTO;
 import uaa.web.rest.BaseResource;
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

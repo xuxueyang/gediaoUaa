@@ -1,7 +1,7 @@
 package uaa.web.rest.wx;
 
 
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import core.ReturnResultDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

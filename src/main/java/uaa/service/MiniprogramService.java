@@ -1,7 +1,7 @@
 package uaa.service;
 
 import com.alibaba.fastjson.JSONObject;
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

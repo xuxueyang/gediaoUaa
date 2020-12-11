@@ -1,6 +1,6 @@
 package uaa.web.rest;
 
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

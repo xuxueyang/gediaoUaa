@@ -13,6 +13,7 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import uaa.config.ApplicationProperties;
 import uaa.config.Constants;
 import uaa.domain.SenderInfo;
+import uaa.service.util.QQEmailSendUtil;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -37,10 +38,16 @@ public class EmailService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    public static void main(String[] args) {
+        QQEmailSendUtil qqEmailSendUtil = new QQEmailSendUtil();
+        QQEmailSendUtil.EmailUser user = new QQEmailSendUtil.EmailUser("xuxy", "123456", "1059738716@qq.com");
+        qqEmailSendUtil.SendMail(user);
+        qqEmailSendUtil.start();
+    }
 
-    public void sendEmail()throws Exception{
+    public void sendEmail() throws Exception {
         Context context = new Context(Locale.CHINA);
-        context.setVariable(Constants.EMAIL_VAR_URL,"http://193.112.161.157:8080");
+        context.setVariable(Constants.EMAIL_VAR_URL, "http://193.112.161.157:8080");
         String subject = applicationProperties.getConfig().getEmail().getSubject().getCreate();
         String emailContent = templateEngine.process(Constants.EMAIL_TEMPLATE_TEST_SEND, context);
 
@@ -51,11 +58,12 @@ public class EmailService {
         senderInfo.setTextMessage("测试Uaa短信");
         sender.sendHTMLFormattedEmail(senderInfo);
     }
-//    http://www.runoob.com/jsp/jsp-sending-email.html
+
+    //    http://www.runoob.com/jsp/jsp-sending-email.html
 //    public static  void main(String[] args){
 //        sendEmail2();
 //    }
-    public static void sendEmail2(){
+    public static void sendEmail2() {
         String result;
         // 收件人的电子邮件
         String to = "1059738716@qq.com";
@@ -75,7 +83,7 @@ public class EmailService {
 
         // 获取默认的Session对象。
         Session mailSession = Session.getDefaultInstance(properties);
-        try{
+        try {
             // 创建一个默认的MimeMessage对象。
             MimeMessage message = new MimeMessage(mailSession);
             // 设置 From: 头部的header字段
@@ -92,7 +100,7 @@ public class EmailService {
             // 发送消息
             Transport.send(message);
             result = "Sent message successfully....";
-        }catch (MessagingException mex) {
+        } catch (MessagingException mex) {
             mex.printStackTrace();
             result = "Error: unable to send message....";
         }

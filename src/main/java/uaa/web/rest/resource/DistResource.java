@@ -1,13 +1,14 @@
 package uaa.web.rest.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import uaa.config.ReturnCode;
 import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaUser;
 import uaa.service.dto.UaaBasePremissionDTO;
 import uaa.service.dto.dict.UpdateDictValeDTO;
 import uaa.service.resource.DictService;
 import uaa.web.rest.BaseResource;
-import core.ReturnCode;
+//import uaa.;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;

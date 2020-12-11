@@ -8,7 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import uaa.domain.UaaError;
 import uaa.domain.uaa.UaaUser;
 import uaa.web.rest.BaseResource;
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -30,8 +30,16 @@ public class AppLogEachDTO extends AppLogBaseDTO{
     @ApiModelProperty(name = "标签")
     private Map<String,AppLogTagDTO> tagMap;
 
+    private String tomatoType;
 
-//    @ApiModelProperty(name = "含有each参数的map")
+    public String getTomatoType() {
+        return tomatoType;
+    }
+
+    public void setTomatoType(String tomatoType) {
+        this.tomatoType = tomatoType;
+    }
+    //    @ApiModelProperty(name = "含有each参数的map")
 //    private Map<String,Object> values;
 
 

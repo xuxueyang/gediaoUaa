@@ -1,7 +1,7 @@
 package uaa.web.rest.app.log;
 
 import com.alibaba.fastjson.JSON;
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

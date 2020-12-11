@@ -1,6 +1,6 @@
 package uaa.domain;
 
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 
 import java.util.ArrayList;
 import java.util.List;

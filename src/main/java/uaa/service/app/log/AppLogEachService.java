@@ -90,6 +90,7 @@ public class AppLogEachService {
         appLogEachDTO.setMessage(appLogEach.getMessage());
         appLogEachDTO.setTitle(appLogEach.getTitle());
         appLogEachDTO.setStatus(appLogEach.getType());
+        appLogEachDTO.setTomatoType(appLogEach.getTomatoType());
 //        appLogEachDTO.setAppLogDetailDTOList();
         return appLogEachDTO;
     }

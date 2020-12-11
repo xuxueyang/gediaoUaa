@@ -1,7 +1,7 @@
 package uaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import core.ReturnResultDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

@@ -7,7 +7,7 @@ import uaa.domain.uaa.UaaToken;
 import uaa.service.app.blog.AppBlogService;
 import uaa.service.login.UaaLoginService;
 import uaa.web.rest.BaseResource;
-import core.ReturnCode;
+import uaa.config.ReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
