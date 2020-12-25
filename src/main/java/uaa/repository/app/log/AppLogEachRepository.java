@@ -11,6 +11,8 @@ public interface AppLogEachRepository extends JpaRepository<AppLogEach,String>,J
 
     List<AppLogEach> findAllByCreatedIdAndStatusNotOrderByBelongDate(String userId,String status);
     List<AppLogEach> findAllByCreatedIdAndStatusNotAndType(String userId,String status,String type);
+    int countAllByCreatedIdAndStatusNotAndType(String userId,String status,String type);
+
     List<AppLogEach> findAllByBelongDateAndCreatedIdAndStatusNotAndTypeOrderByUpdatedDateDesc(String belongDate,String createdId,String status,String type);
 
 }

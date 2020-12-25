@@ -449,10 +449,11 @@ public class AppLogStatisService {
                 dto.setId(dict.getValue());
                 dto.setLabel(dict.getLabel());
                 dto.setNum(num);
-                List<AppLogEach> eaches = appLogEachRepository.findAllByCreatedIdAndStatusNotAndType(createdid, Constants.APP_LOG_STATUS_DELETE, dict.getValue());
-                if(eaches!=null){
-                    num = eaches.size();
-                }
+//                List<AppLogEach> eaches = appLogEachRepository.findAllByCreatedIdAndStatusNotAndType(createdid, Constants.APP_LOG_STATUS_DELETE, dict.getValue());
+                num = appLogEachRepository.countAllByCreatedIdAndStatusNotAndType(createdid,Constants.APP_LOG_STATUS_DELETE,dict.getValue());
+//                if(eaches!=null){
+//                    num = eaches.size();
+//                }
                 dto.setNum(num);
                 map.put(dict.getValue(),dto);
             }
