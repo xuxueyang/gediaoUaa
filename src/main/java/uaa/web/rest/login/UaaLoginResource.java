@@ -1,5 +1,6 @@
 package uaa.web.rest.login;
 
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import uaa.config.Constants;
 import uaa.domain.uaa.UaaTenantCode;
 import uaa.service.dto.CreateAdviceDTO;
@@ -17,6 +18,7 @@ import uaa.service.login.UaaLoginService;
 import util.UUIDGenerator;
 import util.Validators;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -40,7 +42,8 @@ public class UaaLoginResource extends BaseResource{
         // 防止二维码显示不了
         System.setProperty("java.awt.headless","true");
     }
-
+    @Resource(name = "studentCache")
+    private LoadingCache<Integer, Object> studentCache;
 
 
     @Autowired

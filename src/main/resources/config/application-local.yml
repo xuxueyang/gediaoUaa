@@ -80,16 +80,7 @@ spring:
         locator:
             discovery:
                 enabled: true
-    redis:
-        database: 0
-        host: 218.4.170.234
-        password: fengyun123456
-        port: 9701
-        pool:
-            max-idle: 8
-            min-idle: 0
-            max-active: 8
-            max-wait: -1
+
 
 liquibase:
     contexts: dev

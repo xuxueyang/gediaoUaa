@@ -10,6 +10,16 @@ jhipster:
 spring:
     application:
         name: uaa
+    redis:
+        database: 0
+        host: 106.14.9.239
+        password: admin11
+        port: 6379
+        pool:
+            max-idle: 8
+            min-idle: 0
+            max-active: 8
+            max-wait: -1
     profiles:
         # The commented value for `active` can be replaced with valid Spring profiles to load.
         # Otherwise, it will be filled in by maven when building the WAR file
