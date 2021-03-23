@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "app_money_each")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Data
+//@Data
 public class AppMoneyEach extends BaseEntity implements Serializable {
 
     @Id
@@ -41,5 +41,66 @@ public class AppMoneyEach extends BaseEntity implements Serializable {
 
     @Column(name = "created_id",length = 60)
     private String createdId;
+    @Column(name = "ps")
+    private String ps;
 
+    @Column(name = "deleted",length = 1)
+    private Boolean deleted;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Float getSpend() {
+        return spend;
+    }
+
+    public void setSpend(Float spend) {
+        this.spend = spend;
+    }
+
+    public String getBigType() {
+        return bigType;
+    }
+
+    public void setBigType(String bigType) {
+        this.bigType = bigType;
+    }
+
+    public String getSmallType() {
+        return smallType;
+    }
+
+    public void setSmallType(String smallType) {
+        this.smallType = smallType;
+    }
+
+    public String getCreatedId() {
+        return createdId;
+    }
+
+    public void setCreatedId(String createdId) {
+        this.createdId = createdId;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

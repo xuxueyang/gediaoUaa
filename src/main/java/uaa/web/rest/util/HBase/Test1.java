@@ -1,13 +1,13 @@
 package uaa.web.rest.util.HBase;
 
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.util.Bytes;
-
-import java.io.IOException;
-import java.util.*;
+//
+//import org.apache.hadoop.conf.Configuration;
+//import org.apache.hadoop.hbase.*;
+//import org.apache.hadoop.hbase.client.*;
+//import org.apache.hadoop.hbase.util.Bytes;
+//
+//import java.io.IOException;
+//import java.util.*;
 
 
 public class Test1 {

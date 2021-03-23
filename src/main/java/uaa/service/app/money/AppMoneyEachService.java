@@ -1,7 +1,10 @@
 package uaa.service.app.money;
 
+import io.swagger.models.auth.In;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.envers.Audited;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,7 +15,13 @@ import uaa.repository.money.MoneyEachRep;
 import uaa.service.dto.app.money.AppMoneyEachDTO;
 import uaa.service.dto.app.money.QueryAppMoneyEachDTO;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xuxy
@@ -20,7 +29,7 @@ import java.time.ZonedDateTime;
  */
 @Service
 public class AppMoneyEachService {
-    @Audited
+    @Autowired
     private MoneyEachRep moneyEachRep;
 
 
@@ -34,6 +43,7 @@ public class AppMoneyEachService {
             target.setSpend(dto.getSpend());
         }else{
             target = new AppMoneyEach();
+            target.setDeleted(false);
             BeanUtils.copyProperties(dto, target);
             target.setCreatedDate(ZonedDateTime.now());
             target.setCreatedId("1");
@@ -45,8 +55,32 @@ public class AppMoneyEachService {
     }
 
     public Page<AppMoneyEach> page(QueryAppMoneyEachDTO dto, Pageable pageable){
-//        Specification specification = new Specifications<AppMoneyEachDTO>()
-        Page<AppMoneyEach> all = moneyEachRep.findAll(pageable);
+
+        Page<AppMoneyEach> all = moneyEachRep.findAll(new Specification<AppMoneyEach>() {
+            @Override
+            public Predicate toPredicate(Root<AppMoneyEach> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(criteriaBuilder.equal(root.get("deleted").as(Boolean.class),false));
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        },pageable);
         return all;
+    }
+
+    public Object getDetail(Integer id) {
+        if(id==null || id==0){
+            return null;
+        }
+        return moneyEachRep.findOne(id);
+    }
+
+    public Object deleteById(Integer id) {
+        AppMoneyEach one = moneyEachRep.findOne(id);
+        if(one!=null){
+            one.setDeleted(true);
+            moneyEachRep.saveAndFlush(one);
+        }
+        return null;
     }
 }
