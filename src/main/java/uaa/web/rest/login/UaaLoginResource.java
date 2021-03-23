@@ -42,8 +42,8 @@ public class UaaLoginResource extends BaseResource{
         // 防止二维码显示不了
         System.setProperty("java.awt.headless","true");
     }
-    @Resource(name = "studentCache")
-    private LoadingCache<Integer, Object> studentCache;
+//    @Resource(name = "studentCache")
+//    private LoadingCache<Integer, Object> studentCache;
 
 
     @Autowired

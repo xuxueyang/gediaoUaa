@@ -27,14 +27,14 @@ eureka:
             defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
 
 spring:
-    rabbitmq:
-        template:
-            retry:
-                enabled: false
-                initial-interval: 500
-                max-attempts: 10
-                multiplier: 5
-                max-interval: 60000
+#    rabbitmq:
+#        template:
+#            retry:
+#                enabled: false
+#                initial-interval: 500
+#                max-attempts: 10
+#                multiplier: 5
+#                max-interval: 60000
     mvc:
         view:
             prefix: WEB-INF/jsp/

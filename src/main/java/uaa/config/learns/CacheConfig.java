@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020/12/25 上午10:28
  */
 @Slf4j
-@Configuration
+//@Configuration
 public class CacheConfig {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
