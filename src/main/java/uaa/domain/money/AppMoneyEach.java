@@ -46,7 +46,8 @@ public class AppMoneyEach extends BaseEntity implements Serializable {
 
     @Column(name = "deleted",length = 1)
     private Boolean deleted;
-
+    @Column(name = "pay",length = 1)
+    private Boolean pay;
     public Integer getId() {
         return id;
     }
@@ -102,5 +103,13 @@ public class AppMoneyEach extends BaseEntity implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Boolean getPay() {
+        return pay;
+    }
+
+    public void setPay(Boolean pay) {
+        this.pay = pay;
     }
 }

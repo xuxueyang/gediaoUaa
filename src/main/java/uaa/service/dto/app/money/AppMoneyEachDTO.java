@@ -20,6 +20,7 @@ public class AppMoneyEachDTO {
     private String smallType;
 
     private String createdId;
+    private Boolean pay;
     private String ps;
 
     public Integer getId() {
@@ -68,5 +69,13 @@ public class AppMoneyEachDTO {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public Boolean getPay() {
+        return pay;
+    }
+
+    public void setPay(Boolean pay) {
+        this.pay = pay;
     }
 }

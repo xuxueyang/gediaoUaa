@@ -41,6 +41,7 @@ public class AppMoneyEachService {
             target.setBigType(dto.getBigType());
             target.setSmallType(dto.getSmallType());
             target.setSpend(dto.getSpend());
+            target.setPay(dto.getPay());
         }else{
             target = new AppMoneyEach();
             target.setDeleted(false);
@@ -61,6 +62,7 @@ public class AppMoneyEachService {
             public Predicate toPredicate(Root<AppMoneyEach> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
                 predicates.add(criteriaBuilder.equal(root.get("deleted").as(Boolean.class),false));
+//                predicates.add(criteriaBuilder.equal(root.get("pay").as(Boolean.class),true));
 
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
