@@ -198,10 +198,11 @@
         <!--来源：CSDN-->
         <!--原文：https://blog.csdn.net/forezp/article/details/85081162-->
         <!--版权声明：本文为博主原创文章，转载请附上博文链接！-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--        todo 不考虑 amqp -->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+<!--        </dependency>-->
         <!--https://blog.csdn.net/forezp/article/details/70148235-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

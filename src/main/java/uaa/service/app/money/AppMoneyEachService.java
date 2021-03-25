@@ -61,9 +61,11 @@ public class AppMoneyEachService {
                 Predicate deleted = criteriaBuilder.equal(root.get("deleted").as(Boolean.class), false);
 //                predicates.add(deleted);
 //                predicates.add(criteriaBuilder.equal(root.get("pay").as(Boolean.class),true));
-                Order dataOrder = criteriaBuilder.desc(root.get("CREATED_DATE"));
+//                Order dataOrder = criteriaBuilder.desc(root.get("created_date"));
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate").as(ZonedDateTime.class)));
 
-                return criteriaQuery.orderBy(dataOrder).where(deleted).getRestriction();
+                return criteriaBuilder.and(deleted);
+//                return criteriaQuery.orderBy(dataOrder).where(deleted).getRestriction();
             }
         },pageable);
         return all;
