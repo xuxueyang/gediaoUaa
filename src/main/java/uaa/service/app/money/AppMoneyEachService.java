@@ -15,10 +15,7 @@ import uaa.repository.money.MoneyEachRep;
 import uaa.service.dto.app.money.AppMoneyEachDTO;
 import uaa.service.dto.app.money.QueryAppMoneyEachDTO;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,11 +57,13 @@ public class AppMoneyEachService {
         Page<AppMoneyEach> all = moneyEachRep.findAll(new Specification<AppMoneyEach>() {
             @Override
             public Predicate toPredicate(Root<AppMoneyEach> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> predicates = new ArrayList<>();
-                predicates.add(criteriaBuilder.equal(root.get("deleted").as(Boolean.class),false));
+//                List<Predicate> predicates = new ArrayList<>();
+                Predicate deleted = criteriaBuilder.equal(root.get("deleted").as(Boolean.class), false);
+//                predicates.add(deleted);
 //                predicates.add(criteriaBuilder.equal(root.get("pay").as(Boolean.class),true));
+                Order dataOrder = criteriaBuilder.desc(root.get("CREATED_DATE"));
 
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+                return criteriaQuery.orderBy(dataOrder).where(deleted).getRestriction();
             }
         },pageable);
         return all;
