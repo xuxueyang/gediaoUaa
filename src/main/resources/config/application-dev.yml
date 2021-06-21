@@ -114,9 +114,10 @@ spring:
                 enabled: true
     redis:
         database: 0
-        host: redis.fixbug.fun
+#        host: redis.fixbug.fun
+        host: 106.14.9.239
         password:
-        port: 6379
+        port: 9379
         pool:
             max-idle: 8
             min-idle: 0
