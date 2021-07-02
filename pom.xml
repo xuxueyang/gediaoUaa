@@ -466,7 +466,7 @@
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>5.5.0</version>
+            <version>6.8.15</version>
         </dependency>
 
         <!--原文：https://blog.csdn.net/weixin_37684345/article/details/78953233-->
